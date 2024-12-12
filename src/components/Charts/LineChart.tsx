@@ -121,12 +121,12 @@ const options: ApexOptions = {
   },
 };
 
-interface LineChartState {
+/* interface LineChartState {
   series: {
     name: string;
     data: number[];
   }[];
-}
+} */
 
 const LineChart: React.FC = () => {
   const series = [

@@ -2,9 +2,9 @@ import { ApexOptions } from "apexcharts";
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 
-interface PieChartState {
+/* interface PieChartState {
   series: number[];
-}
+} */
 
 const options: ApexOptions = {
   chart: {
