@@ -12,9 +12,9 @@ const options: ApexOptions = {
     type: "donut",
   },
   colors: ["#3C50E0", "#6577F3", "#8FD0EF", "#0FADCF"],
-  labels: ["Desktop", "Tablet", "Mobile", "Unknown"],
+  labels: ["VOO", "VUG", "Nova Unit", "Saving Account"],
   legend: {
-    show: false,
+    show: true,
     position: "bottom",
   },
 
@@ -56,13 +56,13 @@ const PieChart: React.FC = () => {
     <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5">
       <div className="mb-3 justify-center gap-4 sm:flex">
         <h2 className="text-xl font-semibold text-black dark:text-white">
-          Diversification
+          Portfolio
         </h2>
       </div>
 
       <div className="mb-2">
         <div id="chartThree" className="mx-auto flex justify-center">
-          <ReactApexChart options={options} series={series} type="donut" legend />
+          <ReactApexChart options={options} series={series} type="donut" />
         </div>
       </div>
     </div>
