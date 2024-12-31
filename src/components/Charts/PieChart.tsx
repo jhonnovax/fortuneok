@@ -9,44 +9,25 @@ import ReactApexChart from "react-apexcharts";
 const options: ApexOptions = {
   chart: {
     fontFamily: "Satoshi, sans-serif",
-    type: "donut",
+    type: "pie"
   },
-  colors: ["#3C50E0", "#6577F3", "#8FD0EF", "#0FADCF"],
   labels: ["VOO", "VUG", "Nova Unit", "Saving Account"],
   legend: {
-    show: true,
+    show: false,
     position: "bottom",
   },
-
-  plotOptions: {
-    pie: {
-      donut: {
-        size: "65%",
-        background: "transparent",
-      },
-    },
-  },
   dataLabels: {
-    enabled: false,
-  },
-  responsive: [
-    {
-      breakpoint: 2600,
-      options: {
-        chart: {
-          width: 380,
-        },
-      },
+    enabled: true,
+    /* formatter: function(value, { seriesIndex, w }) {
+      return w.config.labels[seriesIndex] + ":  " + value
+    }, */
+    dropShadow: {
+      enabled: false
     },
-    {
-      breakpoint: 640,
-      options: {
-        chart: {
-          width: 200,
-        },
-      },
-    },
-  ],
+    style: {
+      colors: ["#fff", "#fff", "#fff", "#fff"]
+    }
+  }
 };
 
 const PieChart: React.FC = () => {
@@ -62,7 +43,7 @@ const PieChart: React.FC = () => {
 
       <div className="mb-2">
         <div id="chartThree" className="mx-auto flex justify-center">
-          <ReactApexChart options={options} series={series} type="donut" />
+          <ReactApexChart options={options} series={series} type="pie" />
         </div>
       </div>
     </div>

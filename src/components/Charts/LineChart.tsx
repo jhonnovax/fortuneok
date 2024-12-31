@@ -31,6 +31,10 @@ const options: ApexOptions = {
     toolbar: {
       show: false,
     },
+
+    zoom: {
+      enabled: false,
+    },
   },
   responsive: [
     {
