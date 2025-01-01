@@ -3,6 +3,7 @@
 import { ApexOptions } from "apexcharts";
 import React from "react";
 import dynamic from "next/dynamic";
+import { Investment } from "@/types/Investment";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -36,32 +37,10 @@ const options: ApexOptions = {
       enabled: false,
     },
   },
-  responsive: [
-    {
-      breakpoint: 1024,
-      options: {
-        chart: {
-          height: 300,
-        },
-      },
-    },
-    {
-      breakpoint: 1366,
-      options: {
-        chart: {
-          height: 350,
-        },
-      },
-    },
-  ],
   stroke: {
     width: [2, 2],
     curve: "straight",
   },
-  // labels: {
-  //   show: false,
-  //   position: "top",
-  // },
   grid: {
     xaxis: {
       lines: {
@@ -120,30 +99,31 @@ const options: ApexOptions = {
         fontSize: "0px",
       },
     },
-    min: 0,
-    max: 100,
   },
 };
 
-/* interface LineChartState {
-  series: {
-    name: string;
-    data: number[];
-  }[];
-} */
+interface LineChartProps {
+  investmentData: Investment[];
+}
+const LineChart: React.FC<LineChartProps> = ({ investmentData }) => {
+  const totalInvested = investmentData.reduce((total, investment) => {
+    return total + investment.price * (investment.stocks || 1)
+  }, 0);
+  const totalProfit = investmentData.reduce((total, investment) => {
+    return total + investment.profit
+  }, 0);
 
-const LineChart: React.FC = () => {
   const series = [
-      {
-        name: "Product One",
-        data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30, 45],
-      },
+    {
+      name: "Invested",
+      data: Array.from({ length: 12 }).map(() => parseInt((totalInvested / 12).toString())),
+    },
 
-      {
-        name: "Product Two",
-        data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39, 51],
-      },
-    ]
+    {
+      name: "Profit",
+      data: Array.from({ length: 12 }).map(() => parseInt(((totalInvested + totalProfit) / 12).toString())),
+    }
+  ];
 
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5">

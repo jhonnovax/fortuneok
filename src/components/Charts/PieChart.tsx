@@ -1,37 +1,31 @@
 import { ApexOptions } from "apexcharts";
 import React from "react";
 import ReactApexChart from "react-apexcharts";
+import { Investment } from "@/types/Investment";
 
-/* interface PieChartState {
-  series: number[];
-} */
+interface PieChartProps {
+  investmentData: Investment[];
+}
 
-const options: ApexOptions = {
-  chart: {
-    fontFamily: "Satoshi, sans-serif",
-    type: "pie"
-  },
-  labels: ["VOO", "VUG", "Nova Unit", "Saving Account"],
-  legend: {
-    show: false,
-    position: "bottom",
-  },
-  dataLabels: {
-    enabled: true,
-    /* formatter: function(value, { seriesIndex, w }) {
-      return w.config.labels[seriesIndex] + ":  " + value
-    }, */
-    dropShadow: {
-      enabled: false
+const PieChart: React.FC<PieChartProps> = ({ investmentData }) => {
+  const series = investmentData.map((investment: Investment) => investment.price * (investment.stocks || 1));
+  const options: ApexOptions = {
+    chart: {
+      fontFamily: "Satoshi, sans-serif",
+      type: "pie"
     },
-    style: {
-      colors: ["#fff", "#fff", "#fff", "#fff"]
+    labels: investmentData.map((investment: Investment) => investment.name),
+    legend: {
+      show: false,
+      position: "bottom",
+    },
+    dataLabels: {
+      enabled: true,
+      dropShadow: {
+        enabled: false
+      }
     }
-  }
-};
-
-const PieChart: React.FC = () => {
-  const series = [65, 34, 12, 56];
+  };
 
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5">

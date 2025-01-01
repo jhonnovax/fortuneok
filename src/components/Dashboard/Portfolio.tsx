@@ -3,12 +3,17 @@ import dynamic from "next/dynamic";
 import React from "react";
 import LineChart from "../Charts/LineChart";
 import InvestmentsSummary from "../Tables/InvestmentsSummary";
+import { Investment } from "@/types/Investment";
 
 const PieChart = dynamic(() => import("@/components/Charts/PieChart"), {
   ssr: false,
 });
 
-const Portfolio: React.FC = () => {
+interface PortfolioProps {
+  investmentData: Investment[];
+}
+
+const Portfolio: React.FC<PortfolioProps> = ({ investmentData }) => {
   return (
     <>
       <div className="mt-4 grid grid-cols-12 gap-4 2xl:mt-7 2xl:gap-7.5">
@@ -44,15 +49,15 @@ const Portfolio: React.FC = () => {
         </div>
 
         <div className="col-span-12">
-          <LineChart />
+          <LineChart investmentData={investmentData} />
         </div>
 
         <div className="col-span-12 xl:col-span-6">
-          <PieChart />
+          <PieChart investmentData={investmentData} />
         </div>
 
         <div className="col-span-12 xl:col-span-6">
-          <InvestmentsSummary />
+          <InvestmentsSummary investmentData={investmentData} />
         </div>
       </div>
     </>
