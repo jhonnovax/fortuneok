@@ -4,8 +4,8 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { Investment } from "@/types/Investment";
 
 export const metadata: Metadata = {
-  title: "FortuneOK | Manage your portfolio investments and track the money invested and profits",
-  description: "Dashboard to manage your portfolio investments and track the money invested and profits",
+  title: "FortuneOK | Manage your Investment Portfolio",
+  description: "Effortlessly manage your portfolio investments with our intuitive dashboard. Track your invested funds, analyze allocation, and monitor the performance of your investments all in one place.",
 };
 
 const investmentData: Investment[] = [

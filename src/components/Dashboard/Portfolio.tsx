@@ -16,18 +16,13 @@ interface PortfolioProps {
 const Portfolio: React.FC<PortfolioProps> = ({ investmentData }) => {
   return (
     <>
+      <h1 className="sr-only">Manage your Investment Portfolio</h1>
       <div className="mt-4 grid grid-cols-12 gap-4 2xl:mt-7 2xl:gap-7.5">
         <div className="col-span-12">
           <div className="flex w-full justify-center">
             <div className="inline-flex items-center rounded-md bg-gray p-1.5 dark:bg-meta-4">
-              <button className="rounded bg-white px-3 py-1 text-xs font-medium text-black shadow-card hover:bg-white hover:shadow-card dark:bg-boxdark dark:text-white dark:hover:bg-boxdark">
-                Day
-              </button>
               <button className="rounded px-3 py-1 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark">
-                Week
-              </button>
-              <button className="rounded px-3 py-1 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark">
-                Month
+                1 Month
               </button>
               <button className="rounded px-3 py-1 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark">
                 3 Months
@@ -35,7 +30,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ investmentData }) => {
               <button className="rounded px-3 py-1 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark hidden md:block">
                 6 Months
               </button>
-              <button className="rounded px-3 py-1 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark">
+              <button className="rounded bg-white px-3 py-1 text-xs font-medium text-black shadow-card hover:bg-white hover:shadow-card dark:bg-boxdark dark:text-white dark:hover:bg-boxdark">
                 1 Year
               </button>
               <button className="rounded px-3 py-1 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark hidden md:block">
