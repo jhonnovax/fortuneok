@@ -6,11 +6,13 @@ const DarkModeSwitcher = () => {
   return (
     <li>
       <label
+        htmlFor="dark-mode-switcher"
         className={`relative m-0 block h-7.5 w-14 rounded-full ${
           colorMode === "dark" ? "bg-primary" : "bg-stroke"
         }`}
       >
         <input
+          id="dark-mode-switcher"
           type="checkbox"
           onChange={() => {
             if (typeof setColorMode === "function") {

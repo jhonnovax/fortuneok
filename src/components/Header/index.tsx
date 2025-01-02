@@ -15,8 +15,8 @@ const Header = (props?: {
             <Image
               width={32}
               height={32}
-              src={"/logo.png"}
-              alt="FortuneOk"
+              src={"/icon.svg"}
+              alt="FortuneOk Logo"
             />
             <span className="text-lg font-bold lg:block">FortuneOK</span>
           </Link>
