@@ -15,7 +15,7 @@ const options: ApexOptions = {
     position: "top",
     horizontalAlign: "left",
   },
-  colors: ["#3C50E0", "#80CAEE"],
+  colors: ["#5d8245"],
   chart: {
     fontFamily: "Satoshi, sans-serif",
     height: 335,
@@ -39,7 +39,7 @@ const options: ApexOptions = {
   },
   stroke: {
     width: [2, 2],
-    curve: "straight",
+    curve: "smooth",
   },
   grid: {
     xaxis: {
@@ -56,42 +56,8 @@ const options: ApexOptions = {
   dataLabels: {
     enabled: false,
   },
-  markers: {
-    size: 4,
-    colors: "#fff",
-    strokeColors: ["#3056D3", "#80CAEE"],
-    strokeWidth: 3,
-    strokeOpacity: 0.9,
-    strokeDashArray: 0,
-    fillOpacity: 1,
-    discrete: [],
-    hover: {
-      size: undefined,
-      sizeOffset: 5,
-    },
-  },
   xaxis: {
-    type: "category",
-    categories: [
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-    ],
-    axisBorder: {
-      show: false,
-    },
-    axisTicks: {
-      show: false,
-    },
+    type: 'datetime'
   },
   yaxis: {
     title: {
@@ -99,29 +65,39 @@ const options: ApexOptions = {
         fontSize: "0px",
       },
     },
+    labels: {
+      formatter: function (value) {
+        return `$${new Intl.NumberFormat().format(Math.round(value))}`;
+      },
+    }
   },
+  fill: {
+    type: 'gradient'
+  },
+ /*  forecastDataPoints: {
+    count: 2,
+    fillOpacity: 0.5,
+    strokeWidth: undefined,
+    dashArray: 4,
+  } */
 };
 
 interface LineChartProps {
   investmentData: Investment[];
 }
 const LineChart: React.FC<LineChartProps> = ({ investmentData }) => {
-  const totalInvested = investmentData.reduce((total, investment) => {
-    return total + investment.price * (investment.stocks || 1)
-  }, 0);
-  const totalProfit = investmentData.reduce((total, investment) => {
-    return total + investment.profit
-  }, 0);
-
+  const seriesData = investmentData.map((investment: Investment, index, array) => {
+    return {
+      x: new Date(investment.date),
+      y: array.slice(0, index + 1).reduce((sum, item: Investment) => {
+        return sum + (item.price * (item.stocks || 1));
+      }, 0)
+    }
+  });
   const series = [
     {
-      name: "Invested",
-      data: Array.from({ length: 12 }).map(() => parseInt((totalInvested / 12).toString())),
-    },
-
-    {
-      name: "Profit",
-      data: Array.from({ length: 12 }).map(() => parseInt(((totalInvested + totalProfit) / 12).toString())),
+      name: "Balance",
+      data: seriesData
     }
   ];
 

@@ -12,18 +12,35 @@ const PieChart: React.FC<PieChartProps> = ({ investmentData }) => {
   const options: ApexOptions = {
     chart: {
       fontFamily: "Satoshi, sans-serif",
-      type: "pie"
+      type: "donut"
     },
     labels: investmentData.map((investment: Investment) => investment.name),
     legend: {
-      show: false,
-      position: "bottom",
+      show: false
     },
-    dataLabels: {
-      enabled: true,
-      dropShadow: {
-        enabled: false
+    plotOptions: {
+      pie: {
+        donut: {
+          labels: {
+            show: true,
+            total: {
+              showAlways: true,
+              show: true,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              formatter: (w: any) => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const total = w.globals.seriesTotals.reduce((a: any, b: any) => {
+                  return a + b;
+                }, 0);
+                return `$${new Intl.NumberFormat().format(Math.round(total))}`;
+              }
+            }
+          }
+        }
       }
+    },
+    theme: {
+      palette: "palette1"
     }
   };
 
@@ -37,7 +54,7 @@ const PieChart: React.FC<PieChartProps> = ({ investmentData }) => {
 
       <div className="mb-2">
         <div id="chartThree" className="mx-auto flex justify-center">
-          <ReactApexChart options={options} series={series} type="pie" />
+          <ReactApexChart options={options} series={series} type="donut" />
         </div>
       </div>
     </div>

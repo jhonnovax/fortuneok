@@ -1,4 +1,5 @@
 export type Investment = {
+  date: string;
   name: string;
   category: string;
   price: number;
