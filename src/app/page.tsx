@@ -10,38 +10,86 @@ export const metadata: Metadata = {
 
 const investmentData: Investment[] = [
   {
-    date: "2022-04-25",
-    name: "Nova Unit, San Francisco, USA",
+    date: "2024-10-06",
+    category: 'cash',
+    company: "Bancolombia",
+    name: "Saving Account",
+    price: 100000,
+    annualInterestRate: 9.55
+  },
+  {
+    date: "2024-10-06",
+    category: "cash",
+    company: "Nubank",
+    name: "Saving Account",
+    price: 10000,
+    annualInterestRate: 11
+  },
+  {
+    date: "2024-11-21",
+    category: "cash",
+    company: "Wealthsimple",
+    name: "Saving Account",
+    price: 10000,
+    annualInterestRate: 2.75
+  },
+  {
+    date: "2024-11-21",
+    category: "cash",
+    company: "Proteccion",
+    name: "Retirement Account",
+    price: 1000,
+    annualInterestRate: 7
+  },
+  {
+    date: "2024-11-21",
     category: "real-estate",
-    price: 50750,
-    profit: 247,
-    profitPercentage: 4.13
+    company: "Novoa Building",
+    name: "Unit 301, New York, USA",
+    price: 25000,
+    annualInterestRate: 3
+  },
+  {
+    date: "2022-04-25",
+    category: "real-estate",
+    company: "Cacique Building",
+    name: "Unit 402, New York, USA",
+    price: 45000,
+    annualInterestRate: 3,
+  },
+  {
+    date: "2022-04-25",
+    category: "real-estate",
+    company: "Cacique Building",
+    name: "Unit 403, San Francisco, USA",
+    price: 50000,
+    annualInterestRate: 3,
   },
   {
     date: "2023-04-25",
-    name: "Saving Account, Bank of America",
-    category: "cash",
-    price: 25200,
-    profit: 134.56,
-    profitPercentage: 2.75
+    category: "goods",
+    company: "Renault",
+    name: "Sandero Stepway",
+    price: 10000,
+    annualInterestRate: 0
   },
   {
     date: "2024-06-15",
-    name: "VOO",
     category: "stocks",
+    company: "Hapi",
+    name: "VOO",
     price: 538.66,
     stocks: 62.62,
-    profit: 2.67,
-    profitPercentage: 2.34
+    annualInterestRate: 7
   },
   {
     date: "2024-07-25",
-    name: "VUG",
     category: "stocks",
+    company: "Hapi",
+    name: "VUG",
     price: 410.56,
     stocks: 21.31,
-    profit: 4.19,
-    profitPercentage: 1.84
+    annualInterestRate: 7
   }
 ];
 

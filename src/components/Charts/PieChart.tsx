@@ -2,6 +2,7 @@ import { ApexOptions } from "apexcharts";
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 import { Investment } from "@/types/Investment";
+import { formatCurrency } from "@/services/intl-service";
 
 interface PieChartProps {
   investmentData: Investment[];
@@ -32,7 +33,7 @@ const PieChart: React.FC<PieChartProps> = ({ investmentData }) => {
                 const total = w.globals.seriesTotals.reduce((a: any, b: any) => {
                   return a + b;
                 }, 0);
-                return `$${new Intl.NumberFormat().format(Math.round(total))}`;
+                return `${formatCurrency(Math.round(total))}`;
               }
             }
           }

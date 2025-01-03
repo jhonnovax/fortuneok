@@ -43,15 +43,13 @@ const Portfolio: React.FC<PortfolioProps> = ({ investmentData }) => {
           </div>
         </div>
 
-        <div className="col-span-12">
+        <div className="col-span-12 xl:col-span-8">
           <LineChart investmentData={investmentData} />
-        </div>
-
-        <div className="col-span-12 xl:col-span-6">
+          <div className="mt-4 xl:mt-6"></div>
           <PieChart investmentData={investmentData} />
         </div>
 
-        <div className="col-span-12 xl:col-span-6">
+        <div className="col-span-12 xl:col-span-4">
           <InvestmentsSummary investmentData={investmentData} />
         </div>
       </div>

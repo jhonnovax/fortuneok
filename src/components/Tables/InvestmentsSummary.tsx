@@ -1,4 +1,5 @@
 import { Investment } from "@/types/Investment";
+import { formatCurrency } from "@/services/intl-service";
 
 interface InvestmentsSummaryProps {
   investmentData: Investment[];
@@ -26,10 +27,10 @@ const InvestmentsSummary = ({ investmentData }: InvestmentsSummaryProps) => {
                 <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                   <div>
                     <div className="text-sm text-black dark:text-white">
-                      {investment.name}
+                      {investment.name} {investment.stocks && ` (${investment.stocks} stocks)`}
                     </div>
                     <div className="text-sm text-black dark:text-white">
-                      {investment.stocks}
+                      {investment.company}
                     </div>
                   </div>
                 </span>
@@ -39,7 +40,7 @@ const InvestmentsSummary = ({ investmentData }: InvestmentsSummaryProps) => {
 
           <div className="col-span-2 text-right">
             <p className="text-sm text-black dark:text-white">
-              ${investment.price}
+              {formatCurrency(investment.price * (investment.stocks || 1))}
             </p>
             <p className="flex items-center justify-end text-sm text-green">
               <span className="mr-1">
@@ -58,10 +59,10 @@ const InvestmentsSummary = ({ investmentData }: InvestmentsSummaryProps) => {
                 </svg>
               </span>
               <span>
-                ${investment.profit}
+                {formatCurrency((investment.price * (investment.stocks || 1)) * (investment.annualInterestRate / 100))}
               </span>
               <span className="ml-1">
-                ({investment.profitPercentage}%)
+                ({investment.annualInterestRate}%)
               </span>
             </p>
           </div>
