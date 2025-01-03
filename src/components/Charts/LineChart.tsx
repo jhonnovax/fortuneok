@@ -93,7 +93,7 @@ const LineChart: React.FC<LineChartProps> = ({ investmentData }) => {
         return sum + (item.price * (item.stocks || 1));
       }, 0)
     }
-  });
+  })
   const series = [
     {
       name: "Balance",

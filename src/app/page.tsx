@@ -10,31 +10,7 @@ export const metadata: Metadata = {
 
 const investmentData: Investment[] = [
   {
-    date: "2024-10-06",
-    category: 'cash',
-    company: "Bancolombia",
-    name: "Saving Account",
-    price: 100000,
-    annualInterestRate: 9.55
-  },
-  {
-    date: "2024-10-06",
-    category: "cash",
-    company: "Nubank",
-    name: "Saving Account",
-    price: 10000,
-    annualInterestRate: 11
-  },
-  {
-    date: "2024-11-21",
-    category: "cash",
-    company: "Wealthsimple",
-    name: "Saving Account",
-    price: 10000,
-    annualInterestRate: 2.75
-  },
-  {
-    date: "2024-11-21",
+    date: "2011-11-29",
     category: "cash",
     company: "Proteccion",
     name: "Retirement Account",
@@ -42,15 +18,7 @@ const investmentData: Investment[] = [
     annualInterestRate: 7
   },
   {
-    date: "2024-11-21",
-    category: "real-estate",
-    company: "Novoa Building",
-    name: "Unit 301, New York, USA",
-    price: 25000,
-    annualInterestRate: 3
-  },
-  {
-    date: "2022-04-25",
+    date: "2018-04-25",
     category: "real-estate",
     company: "Cacique Building",
     name: "Unit 402, New York, USA",
@@ -74,6 +42,14 @@ const investmentData: Investment[] = [
     annualInterestRate: 0
   },
   {
+    date: "2024-02-21",
+    category: "real-estate",
+    company: "Novoa Building",
+    name: "Unit 301, New York, USA",
+    price: 25000,
+    annualInterestRate: 3
+  },
+  {
     date: "2024-06-15",
     category: "stocks",
     company: "Hapi",
@@ -90,7 +66,31 @@ const investmentData: Investment[] = [
     price: 410.56,
     stocks: 21.31,
     annualInterestRate: 7
-  }
+  },
+  {
+    date: "2024-10-02",
+    category: 'cash',
+    company: "Bancolombia",
+    name: "Saving Account",
+    price: 100000,
+    annualInterestRate: 9.55
+  },
+  {
+    date: "2024-10-06",
+    category: "cash",
+    company: "Nubank",
+    name: "Saving Account",
+    price: 10000,
+    annualInterestRate: 11
+  },
+  {
+    date: "2024-11-21",
+    category: "cash",
+    company: "Wealthsimple",
+    name: "Saving Account",
+    price: 10000,
+    annualInterestRate: 2.75
+  },
 ];
 
 

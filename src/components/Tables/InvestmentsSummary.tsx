@@ -29,8 +29,11 @@ const InvestmentsSummary = ({ investmentData }: InvestmentsSummaryProps) => {
                     <div className="text-sm text-black dark:text-white">
                       {investment.name} {investment.stocks && ` (${investment.stocks} stocks)`}
                     </div>
-                    <div className="text-sm text-black dark:text-white">
+                    <div className="text-sm text-bodydark2 dark:text-white">
                       {investment.company}
+                    </div>
+                    <div className="text-xs text-bodydark2 dark:text-white">
+                      {investment.date}
                     </div>
                   </div>
                 </span>
