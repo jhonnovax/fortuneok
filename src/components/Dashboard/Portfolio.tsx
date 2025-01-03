@@ -17,7 +17,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ investmentData }) => {
   return (
     <>
       <h1 className="sr-only">Manage your Investment Portfolio</h1>
-      <div className="grid grid-cols-12 gap-4 2xl:mt-7 2xl:gap-7.5">
+      <div className="grid grid-cols-12 gap-4 2xl:gap-7.5">
         <div className="col-span-12">
           <div className="flex w-full justify-center">
             <div className="inline-flex items-center rounded-md bg-gray p-1.5 dark:bg-meta-4">
