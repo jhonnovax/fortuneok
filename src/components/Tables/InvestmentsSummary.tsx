@@ -43,7 +43,7 @@ const InvestmentsSummary = ({ investmentData }: InvestmentsSummaryProps) => {
 
           <div className="col-span-2 text-right">
             <p className="text-sm text-black dark:text-white">
-              {formatCurrency(investment.price * (investment.stocks || 1))}
+              {formatCurrency(investment.total)}
             </p>
             <p className="flex items-center justify-end text-sm text-green">
               <span className="mr-1">
@@ -62,7 +62,7 @@ const InvestmentsSummary = ({ investmentData }: InvestmentsSummaryProps) => {
                 </svg>
               </span>
               <span>
-                {formatCurrency((investment.price * (investment.stocks || 1)) * (investment.annualInterestRate / 100))}
+                {formatCurrency(investment.total + investment.profit)}
               </span>
               <span className="ml-1">
                 ({investment.annualInterestRate}%)

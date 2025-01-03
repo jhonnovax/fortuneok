@@ -1,9 +1,10 @@
 export type Investment = {
   date: string;
-  name: string;
   company: string;
-  category: string;
-  price: number;
+  name: string;
+  amount?: number;
   stocks?: number;
   annualInterestRate: number;
+  profit: number;
+  total: number;
 };

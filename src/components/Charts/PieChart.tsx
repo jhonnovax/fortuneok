@@ -9,7 +9,7 @@ interface PieChartProps {
 }
 
 const PieChart: React.FC<PieChartProps> = ({ investmentData }) => {
-  const series = investmentData.map((investment: Investment) => investment.price * (investment.stocks || 1));
+  const series = investmentData.map((investment: Investment) => investment.total);
   const options: ApexOptions = {
     chart: {
       fontFamily: "Satoshi, sans-serif",

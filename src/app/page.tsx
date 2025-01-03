@@ -11,86 +11,94 @@ export const metadata: Metadata = {
 const investmentData: Investment[] = [
   {
     date: "2011-11-29",
-    category: "cash",
     company: "Proteccion",
     name: "Retirement Account",
-    price: 1000,
-    annualInterestRate: 7
+    amount: 1000,
+    annualInterestRate: 7,
+    profit: 120,
+    total: 1000,
   },
   {
     date: "2018-04-25",
-    category: "real-estate",
     company: "Cacique Building",
     name: "Unit 402, New York, USA",
-    price: 45000,
+    amount: 45000,
     annualInterestRate: 3,
+    profit: 1200,
+    total: 45000
   },
   {
     date: "2022-04-25",
-    category: "real-estate",
     company: "Cacique Building",
     name: "Unit 403, San Francisco, USA",
-    price: 50000,
+    amount: 50000,
     annualInterestRate: 3,
+    profit: 1500,
+    total: 50000
   },
   {
     date: "2023-04-25",
-    category: "goods",
     company: "Renault",
     name: "Sandero Stepway",
-    price: 10000,
-    annualInterestRate: 0
+    amount: 10000,
+    annualInterestRate: 0,
+    profit: 0,
+    total: 10000
   },
   {
     date: "2024-02-21",
-    category: "real-estate",
     company: "Novoa Building",
     name: "Unit 301, New York, USA",
-    price: 25000,
-    annualInterestRate: 3
+    amount: 25000,
+    annualInterestRate: 3,
+    profit: 750,
+    total: 25000
   },
   {
     date: "2024-06-15",
-    category: "stocks",
     company: "Hapi",
     name: "VOO",
-    price: 538.66,
     stocks: 62.62,
-    annualInterestRate: 7
+    annualInterestRate: 7,
+    profit: 1240,
+    total: (62.62 * 543.05),
   },
   {
     date: "2024-07-25",
-    category: "stocks",
     company: "Hapi",
     name: "VUG",
-    price: 410.56,
     stocks: 21.31,
-    annualInterestRate: 7
+    annualInterestRate: 7,
+    profit: 0,
+    total: (21.31 * 415.19)
   },
   {
     date: "2024-10-02",
-    category: 'cash',
     company: "Bancolombia",
-    name: "Saving Account",
-    price: 100000,
-    annualInterestRate: 9.55
+    name: "CDT",
+    amount: 100000,
+    annualInterestRate: 9.55,
+    profit: 9550,
+    total: 100000
   },
   {
     date: "2024-10-06",
-    category: "cash",
     company: "Nubank",
     name: "Saving Account",
-    price: 10000,
-    annualInterestRate: 11
+    amount: 10000,
+    annualInterestRate: 11,
+    profit: 1100,
+    total: 10000
   },
   {
     date: "2024-11-21",
-    category: "cash",
     company: "Wealthsimple",
     name: "Saving Account",
-    price: 10000,
-    annualInterestRate: 2.75
-  },
+    amount: 10000,
+    annualInterestRate: 2.75,
+    profit: 275,
+    total: 10000
+  }
 ];
 
 

@@ -90,7 +90,7 @@ const LineChart: React.FC<LineChartProps> = ({ investmentData }) => {
     return {
       x: new Date(investment.date),
       y: array.slice(0, index + 1).reduce((sum, item: Investment) => {
-        return sum + (item.price * (item.stocks || 1));
+        return sum + (item.total);
       }, 0)
     }
   })
