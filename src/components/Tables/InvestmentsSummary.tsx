@@ -1,5 +1,5 @@
 import { Investment } from "@/types/Investment";
-import { formatCurrency } from "@/services/intl-service";
+import { formatCurrency, formatDate } from "@/services/intl-service";
 
 interface InvestmentsSummaryProps {
   investmentData: Investment[];
@@ -33,7 +33,7 @@ const InvestmentsSummary = ({ investmentData }: InvestmentsSummaryProps) => {
                       {investment.company}
                     </div>
                     <div className="text-xs text-bodydark2 dark:text-white">
-                      {investment.date}
+                      {formatDate(investment.date)}
                     </div>
                   </div>
                 </span>
