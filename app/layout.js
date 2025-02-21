@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import { getSEOTags } from "@/libs/seo";
 import ClientLayout from "@/components/LayoutClient";
 import config from "@/config";
+import Script from 'next/script';
 import "./globals.css";
 
 const font = Inter({ subsets: ["latin"] });
@@ -24,6 +25,12 @@ export default function RootLayout({ children }) {
 			data-theme={config.colors.theme}
 			className={font.className}
 		>
+			<Script 
+				defer
+				data-website-id="67b4e06b026712ec6b42da7e"
+				data-domain="fortuneok.com"
+				src="/js/script.js"
+			/>
 			<body>
 				{/* ClientLayout contains all the client wrappers (Crisp chat support, toast messages, tooltips, etc.) */}
 				<ClientLayout>{children}</ClientLayout>
