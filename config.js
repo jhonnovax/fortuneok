@@ -25,14 +25,14 @@ const config = {
         //  REQUIRED - Name of the plan, displayed on the pricing page
         name: "Starter",
         // A friendly description of the plan, displayed on the pricing page. Tip: explain why this plan and not others
-        description: "Perfect for small projects",
+        description: "Perfect for beginners",
         // The price you want to display, the one user will be charged on Stripe.
         price: 9,
         // If you have an anchor price (i.e. $29) that you want to display crossed out, put it here. Otherwise, leave it empty
         priceAnchor: 19,
         features: [
-          { name: "Unlimited investments" },
-          { name: "24 hours auto-refresh of stock, crypto, and forex prices" },
+          { name: "Unlimited Investments" },
+          { name: "24 hours auto-refresh cryptos and stocks" },
         ],
       },
       {
@@ -43,13 +43,13 @@ const config = {
             ? "price_1O5KtcAxyNprDp7iftKnrrpw"
             : "price_456",
         name: "Advanced",
-        description: "You need more power",
+        description: "Experimented investors",
         price: 19,
         priceAnchor: 29,
         features: [
-          { name: "Unlimited investments" },
-          { name: "Real-time stock, crypto, and forex prices" },
-          { name: "24/7 support" },
+          { name: "Unlimited Investments" },
+          { name: "Real-time cryptos and stocks" },
+          { name: "Track the history of your sold investments" },
         ],
       },
     ],
