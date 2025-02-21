@@ -27,9 +27,9 @@ const config = {
         // A friendly description of the plan, displayed on the pricing page. Tip: explain why this plan and not others
         description: "Perfect for small projects",
         // The price you want to display, the one user will be charged on Stripe.
-        price: 19,
+        price: 9,
         // If you have an anchor price (i.e. $29) that you want to display crossed out, put it here. Otherwise, leave it empty
-        priceAnchor: 39,
+        priceAnchor: 19,
         features: [
           { name: "Unlimited investments" },
           { name: "24 hours auto-refresh of stock, crypto, and forex prices" },
@@ -44,8 +44,8 @@ const config = {
             : "price_456",
         name: "Advanced",
         description: "You need more power",
-        price: 39,
-        priceAnchor: 59,
+        price: 19,
+        priceAnchor: 29,
         features: [
           { name: "Unlimited investments" },
           { name: "Real-time stock, crypto, and forex prices" },
