@@ -9,6 +9,18 @@ const nextConfig = {
       "logos-world.net",
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/js/script.js',
+        destination: 'https://datafa.st/js/script.js',
+      },
+      {
+        source: '/api/events',
+        destination: 'https://datafa.st/api/events',
+      },
+    ]
+  },
 };
 
 module.exports = nextConfig;

@@ -8,6 +8,7 @@ import FAQ from "@/components/FAQ";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import { getSEOTags } from "@/libs/seo";
+import Script from 'next/script';
 
 export const metadata = getSEOTags({
   title: "FortuneOK | Grow and Simplify your investments",
@@ -17,6 +18,12 @@ export const metadata = getSEOTags({
 export default function Home() {
   return (
     <>
+      <Script 
+        defer
+        data-website-id="67b4e06b026712ec6b42da7e"
+        data-domain="fortuneok.com"
+        src="/js/script.js"
+      />
       <Suspense>
         <Header />
       </Suspense>
