@@ -2,12 +2,11 @@ import themes from "daisyui/src/theming/themes";
 
 const config = {
   // REQUIRED
-  appName: "ShipFast",
+  appName: "FortuneOK",
   // REQUIRED: a short description of your app for SEO tags (can be overwritten)
-  appDescription:
-    "The NextJS boilerplate with all you need to build your SaaS, AI tool, or any other web app.",
+  appDescription: "Manage & Track Your Investments Seamlessly All in One Place – Say Goodbye to Spreadsheets.",
   // REQUIRED (no https://, not trialing slash at the end, just the naked domain)
-  domainName: "shipfa.st",
+  domainName: "fortuneok.com",
   crisp: {
     // Crisp website ID. IF YOU DON'T USE CRISP: just remove this => Then add a support email in this config file (resend.supportEmail) otherwise customer support won't work.
     id: "",
@@ -28,16 +27,12 @@ const config = {
         // A friendly description of the plan, displayed on the pricing page. Tip: explain why this plan and not others
         description: "Perfect for small projects",
         // The price you want to display, the one user will be charged on Stripe.
-        price: 79,
+        price: 19,
         // If you have an anchor price (i.e. $29) that you want to display crossed out, put it here. Otherwise, leave it empty
-        priceAnchor: 99,
+        priceAnchor: 39,
         features: [
-          {
-            name: "NextJS boilerplate",
-          },
-          { name: "User oauth" },
-          { name: "Database" },
-          { name: "Emails" },
+          { name: "Unlimited investments" },
+          { name: "24 hours auto-refresh of stock, crypto, and forex prices" },
         ],
       },
       {
@@ -49,16 +44,11 @@ const config = {
             : "price_456",
         name: "Advanced",
         description: "You need more power",
-        price: 99,
-        priceAnchor: 149,
+        price: 39,
+        priceAnchor: 59,
         features: [
-          {
-            name: "NextJS boilerplate",
-          },
-          { name: "User oauth" },
-          { name: "Database" },
-          { name: "Emails" },
-          { name: "1 year of updates" },
+          { name: "Unlimited investments" },
+          { name: "Real-time stock, crypto, and forex prices" },
           { name: "24/7 support" },
         ],
       },
@@ -72,11 +62,11 @@ const config = {
   },
   resend: {
     // REQUIRED — Email 'From' field to be used when sending magic login links
-    fromNoReply: `ShipFast <noreply@resend.shipfa.st>`,
+    fromNoReply: `FortuneOK <noreply@resend.fortuneok.com>`,
     // REQUIRED — Email 'From' field to be used when sending other emails, like abandoned carts, updates etc..
-    fromAdmin: `Marc at ShipFast <marc@resend.shipfa.st>`,
+    fromAdmin: `Jhon at FortuneOK <jhon@resend.fortuneok.com>`,
     // Email shown to customer if need support. Leave empty if not needed => if empty, set up Crisp above, otherwise you won't be able to offer customer support."
-    supportEmail: "marc.louvion@gmail.com",
+    supportEmail: "support@fortuneok.com",
   },
   colors: {
     // REQUIRED — The DaisyUI theme to use (added to the main layout.js). Leave blank for default (light & dark mode). If you any other theme than light/dark, you need to add it in config.tailwind.js in daisyui.themes.
