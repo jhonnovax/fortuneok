@@ -7,6 +7,12 @@ import Pricing from "@/components/Pricing";
 import FAQ from "@/components/FAQ";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
+import { getSEOTags } from "@/libs/seo";
+
+export const metadata = getSEOTags({
+  title: "FortuneOK | Grow and Simplify your investments",
+  canonicalUrlRelative: "/tos",
+});
 
 export default function Home() {
   return (

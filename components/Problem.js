@@ -44,10 +44,10 @@ const Problem = () => {
     <section className="bg-neutral text-neutral-content">
       <div className="max-w-7xl mx-auto px-8 py-16 md:py-32 text-center">
         <h2 className="max-w-3xl mx-auto font-extrabold text-4xl md:text-5xl tracking-tight mb-6 md:mb-8">
-          Personal finance fails because people never track their investments.
+          Finance fails because people never track their investments.
         </h2>
         <p className="max-w-xl mx-auto text-lg opacity-90 leading-relaxed mb-12 md:mb-20">
-          Manage and track your investments easily with FortuneOK, stop wasting time on spreadsheets and manual updates, start making better decisions with your money.
+          Register your investments, get real-time updates, and make better decisions with your money.
         </p>
 
         <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-6">
