@@ -4,7 +4,7 @@ const config = {
   // REQUIRED
   appName: "FortuneOK",
   // REQUIRED: a short description of your app for SEO tags (can be overwritten)
-  appDescription: "Manage & Track Your Investments Seamlessly All in One Place – Say Goodbye to Spreadsheets.",
+  appDescription: "Manage and track your investments effortlessly! With our platform, all your data is in one place—no more searching for where you wrote it down. Say goodbye to notebooks and Excel spreadsheets, and keep your finances organized and under control. It’s time to simplify your investing!",
   // REQUIRED (no https://, not trialing slash at the end, just the naked domain)
   domainName: "fortuneok.com",
   crisp: {
