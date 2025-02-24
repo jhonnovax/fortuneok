@@ -20,6 +20,7 @@ const ButtonCheckout = ({ priceId, mode = "payment" }) => {
         mode,
         successUrl: window.location.href,
         cancelUrl: window.location.href,
+        couponId: 'qEUaRv2F'
       });
 
       window.location.href = res.url;

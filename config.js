@@ -20,19 +20,20 @@ const config = {
         // REQUIRED — we use this to find the plan in the webhook (for instance if you want to update the user's credits based on the plan)
         priceId:
           process.env.NODE_ENV === "development"
-            ? "price_1Niyy5AxyNprDp7iZIqEyD2h"
-            : "price_456",
+            ? "price_1Qv2q4DvX2TSHq7dc07XH0oM"
+            : "",
         //  REQUIRED - Name of the plan, displayed on the pricing page
         name: "Starter",
         // A friendly description of the plan, displayed on the pricing page. Tip: explain why this plan and not others
         description: "Perfect for beginners",
         // The price you want to display, the one user will be charged on Stripe.
-        price: 9,
+        price: 49,
         // If you have an anchor price (i.e. $29) that you want to display crossed out, put it here. Otherwise, leave it empty
-        priceAnchor: 19,
+        priceAnchor: 99,
         features: [
           { name: "Unlimited Investments" },
-          { name: "24 hours auto-refresh cryptos and stocks" },
+          { name: "24-hour updates on crypto & stock prices" },
+          { name: 'Export your data to Excel/CSV' }
         ],
       },
       {
@@ -40,16 +41,17 @@ const config = {
         isFeatured: true,
         priceId:
           process.env.NODE_ENV === "development"
-            ? "price_1O5KtcAxyNprDp7iftKnrrpw"
-            : "price_456",
+            ? "price_1Qv36zDvX2TSHq7dqtNqaRPg"
+            : "",
         name: "Advanced",
         description: "Experimented investors",
-        price: 19,
-        priceAnchor: 29,
+        price: 69,
+        priceAnchor: 119,
         features: [
           { name: "Unlimited Investments" },
-          { name: "Real-time cryptos and stocks" },
+          { name: "Real-time cryptos and stocks updates" },
           { name: "Track the history of your sold investments" },
+          { name: 'Seamless Excel/CSV Import & Export' }
         ],
       },
     ],
