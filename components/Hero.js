@@ -22,7 +22,7 @@ const Hero = () => {
       </div>
       <div className="lg:w-[50%]">
         <video className="w-full max-w-lg rounded-lg shadow-lg" controls>
-          <source src="/teaser-video.webm" type="video/webm" />
+          <source src="/teaser-video.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </div>
