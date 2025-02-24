@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import apiClient from "@/libs/api";
 import config from "@/config";
@@ -10,9 +11,11 @@ import config from "@/config";
 // You can also change the mode to "subscription" if you want to create a subscription instead of a one-time payment
 const ButtonCheckout = ({ priceId, mode = "payment" }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const { data: session } = useSession();
 
   const handlePayment = async () => {
     setIsLoading(true);
+    window?.datafast("payment", { email: session.user?.email || 'anonymous' });
 
     try {
       const res = await apiClient.post("/stripe/create-checkout", {
