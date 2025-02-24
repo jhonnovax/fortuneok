@@ -7,16 +7,24 @@ import { useRef, useState } from "react";
 
 const faqList = [
   {
-    question: "What do I get exactly?",
-    answer: <div className="space-y-2 leading-relaxed">You get a dashboard to manage and track your investments, with real-time prices and a portfolio overview.</div>,
+    question: "Why do I need FortuneOK?",
+    answer: <div className="space-y-2 leading-relaxed">When do you have many kinds of investments, it&apos;s hard to keep track of them. FortuneOK is a tool that helps you keep track of your investments and manage all of them in one place.</div>,
   },
   {
-    question: "Is there a free trial?",
-    answer: <div className="space-y-2 leading-relaxed">Yep! You can try for free for 14 days and you don`t even need a credit card!</div>,
+    question: "Does it support multiple currencies?",
+    answer: <div className="space-y-2 leading-relaxed">Yes! FortuneOK supports multiple currencies. You can add your investments in different currencies and FortuneOK will convert them to your base currency for you.</div>,
+  },
+  {
+    question: "Can I migrate my existing investments?",
+    answer: <div className="space-y-2 leading-relaxed">Yes! For now you can import or export your investments to Excel/CSV.</div>,
+  },
+  {
+    question: 'It is secure?',
+    answer: <div className="space-y-2 leading-relaxed">Yes! We prioritize security and use encryption to keep your investment data safe. Your information is never shared or sold.</div>,
   },
   {
     question: "Can I get a refund?",
-    answer: <p>Yes! You can request a refund within 7 days of your purchase. Reach out by email.</p>,
+    answer: <p>Yes! You can request a refund within 7 days of your purchase. Reach out by email at <a className="text-primary hover:underline" href="mailto:support@fortuneok.com" target="_blank" rel="noopener noreferrer">support@fortuneok.com</a>.</p>,
   }
 ];
 

@@ -55,7 +55,7 @@ const Problem = () => {
 
           <Arrow extraStyle="max-md:-scale-x-100 md:-rotate-90" />
 
-          <Step emoji="🔄" text="Get real-time prices and track your portfolio" />
+          <Step emoji="🔄" text="Get real-time updates and track your portfolio" />
 
           <Arrow extraStyle="md:-scale-x-100 md:-rotate-90" />
 

@@ -4,7 +4,7 @@ const config = {
   // REQUIRED
   appName: "FortuneOK",
   // REQUIRED: a short description of your app for SEO tags (can be overwritten)
-  appDescription: "Manage and track your investments effortlessly! With our platform, all your data is in one place—no more searching for where you wrote it down. Say goodbye to notebooks and Excel spreadsheets, and keep your finances organized and under control. It’s time to simplify your investing!",
+  appDescription: "Take control of your investments with ease! Keep all your data in one place and stop checking multiple brokers, notebooks, or spreadsheets. No more scattered records—just a seamless, organized way to track your portfolio. Simplify your investing and stay on top of your finances effortlessly!",
   // REQUIRED (no https://, not trialing slash at the end, just the naked domain)
   domainName: "fortuneok.com",
   crisp: {
@@ -32,7 +32,7 @@ const config = {
         priceAnchor: 99,
         features: [
           { name: "Unlimited Investments" },
-          { name: "24-hour updates on crypto & stock prices" },
+          { name: "24-hour updates on crypto & stock updates" },
           { name: 'Export your data to Excel/CSV' }
         ],
       },
