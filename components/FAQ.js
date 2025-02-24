@@ -11,6 +11,10 @@ const faqList = [
     answer: <div className="space-y-2 leading-relaxed">When do you have many kinds of investments, it&apos;s hard to keep track of them. FortuneOK is a tool that helps you keep track of your investments and manage all of them in one place.</div>,
   },
   {
+    question: "How does it update crypto and stock prices?",
+    answer: <div className="space-y-2 leading-relaxed">FortuneOK connects to financial APIs to fetch real-time market data, ensuring your investment values and profit percentages are always up to date.</div>,
+  },
+  {
     question: "Does it support multiple currencies?",
     answer: <div className="space-y-2 leading-relaxed">Yes! FortuneOK supports multiple currencies. You can add your investments in different currencies and FortuneOK will convert them to your base currency for you.</div>,
   },
