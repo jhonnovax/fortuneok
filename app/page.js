@@ -10,7 +10,7 @@ import Footer from "@/components/Footer";
 import { getSEOTags } from "@/libs/seo";
 
 export const metadata = getSEOTags({
-  title: "FortuneOK | Grow and Simplify your investments",
+  title: "FortuneOK | Grow and Simplify your Investments",
   canonicalUrlRelative: "/tos",
 });
 
