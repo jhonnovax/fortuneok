@@ -13,6 +13,12 @@ export default function AssetsList() {
     { id: 7, type: 'Fund', symbol: 'FXAIX', name: 'Fidelity 500', shares: '42.3', value: '$6,345.00', change: '-$31.25', changePercent: '-0.49%', checked: false },
     { id: 8, type: 'Real Estate', symbol: 'HOME1', name: 'Rental Property', shares: '1', value: '$250,000.00', change: '$0.00', changePercent: '0.00%', checked: false },
     { id: 9, type: 'Cash', symbol: 'USD', name: 'US Dollar', shares: '-', value: '$15,325.00', change: '$0.00', changePercent: '0.00%', checked: false },
+    { id: 10, type: 'Stock', symbol: 'TSLA', name: 'Tesla Inc.', shares: '12.5', value: '$2,437.50', change: '+$45.75', changePercent: '+1.91%', checked: false },
+    { id: 11, type: 'ETF', symbol: 'VXUS', name: 'Vanguard Total International', shares: '95.33', value: '$5,243.15', change: '-$12.45', changePercent: '-0.24%', checked: false },
+    { id: 12, type: 'Crypto', symbol: 'SOL', name: 'Solana', shares: '45.8', value: '$4,672.54', change: '+$234.12', changePercent: '+5.27%', checked: false },
+    { id: 13, type: 'Real Estate', symbol: 'HOME2', name: 'Commercial Property', shares: '1', value: '$475,000.00', change: '+$5,000.00', changePercent: '+1.06%', checked: false },
+    { id: 14, type: 'Fund', symbol: 'PRGFX', name: 'T. Rowe Price Growth', shares: '156.22', value: '$8,592.10', change: '+$43.21', changePercent: '+0.51%', checked: false },
+    { id: 15, type: 'Stock', symbol: 'NVDA', name: 'NVIDIA Corporation', shares: '18.3', value: '$9,168.45', change: '+$312.45', changePercent: '+3.53%', checked: false },
   ]);
 
   const toggleAll = (checked) => {

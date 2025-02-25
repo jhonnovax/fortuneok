@@ -16,9 +16,9 @@ export default function MobileSidebar({ isOpen, setIsOpen, children }) {
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}>
         <div className="flex flex-col h-full">
-          <div className="p-4 border-b">
+          <div className="p-4 border-b bg-base-100">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold">My Assets</h2>
+              <h2 className="font-bold">My Assets</h2>
               <button 
                 onClick={() => setIsOpen(false)}
                 className="btn btn-ghost btn-circle"
