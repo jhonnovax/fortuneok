@@ -3,6 +3,7 @@ import { getSEOTags } from "@/libs/seo";
 import ClientLayout from "@/components/LayoutClient";
 import config from "@/config";
 import Script from 'next/script';
+import { Analytics } from '@vercel/analytics/react';
 import "./globals.css";
 
 const font = Inter({ subsets: ["latin"] });
@@ -25,6 +26,7 @@ export default function RootLayout({ children }) {
 			data-theme={config.colors.theme}
 			className={font.className}
 		>
+			<Analytics />
 			<Script 
 				defer
 				data-website-id="67b4e06b026712ec6b42da7e"
