@@ -36,8 +36,8 @@ export default function AssetsList() {
 
   return (
     <div className="space-y-4">
-      {/* Select All Toggle */}
-      <div className="flex items-center justify-between px-2">
+      {/* Sticky Select All Toggle */}
+      <div className="sticky top-0 bg-base-100 py-2 -mt-4 -mx-4 px-6 border-b z-10">
         <label className="cursor-pointer flex items-center gap-2">
           <input
             type="checkbox"
@@ -61,7 +61,7 @@ export default function AssetsList() {
       </div>
 
       {/* Assets List */}
-      <div className="space-y-2">
+      <div className="space-y-2 pt-2">
         {assets.map((asset) => (
           <div key={asset.id} className="card bg-base-100 shadow-sm hover:shadow-md transition-shadow">
             <div className="card-body p-4">

@@ -29,7 +29,7 @@ export default function MobileSidebar({ isOpen, setIsOpen, children }) {
               </button>
             </div>
           </div>
-          <div className="flex-1 overflow-y-auto p-4">
+          <div className="flex-1 overflow-y-auto p-4 pt-0">
             {children}
           </div>
         </div>
