@@ -57,9 +57,6 @@ const Footer = () => {
                     Support
                   </a>
                 )}
-                <Link href="/#hero" className="link link-hover">
-                  Waitlist
-                </Link>
                 {/* <Link href="/blog" className="link link-hover">
                   Blog
                 </Link> */}

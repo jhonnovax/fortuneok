@@ -59,7 +59,7 @@ const ButtonAccount = () => {
               </span>
             )}
 
-            {session?.user?.name || "Account"}
+            <span className="lowercase">{session?.user?.email || "Account"}</span>
 
             {isLoading ? (
               <span className="loading loading-spinner loading-xs"></span>

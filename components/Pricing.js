@@ -36,7 +36,7 @@ const Pricing = () => {
               )}
 
               <div className="relative flex flex-col h-full gap-5 lg:gap-8 z-10 bg-base-100 p-8 rounded-lg">
-                <div className="flex justify-between items-center gap-4">
+                <div className="flex justify-between items-center gap-4 sr-only">
                   <div>
                     <p className="text-lg lg:text-xl font-bold">{plan.name}</p>
                     {plan.description && (
@@ -95,7 +95,7 @@ const Pricing = () => {
                     <ButtonLead extraStyle="!max-w-none !w-full" />
                   )}
                   <p className="flex items-center justify-center gap-2 text-sm text-center text-base-content/80 font-medium relative">
-                    Pay once. Access forever.
+                    One-time payment. Access forever.
                   </p>
                 </div>
               </div>

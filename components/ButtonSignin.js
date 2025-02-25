@@ -42,7 +42,7 @@ const ButtonSignin = ({ text = "Get started", extraStyle }) => {
             {session.user?.name?.charAt(0) || session.user?.email?.charAt(0)}
           </span>
         )}
-        {session.user?.name || session.user?.email || "Account"}
+        <span className="lowercase">{session.user?.email || "Account"}</span>
       </Link>
     );
   }

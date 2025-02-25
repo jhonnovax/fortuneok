@@ -1,4 +1,4 @@
-import themes from "daisyui/src/theming/themes";
+import { daisyui } from "@/tailwind.config";
 
 const config = {
   // REQUIRED
@@ -31,9 +31,9 @@ const config = {
         // If you have an anchor price (i.e. $29) that you want to display crossed out, put it here. Otherwise, leave it empty
         priceAnchor: 99,
         features: [
-          { name: "Unlimited Investments" },
-          { name: "24-hour updates on crypto & stock updates" },
-          { name: 'Export your data to Excel/CSV' }
+          { name: "Stocks, ETFs, Funds, and Cryptos" },
+          { name: "Unlimited Holdings" },
+          { name: 'Excel Reports' }
         ],
       },
       {
@@ -48,10 +48,9 @@ const config = {
         price: 69,
         priceAnchor: 119,
         features: [
-          { name: "Unlimited Investments" },
-          { name: "Real-time cryptos and stocks updates" },
-          { name: "Track the history of your sold investments" },
-          { name: 'Seamless Excel/CSV Import & Export' }
+          { name: "Stocks, ETFs, Funds, and Cryptos" },
+          { name: "Unlimited Holdings" },
+          { name: 'Excel/PDF Reports' }
         ],
       },
     ],
@@ -72,10 +71,10 @@ const config = {
   },
   colors: {
     // REQUIRED — The DaisyUI theme to use (added to the main layout.js). Leave blank for default (light & dark mode). If you any other theme than light/dark, you need to add it in config.tailwind.js in daisyui.themes.
-    theme: "light",
+    theme: "system",
     // REQUIRED — This color will be reflected on the whole app outside of the document (loading bar, Chrome tabs, etc..). By default it takes the primary color from your DaisyUI theme (make sure to update your the theme name after "data-theme=")
     // OR you can just do this to use a custom color: main: "#f37055". HEX only.
-    main: themes["light"]["primary"],
+    main: daisyui.themes[0]["light"]["primary"],
   },
   auth: {
     // REQUIRED — the path to log in users. It's use to protect private routes (like /dashboard). It's used in apiClient (/libs/api.js) upon 401 errors from our API
