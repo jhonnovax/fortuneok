@@ -4,6 +4,7 @@ import ClientLayout from "@/components/LayoutClient";
 import config from "@/config";
 import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css";
 
 const font = Inter({ subsets: ["latin"] });
@@ -27,6 +28,7 @@ export default function RootLayout({ children }) {
 			className={font.className}
 		>
 			<Analytics />
+			<SpeedInsights />
 			<Script 
 				defer
 				data-website-id="67b4e06b026712ec6b42da7e"
