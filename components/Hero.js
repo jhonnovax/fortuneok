@@ -34,7 +34,7 @@ const Hero = () => {
         </div>
       </div>
       <div className="w-full flex justify-center">
-        <video className="w-full max-w-3xl rounded-lg shadow-lg" controls>
+        <video className="w-full max-w-3xl rounded-lg shadow-lg" controls preload="metadata">
           <source src="/teaser-video.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
