@@ -31,9 +31,9 @@ const config = {
         // If you have an anchor price (i.e. $29) that you want to display crossed out, put it here. Otherwise, leave it empty
         priceAnchor: 99,
         features: [
-          { name: "Stocks, ETFs, Funds, and Cryptos" },
+          { name: "Stocks, ETFs, Funds, Cryptos" },
           { name: "Unlimited Holdings" },
-          { name: 'Excel Reports' }
+          { name: '1 Currency' }
         ],
       },
       {
@@ -48,9 +48,9 @@ const config = {
         price: 69,
         priceAnchor: 119,
         features: [
-          { name: "Stocks, ETFs, Funds, and Cryptos" },
+          { name: "Stocks, ETFs, Funds, Cryptos" },
           { name: "Unlimited Holdings" },
-          { name: 'Excel/PDF Reports' }
+          { name: 'Unlimited Currencies' }
         ],
       },
     ],
