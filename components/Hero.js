@@ -6,11 +6,12 @@ import config from "@/config";
 
 const Hero = () => {
   return (
-    <section className="max-w-7xl mx-auto bg-base-100 flex flex-col items-center justify-center gap-16 lg:gap-20 px-8 py-8 lg:py-20">
-      <h1 className="font-extrabold text-4xl lg:text-6xl tracking-tight md:-mb-4">
+    <section className="max-w-7xl mx-auto bg-base-100 px-8 py-16 lg:py-24 text-center">
+      <h1 className="font-extrabold text-4xl lg:text-6xl tracking-tight mb-6 md:mb-8">
         Grow and Simplify your Investments
       </h1>
-      <div className="text-lg leading-relaxed">
+
+      <div className="text-lg leading-relaxed mb-6 md:mb-8">
         <p>{config.appDescription}</p>
         <div className="mx-auto max-w-sm text-left pt-4">
           {/* <button className="btn btn-primary btn-wide">
@@ -33,6 +34,7 @@ const Hero = () => {
           </Link>
         </div>
       </div>
+
       <div className="w-full flex justify-center">
         <video className="w-full max-w-3xl rounded-lg shadow-lg" controls preload="metadata">
           <source src="/teaser-video.mp4" type="video/mp4" />
