@@ -17,7 +17,7 @@ const Hero = () => {
             Get {config.appName}
           </button> */}
           <Link href="/#pricing" className="btn btn-primary btn-block">
-            Grow Your Wealth Now
+            Start Now
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
