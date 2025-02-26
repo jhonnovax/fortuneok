@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 // It's a server compoment which means you can fetch data (like the user profile) before the page is rendered.
 // See https://shipfa.st/docs/tutorials/private-page
 export default function Dashboard() {
-  const [timeframe, setTimeframe] = useState('1month');
+  const [timeframe, setTimeframe] = useState('all');
   const [activeTab, setActiveTab] = useState('performance');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
@@ -21,7 +21,7 @@ export default function Dashboard() {
     total: 11251.45,
     profit: 80.45,
     profitPercentage: 0.72,
-    period: 'all time'
+    period: 'all'
   };
 
   const handleSaveInvestment = (formData, saveAndAdd) => {
