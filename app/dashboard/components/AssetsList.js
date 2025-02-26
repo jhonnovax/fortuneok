@@ -46,10 +46,36 @@ export default function AssetsList() {
   const allChecked = assets.every(asset => asset.checked);
   const selectedCount = assets.filter(asset => asset.checked).length;
 
+  const renderChangeIndicator = (changePercent) => {
+    const value = parseFloat(changePercent.replace('%', ''));
+    const isPositive = value > 0;
+    const isNegative = value < 0;
+    
+    return (
+      <div className={`rounded-lg px-3 py-1 text-sm font-medium inline-flex items-center gap-1
+        ${isPositive ? 'bg-success/20 text-success' : ''}
+        ${isNegative ? 'bg-error/20 text-error' : ''}
+        ${!isPositive && !isNegative ? 'bg-base-200 text-base-content' : ''}
+      `}>
+        {isPositive && (
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+            <path fillRule="evenodd" d="M10 17a.75.75 0 01-.75-.75V5.612L5.29 9.77a.75.75 0 01-1.08-1.04l5.25-5.5a.75.75 0 011.08 0l5.25 5.5a.75.75 0 11-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0110 17z" clipRule="evenodd" />
+          </svg>
+        )}
+        {isNegative && (
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+            <path fillRule="evenodd" d="M10 3a.75.75 0 01.75.75v10.638l3.96-4.158a.75.75 0 111.08 1.04l-5.25 5.5a.75.75 0 01-1.08 0l-5.25-5.5a.75.75 0 111.08-1.04l3.96 4.158V3.75A.75.75 0 0110 3z" clipRule="evenodd" />
+          </svg>
+        )}
+        {changePercent}
+      </div>
+    );
+  };
+
   return (
-    <div className="space-y-4">
+    <div className="">
       {/* Sticky Select All Toggle */}
-      <div className="sticky top-0 bg-base-100 py-2 -mt-4 -mx-4 px-6 border-b border-base-content/10 z-10">
+      <div className="sticky top-0 bg-base-100 py-2 -mx-4 px-6 border-b border-base-content/10 z-10">
         <label className="cursor-pointer flex items-center gap-2">
           <input
             type="checkbox"
@@ -73,10 +99,10 @@ export default function AssetsList() {
       </div>
 
       {/* Assets List */}
-      <div className="space-y-2 pt-2">
+      <div className="divide-y divide-base-content/10">
         {assets.map((asset) => (
-          <div key={asset.id} className="card bg-base-100 shadow-sm hover:shadow-md transition-shadow">
-            <div className="card-body p-4">
+          <div key={asset.id} className="hover:bg-base-200/50 transition-colors">
+            <div className="p-4">
               <div className="flex items-center gap-3">
                 <input
                   type="checkbox"
@@ -91,14 +117,9 @@ export default function AssetsList() {
                       <p className="text-sm opacity-70">{asset.shares}</p>
                     </div>
                     <div className="flex items-center gap-4">
-                      <div className="text-right">
+                      <div className="text-right flex flex-col items-end">
                         <p className="font-bold">{asset.value}</p>
-                        <p className={`text-sm ${
-                          asset.change.startsWith('+') ? 'text-success' : 
-                          asset.change.startsWith('-') ? 'text-error' : ''
-                        }`}>
-                          {asset.change} ({asset.changePercent})
-                        </p>
+                        {renderChangeIndicator(asset.changePercent)}
                       </div>
                       {/* Popover */}
                       <div className="dropdown dropdown-end">
