@@ -42,7 +42,7 @@ export default function Dashboard() {
           className="btn btn-primary"
           onClick={() => setIsAddModalOpen(true)}
         >
-          Add Investment
+          Add Transaction
         </button>
       </div>
 

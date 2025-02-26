@@ -98,7 +98,7 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
   return (
     <dialog className={`modal ${isOpen ? 'modal-open' : ''}`}>
       <div className="modal-box max-w-2xl">
-        <h3 className="font-bold text-lg mb-6">Add Investment</h3>
+        <h3 className="font-bold text-lg mb-6">Add Transaction</h3>
         
         <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
           {/* Category & Description Row */}
