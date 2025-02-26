@@ -1,21 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const CATEGORIES = [
-  { value: 'real_estate', label: 'Real Estate' },
-  { value: 'savings_account', label: 'Savings Account' },
-  { value: 'checking_account', label: 'Checking Account' },
-  { value: 'precious_metals', label: 'Precious Metals' },
-  { value: 'cash', label: 'Cash' },
-  { value: 'loans', label: 'Loans' },
-  { value: 'stocks', label: 'Stocks' },
-  { value: 'bonds', label: 'Bonds' },
-  { value: 'cryptocurrencies', label: 'Cryptocurrencies' },
-  { value: 'etfs_funds', label: 'ETFs/Funds' },
-  { value: 'options', label: 'Options' },
-  { value: 'futures', label: 'Futures' },
-  { value: 'other', label: 'Other' },
+  { value: 'stocks', label: '📈 Stocks' },
+  { value: 'etf', label: '📊 ETF' },
+  { value: 'crypto', label: '₿ Crypto' },
+  { value: 'bonds', label: '📋 Bonds' },
+  { value: 'savings', label: '🏦 Savings' },
+  { value: 'commodities', label: '🪙 Commodities' },
+  { value: 'real_estate', label: '🏠 Real Estate' },
+  { value: 'p2p', label: '🤝 P2P Lending' },
+  { value: 'startups', label: '🚀 Startups' },
+  { value: 'other', label: '💼 Other' }
 ];
 
 const TRADEABLE_CATEGORIES = [
@@ -26,21 +23,30 @@ const INTEREST_RATE_CATEGORIES = [
   'real_estate', 'savings_account', 'checking_account', 'precious_metals', 'cash', 'loans'
 ];
 
-export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
-  const [form, setForm] = useState({
-    category: '',
-    description: '',
-    date: '',
-    operation: 'buy',
-    symbol: '',
-    shares: '',
-    currency: 'USD',
-    price: '',
-    annualInterestRate: '',
-    notes: ''
-  });
+const INITIAL_FORM_STATE = {
+  category: '',
+  description: '',
+  date: '',
+  operation: '',
+  symbol: '',
+  shares: '',
+  currency: '',
+  price: '',
+  annualInterestRate: '',
+  notes: ''
+};
 
+export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
+  const [form, setForm] = useState(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState({});
+
+  // Reset form when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setForm(INITIAL_FORM_STATE);
+      setErrors({});
+    }
+  }, [isOpen]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -104,7 +110,7 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
                 value={form.category}
                 onChange={(e) => setForm({ ...form, category: e.target.value })}
               >
-                <option value="">Select category</option>
+                <option value="">🔍 Select...</option>
                 {CATEGORIES.map(cat => (
                   <option key={cat.value} value={cat.value}>{cat.label}</option>
                 ))}
@@ -144,6 +150,7 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
                 value={form.operation}
                 onChange={(e) => setForm({ ...form, operation: e.target.value })}
               >
+                <option value="">Select...</option>
                 <option value="buy">Buy</option>
                 <option value="sell">Sell</option>
               </select>
@@ -186,6 +193,7 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
                 value={form.currency}
                 onChange={(e) => setForm({ ...form, currency: e.target.value })}
               >
+                <option value="">Select...</option>
                 <option value="USD">USD</option>
                 <option value="EUR">EUR</option>
                 <option value="GBP">GBP</option>
