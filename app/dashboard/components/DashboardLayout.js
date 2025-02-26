@@ -16,7 +16,7 @@ export default function DashboardLayout({ children }) {
   return (
     <div className="min-h-screen flex flex-col bg-base-200">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 h-16 bg-base-100 border-b z-50">
+      <nav className="fixed top-0 left-0 right-0 h-16 bg-base-100 border-b border-base-content/10 z-50">
         <div className="h-full px-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <Image

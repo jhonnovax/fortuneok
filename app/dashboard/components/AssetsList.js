@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import DeleteAssetModal from './DeleteAssetModal';
 
 export default function AssetsList() {
   const [assets, setAssets] = useState([
@@ -21,6 +22,11 @@ export default function AssetsList() {
     { id: 15, type: 'Stock', symbol: 'NVDA', name: 'NVIDIA Corporation', shares: '18.3', value: '$9,168.45', change: '+$312.45', changePercent: '+3.53%', checked: false },
   ]);
 
+  const [deleteModal, setDeleteModal] = useState({
+    isOpen: false,
+    assetId: null
+  });
+
   const toggleAll = (checked) => {
     setAssets(assets.map(asset => ({ ...asset, checked })));
   };
@@ -31,13 +37,19 @@ export default function AssetsList() {
     ));
   };
 
+  const handleDeleteAsset = () => {
+    if (deleteModal.assetId) {
+      setAssets(assets.filter(asset => asset.id !== deleteModal.assetId));
+    }
+  };
+
   const allChecked = assets.every(asset => asset.checked);
   const selectedCount = assets.filter(asset => asset.checked).length;
 
   return (
     <div className="space-y-4">
       {/* Sticky Select All Toggle */}
-      <div className="sticky top-0 bg-base-100 py-2 -mt-4 -mx-4 px-6 border-b z-10">
+      <div className="sticky top-0 bg-base-100 py-2 -mt-4 -mx-4 px-6 border-b border-base-content/10 z-10">
         <label className="cursor-pointer flex items-center gap-2">
           <input
             type="checkbox"
@@ -78,14 +90,45 @@ export default function AssetsList() {
                       <h3 className="font-bold">{asset.symbol}</h3>
                       <p className="text-sm opacity-70">{asset.shares}</p>
                     </div>
-                    <div className="text-right">
-                      <p className="font-bold">{asset.value}</p>
-                      <p className={`text-sm ${
-                        asset.change.startsWith('+') ? 'text-success' : 
-                        asset.change.startsWith('-') ? 'text-error' : ''
-                      }`}>
-                        {asset.change} ({asset.changePercent})
-                      </p>
+                    <div className="flex items-center gap-4">
+                      <div className="text-right">
+                        <p className="font-bold">{asset.value}</p>
+                        <p className={`text-sm ${
+                          asset.change.startsWith('+') ? 'text-success' : 
+                          asset.change.startsWith('-') ? 'text-error' : ''
+                        }`}>
+                          {asset.change} ({asset.changePercent})
+                        </p>
+                      </div>
+                      {/* Popover */}
+                      <div className="dropdown dropdown-end">
+                        <label 
+                          tabIndex={0} 
+                          className="btn btn-ghost btn-sm btn-circle"
+                        >
+                          <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            viewBox="0 0 24 24" 
+                            fill="currentColor" 
+                            className="w-5 h-5"
+                          >
+                            <path d="M12 8.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zM12 14.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zM12 20.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" />
+                          </svg>
+                        </label>
+                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52">
+                          <li><a>View Details</a></li>
+                          <li><a>Edit Asset</a></li>
+                          <li><a>Transaction History</a></li>
+                          <li>
+                            <a 
+                              className="text-error"
+                              onClick={() => setDeleteModal({ isOpen: true, assetId: asset.id })}
+                            >
+                              Remove Asset
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -94,6 +137,14 @@ export default function AssetsList() {
           </div>
         ))}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <DeleteAssetModal
+        isOpen={deleteModal.isOpen}
+        onClose={() => setDeleteModal({ isOpen: false, assetId: null })}
+        onConfirm={handleDeleteAsset}
+        assetSymbol={assets.find(a => a.id === deleteModal.assetId)?.symbol}
+      />
     </div>
   );
 } 

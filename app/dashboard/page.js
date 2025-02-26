@@ -4,6 +4,7 @@ import { useState } from 'react';
 import TimeframeToggle from './components/TimeframeToggle';
 import PerformanceChart from './components/PerformanceChart';
 import AllocationChart from './components/AllocationChart';
+import AddInvestmentModal from './components/AddInvestmentModal';
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +14,7 @@ export const dynamic = "force-dynamic";
 export default function Dashboard() {
   const [timeframe, setTimeframe] = useState('1month');
   const [activeTab, setActiveTab] = useState('performance');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   // Sample data - replace with real data
   const portfolioSummary = {
@@ -22,6 +24,11 @@ export default function Dashboard() {
     period: 'all time'
   };
 
+  const handleSaveInvestment = (formData, saveAndAdd) => {
+    console.log('Saving investment:', formData);
+    // Implement your save logic here
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col items-center">
@@ -29,8 +36,18 @@ export default function Dashboard() {
         <TimeframeToggle selected={timeframe} onSelect={setTimeframe} />
       </div>
 
-      {/* Custom styled tabs */}
-      <div className="border-b border-gray-200">
+      {/* Add Investment Button */}
+      <div className="flex justify-end">
+        <button 
+          className="btn btn-primary"
+          onClick={() => setIsAddModalOpen(true)}
+        >
+          Add Investment
+        </button>
+      </div>
+
+      {/* Custom styled tabs - removed border-b */}
+      <div>
         <div className="flex gap-8">
           <button 
             className={`pb-4 px-1 relative ${
@@ -96,6 +113,13 @@ export default function Dashboard() {
           {activeTab === 'allocation' && <AllocationChart />}
         </div>
       </div>
+
+      {/* Add Investment Modal */}
+      <AddInvestmentModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSave={handleSaveInvestment}
+      />
     </div>
   );
 }

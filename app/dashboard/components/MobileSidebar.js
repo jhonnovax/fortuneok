@@ -12,11 +12,11 @@ export default function MobileSidebar({ isOpen, setIsOpen, children }) {
       />
 
       {/* Drawer */}
-      <div className={`fixed inset-y-0 right-0 w-96 bg-base-100 transform transition-transform duration-300 ease-in-out z-[70] ${
+      <div className={`fixed inset-y-0 right-0 w-96 bg-base-100 transform transition-transform duration-300 ease-in-out z-[70] border-l border-base-content/10 ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}>
         <div className="flex flex-col h-full">
-          <div className="p-4 border-b bg-base-100">
+          <div className="p-4 border-b border-base-content/10 bg-base-100">
             <div className="flex items-center justify-between">
               <h2 className="font-semibold">My Assets</h2>
               <button 
