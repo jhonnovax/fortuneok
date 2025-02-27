@@ -13,7 +13,7 @@ export default function RightSidebar({ children }) {
           </h2>
         </div>
         <div className="flex-1 overflow-y-auto">
-          <div className="p-4">
+          <div className="p-4 pt-0">
             {children}
           </div>
         </div>
