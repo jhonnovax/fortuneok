@@ -1,6 +1,23 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createInvestment, addTransaction } from '../services/investmentService';
+
+// Map UI categories to API categories
+const CATEGORY_MAPPING = {
+  'stocks': 'Stock',
+  'bonds': 'Bond',
+  'cryptocurrencies': 'Crypto',
+  'etf_funds': 'ETF',
+  'real_estate': 'Real Estate',
+  'cash': 'Cash',
+  'savings_account': 'Cash',
+  'precious_metals': 'Other',
+  'p2p_loans': 'Other',
+  'option': 'Other',
+  'futures': 'Other',
+  'other_custom_assets': 'Other'
+};
 
 const CATEGORIES = [
   { value: 'real_estate', label: '🏠 Real Estate' },
@@ -46,12 +63,16 @@ const TRADING_CATEGORIES = [
 export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
   const [form, setForm] = useState(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
   // Reset form when modal opens
   useEffect(() => {
     if (isOpen) {
       setForm(INITIAL_FORM_STATE);
       setErrors({});
+      setSubmitError(null);
+      setIsSubmitting(false);
     }
   }, [isOpen]);
 
@@ -77,13 +98,23 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
     
     // Required field validation
     if (!form.category) newErrors.category = 'Category is required';
-    if (!form.description) newErrors.description = 'Description is required';
     if (!form.date) newErrors.date = 'Date is required';
     if (!form.operation) newErrors.operation = 'Operation is required';
-    if (!form.symbol) newErrors.symbol = 'Symbol is required';
-    if (!form.shares) newErrors.shares = 'Shares is required';
     if (!form.currency) newErrors.currency = 'Currency is required';
     if (!form.price) newErrors.price = 'Price is required';
+    
+    // Conditional required fields
+    if (showDescription && !form.description) {
+      newErrors.description = 'Description is required';
+    }
+    
+    if (showSymbol && !form.symbol) {
+      newErrors.symbol = 'Symbol is required';
+    }
+    
+    if (showShares && !form.shares) {
+      newErrors.shares = 'Shares is required';
+    }
     
     // Number validation
     if (form.shares && isNaN(Number(form.shares))) {
@@ -100,10 +131,66 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
-    if (validateForm()) {
-      onSave(form);
-      onClose();
+  const handleSubmit = async (saveAndAdd = false) => {
+    if (!validateForm()) return;
+    
+    setIsSubmitting(true);
+    setSubmitError(null);
+    
+    try {
+      // Map UI category to API category
+      const apiCategory = CATEGORY_MAPPING[form.category] || 'Other';
+      
+      // Prepare investment data
+      const investmentData = {
+        category: apiCategory,
+        description: form.description || form.symbol,
+        symbol: form.symbol || null,
+        annualInterestRate: form.annualInterestRate ? Number(form.annualInterestRate) : 0
+      };
+      
+      // Create the investment
+      const newInvestment = await createInvestment(investmentData);
+      
+      // Prepare transaction data
+      const transactionData = {
+        date: new Date(form.date).toISOString(),
+        operation: form.operation,
+        currency: form.currency,
+        shares: showShares ? Number(form.shares) : null,
+        pricePerUnit: Number(form.price),
+        note: form.notes || ''
+      };
+      
+      // Add the transaction to the investment
+      await addTransaction(newInvestment.id, transactionData);
+      
+      // Call the onSave callback with the form data
+      if (onSave) {
+        onSave({
+          ...investmentData,
+          transaction: transactionData
+        }, saveAndAdd);
+      }
+      
+      // Close the modal if not saving and adding another
+      if (!saveAndAdd) {
+        onClose();
+      } else {
+        // Reset form for adding another transaction
+        setForm({
+          ...INITIAL_FORM_STATE,
+          category: form.category, // Keep the same category
+          description: form.description, // Keep the same description
+          symbol: form.symbol, // Keep the same symbol
+          annualInterestRate: form.annualInterestRate // Keep the same interest rate
+        });
+      }
+    } catch (error) {
+      console.error('Error saving investment:', error);
+      setSubmitError('Failed to save investment. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -128,6 +215,7 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
         <button 
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
           onClick={onClose}
+          disabled={isSubmitting}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -135,6 +223,13 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
         </button>
 
         <h3 className="font-bold text-lg mb-6">Add Transaction</h3>
+        
+        {submitError && (
+          <div className="alert alert-error mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <span>{submitError}</span>
+          </div>
+        )}
         
         <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -145,6 +240,7 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
                 className={`select select-bordered w-full ${errors.category ? 'select-error' : ''}`}
                 value={form.category}
                 onChange={(e) => setForm({ ...form, category: e.target.value })}
+                disabled={isSubmitting}
               >
                 <option value="">Select category...</option>
                 {CATEGORIES.map(cat => (
@@ -164,6 +260,7 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
                   placeholder="Enter description"
+                  disabled={isSubmitting}
                 />
                 {errors.description && <span className="text-error text-sm mt-1">{errors.description}</span>}
               </div>
@@ -176,6 +273,7 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
                   value={form.symbol}
                   onChange={(e) => setForm({ ...form, symbol: e.target.value })}
                   placeholder="Enter symbol"
+                  disabled={isSubmitting}
                 />
                 {errors.symbol && <span className="text-error text-sm mt-1">{errors.symbol}</span>}
               </div>
@@ -189,6 +287,7 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
                 className={`input input-bordered w-full ${errors.date ? 'input-error' : ''}`}
                 value={form.date}
                 onChange={(e) => setForm({ ...form, date: e.target.value })}
+                disabled={isSubmitting}
               />
               {errors.date && <span className="text-error text-sm mt-1">{errors.date}</span>}
             </div>
@@ -200,10 +299,15 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
                 className={`select select-bordered w-full ${errors.operation ? 'select-error' : ''}`}
                 value={form.operation}
                 onChange={(e) => setForm({ ...form, operation: e.target.value })}
+                disabled={isSubmitting}
               >
                 <option value="">Select...</option>
                 <option value="buy">Buy</option>
                 <option value="sell">Sell</option>
+                <option value="dividend">Dividend</option>
+                <option value="interest">Interest</option>
+                <option value="deposit">Deposit</option>
+                <option value="withdrawal">Withdrawal</option>
               </select>
               {errors.operation && <span className="text-error text-sm mt-1">{errors.operation}</span>}
             </div>
@@ -215,6 +319,7 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
                 className={`select select-bordered w-full ${errors.currency ? 'select-error' : ''}`}
                 value={form.currency}
                 onChange={(e) => setForm({ ...form, currency: e.target.value })}
+                disabled={isSubmitting}
               >
                 <option value="">Select...</option>
                 <option value="USD">USD</option>
@@ -233,6 +338,7 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
                 className={`input input-bordered w-full ${errors.price ? 'input-error' : ''}`}
                 value={form.price}
                 onChange={(e) => setForm({ ...form, price: e.target.value })}
+                disabled={isSubmitting}
               />
               {errors.price && <span className="text-error text-sm mt-1">{errors.price}</span>}
             </div>
@@ -247,54 +353,81 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
                   className={`input input-bordered w-full ${errors.shares ? 'input-error' : ''}`}
                   value={form.shares}
                   onChange={(e) => setForm({ ...form, shares: e.target.value })}
+                  disabled={isSubmitting}
                 />
                 {errors.shares && <span className="text-error text-sm mt-1">{errors.shares}</span>}
               </div>
             )}
 
-            {/* Annual Interest Rate (shown for non-trading categories) */}
+            {/* Annual Interest Rate */}
             {!hideInterestRate && (
               <div className="form-control">
-                {renderLabel('Annual Interest Rate (%)')}
+                {renderLabel('Annual Interest Rate (%)', false)}
                 <input 
                   type="number"
                   step="any"
                   className={`input input-bordered w-full ${errors.annualInterestRate ? 'input-error' : ''}`}
                   value={form.annualInterestRate}
                   onChange={(e) => setForm({ ...form, annualInterestRate: e.target.value })}
+                  placeholder="0.00"
+                  disabled={isSubmitting}
                 />
                 {errors.annualInterestRate && <span className="text-error text-sm mt-1">{errors.annualInterestRate}</span>}
               </div>
             )}
+
+            {/* Notes */}
+            <div className="form-control md:col-span-2">
+              {renderLabel('Notes', false)}
+              <textarea 
+                className="textarea textarea-bordered w-full"
+                value={form.notes}
+                onChange={(e) => setForm({ ...form, notes: e.target.value })}
+                placeholder="Add any additional notes here..."
+                rows={3}
+                disabled={isSubmitting}
+              ></textarea>
+            </div>
           </div>
 
-          {/* Notes - Full width */}
-          <div className="form-control">
-            {renderLabel('Notes', false)}
-            <textarea 
-              className="textarea textarea-bordered h-24"
-              value={form.notes}
-              onChange={(e) => setForm({ ...form, notes: e.target.value })}
-            ></textarea>
+          {/* Action Buttons */}
+          <div className="flex justify-end gap-2 mt-6">
+            <button 
+              type="button" 
+              className="btn btn-outline"
+              onClick={onClose}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </button>
+            <button 
+              type="button" 
+              className="btn btn-outline btn-primary"
+              onClick={() => handleSubmit(true)}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <span className="loading loading-spinner loading-xs"></span>
+                  Saving...
+                </>
+              ) : 'Save & Add Another'}
+            </button>
+            <button 
+              type="button" 
+              className="btn btn-primary"
+              onClick={() => handleSubmit(false)}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <span className="loading loading-spinner loading-xs"></span>
+                  Saving...
+                </>
+              ) : 'Save'}
+            </button>
           </div>
         </form>
-
-        <div className="modal-action">
-          <button className="btn btn-ghost" onClick={onClose}>
-            Cancel
-          </button>
-          <button 
-            className="btn btn-primary"
-            onClick={handleSubmit}
-          >
-            Save
-          </button>
-        </div>
-      </div>
-
-      {/* Add modal backdrop click handler */}
-      <div className="modal-backdrop" onClick={onClose}>
-        <button className="cursor-default">Close</button>
       </div>
     </dialog>
   );
