@@ -5,47 +5,104 @@ import {
   Pie,
   Cell,
   ResponsiveContainer,
-  Label
 } from 'recharts';
 
 const data = [
-  { name: 'Stocks', value: 45000, percentage: 45 },
-  { name: 'ETFs', value: 25000, percentage: 25 },
-  { name: 'Crypto', value: 15000, percentage: 15 },
-  { name: 'Real Estate', value: 10000, percentage: 10 },
-  { name: 'Cash', value: 5000, percentage: 5 },
+  { name: 'Stocks', value: 45000 },
+  { name: 'ETFs', value: 25000 },
+  { name: 'Crypto', value: 15000 },
+  { name: 'Real Estate', value: 10000 },
+  { name: 'Cash', value: 5000 },
 ];
 
+// Calculate total for percentages
+const total = data.reduce((sum, item) => sum + item.value, 0);
+// Add percentage to each item
+const dataWithPercentage = data.map(item => ({
+  ...item,
+  percentage: ((item.value / total) * 100).toFixed(1)
+}));
+
 const COLORS = [
-  'hsl(var(--p))',
-  'hsl(var(--s))',
-  'hsl(var(--a))',
-  'hsl(var(--er))',
-  'hsl(var(--wa))',
+  '#006e00', // Primary green
+  '#4338ca', // Indigo
+  '#0891b2', // Cyan
+  '#c026d3', // Fuchsia
+  '#ea580c', // Orange
 ];
 
 const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, name, value, percentage }) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 1.4;
+
+// Render the percentage inside the slice
+const renderPercentageLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percentage }) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
-  const sin = Math.sin(-midAngle * RADIAN);
-  const cos = Math.cos(-midAngle * RADIAN);
-  const textAnchor = cos >= 0 ? 'start' : 'end';
-  const alignmentBaseline = sin >= 0 ? 'bottom' : 'top';
 
   return (
-    <text 
+    <text
       x={x}
       y={y}
-      textAnchor={textAnchor}
-      dominantBaseline={alignmentBaseline}
-      className="text-xs fill-base-content"
+      fill="white"
+      textAnchor="middle"
+      dominantBaseline="middle"
+      className="text-sm font-medium"
     >
-      <tspan x={x} dy="0" fontWeight="bold">{name}</tspan>
-      <tspan x={x} dy="15">${value.toLocaleString()}</tspan>
-      <tspan x={x} dy="15">{percentage}%</tspan>
+      {percentage}%
     </text>
+  );
+};
+
+// Render the external label with connecting line
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, name, value }) => {
+  // Calculate the point on the pie edge
+  const radius = outerRadius * 1.4; // Increase this value to push labels further out
+  
+  // Calculate end point for the label
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  
+  // Calculate the point where line starts (on the pie)
+  const startX = cx + (outerRadius * 0.95) * Math.cos(-midAngle * RADIAN);
+  const startY = cy + (outerRadius * 0.95) * Math.sin(-midAngle * RADIAN);
+
+  // Determine text anchor based on position
+  const textAnchor = x > cx ? 'start' : 'end';
+
+  return (
+    <g>
+      {/* Simple straight line */}
+      <line
+        x1={startX}
+        y1={startY}
+        x2={x}
+        y2={y}
+        stroke="hsl(var(--bc) / 0.5)"
+        strokeWidth="1"
+      />
+      
+      {/* Label text */}
+      <text
+        x={x}
+        y={y}
+        dy={-2}
+        textAnchor={textAnchor}
+        fill="currentColor"
+        className="text-sm"
+      >
+        <tspan fontWeight="bold">{name}</tspan>
+      </text>
+      <text
+        x={x}
+        y={y}
+        dy={16}
+        textAnchor={textAnchor}
+        fill="currentColor"
+        className="text-sm"
+      >
+        ${value.toLocaleString()}
+      </text>
+    </g>
   );
 };
 
@@ -55,17 +112,17 @@ export default function AllocationChart() {
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
-            data={data}
+            data={dataWithPercentage}
             cx="50%"
             cy="50%"
-            innerRadius={60}
-            outerRadius={90}
-            paddingAngle={2}
-            dataKey="value"
             labelLine={false}
-            label={renderCustomizedLabel}
+            label={renderPercentageLabel}
+            outerRadius={120}
+            innerRadius={60}
+            fill="#8884d8"
+            dataKey="value"
           >
-            {data.map((entry, index) => (
+            {dataWithPercentage.map((entry, index) => (
               <Cell 
                 key={`cell-${index}`} 
                 fill={COLORS[index % COLORS.length]}
@@ -74,6 +131,17 @@ export default function AllocationChart() {
               />
             ))}
           </Pie>
+          <Pie
+            data={dataWithPercentage}
+            cx="50%"
+            cy="50%"
+            labelLine={false}
+            label={renderCustomizedLabel}
+            outerRadius={120}
+            innerRadius={60}
+            fill="none"
+            dataKey="value"
+          />
         </PieChart>
       </ResponsiveContainer>
     </div>
