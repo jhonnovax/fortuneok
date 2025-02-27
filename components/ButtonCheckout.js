@@ -15,7 +15,6 @@ const ButtonCheckout = ({ priceId, mode = "payment" }) => {
 
   const handlePayment = async () => {
     setIsLoading(true);
-    window?.datafast("payment", { email: session.user?.email || 'anonymous' });
 
     try {
       const res = await apiClient.post("/stripe/create-checkout", {

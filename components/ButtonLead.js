@@ -16,7 +16,6 @@ const ButtonLead = ({ extraStyle }) => {
 
   const handleSubmit = async (e) => {
     e?.preventDefault();
-    window?.datafast("waitlist", { email: email });
 
     setIsLoading(true);
     try {

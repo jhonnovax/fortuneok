@@ -17,7 +17,6 @@ const ButtonSignin = ({ text = "Get started", extraStyle }) => {
     if (status === "authenticated") {
       router.push(config.auth.callbackUrl);
     } else {
-      window?.datafast("signup", { email: "anonymous" });
       signIn(undefined, { callbackUrl: config.auth.callbackUrl });
     }
   };
