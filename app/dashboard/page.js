@@ -31,7 +31,7 @@ export default function Dashboard() {
   };
 
   // Helper function to mask value
-  const maskValue = (value) => '$ • • • • • • •';
+  const maskValue = () => '$ • • • • • • ';
 
   return (
     <div className="space-y-6">
@@ -125,10 +125,14 @@ export default function Dashboard() {
                       `${portfolioSummary.profit >= 0 ? '+' : ''}$${Math.abs(portfolioSummary.profit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
                     ) : '$ • • •'}
                   </span>
-                  <span className={`font-medium ${portfolioSummary.profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    ({portfolioSummary.profit >= 0 ? '+' : ''}{portfolioSummary.profitPercentage}%)
-                  </span>
-                  <span className="text-gray-500">{portfolioSummary.period}</span>
+                  {isValueVisible &&
+                    <>
+                      <span className={`font-medium ${portfolioSummary.profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        ({portfolioSummary.profit >= 0 ? '+' : ''}{portfolioSummary.profitPercentage}%)
+                      </span>
+                      <span className="text-gray-500">{portfolioSummary.period}</span>
+                    </>
+                  }
                 </div>
               </div>
               
