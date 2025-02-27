@@ -40,18 +40,8 @@ export default function Dashboard() {
         <TimeframeToggle selected={timeframe} onSelect={setTimeframe} />
       </div>
 
-      {/* Add Investment Button */}
-      <div className="flex justify-end">
-        <button 
-          className="btn btn-primary"
-          onClick={() => setIsAddModalOpen(true)}
-        >
-          Add Transaction
-        </button>
-      </div>
-
-      {/* Custom styled tabs - removed border-b */}
-      <div>
+      {/* Tabs and Add Transaction button in same row */}
+      <div className="flex justify-between items-center">
         <div className="flex gap-8">
           <button 
             className={`pb-4 px-1 relative ${
@@ -80,6 +70,14 @@ export default function Dashboard() {
             )}
           </button>
         </div>
+
+        {/* Add Transaction Button */}
+        <button 
+          className="btn btn-primary"
+          onClick={() => setIsAddModalOpen(true)}
+        >
+          Add Transaction
+        </button>
       </div>
 
       <div className="card bg-base-100 shadow-xl">
