@@ -38,7 +38,7 @@ export default function DashboardLayout({ children }) {
 
       {/* Main content */}
       <div className="flex pt-16 min-h-screen">
-        <main className="flex-1 lg:mr-96 p-6">
+        <main className="flex-1 lg:mr-[420px] p-6">
           {children}
         </main>
 
