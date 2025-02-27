@@ -21,28 +21,6 @@ const TRADEABLE_CATEGORIES = [
   'stocks', 'bonds', 'cryptocurrencies', 'etf_funds', 'option', 'futures'
 ];
 
-const INTEREST_RATE_CATEGORIES = [
-  'real_estate', 'savings_account', 'p2p_loans'
-];
-
-const SYMBOL_CATEGORIES = [
-  'stocks', 
-  'bonds', 
-  'cryptocurrencies', 
-  'etf_funds', 
-  'option', 
-  'futures'
-];
-
-const DESCRIPTION_CATEGORIES = [
-  'real_estate',
-  'savings_account',
-  'precious_metals',
-  'cash',
-  'p2p_loans',
-  'other_custom_assets'
-];
-
 const INITIAL_FORM_STATE = {
   category: '',
   description: '',
@@ -76,6 +54,23 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
       setErrors({});
     }
   }, [isOpen]);
+
+  // Add escape key handler
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      window.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleEscape);
+    };
+  }, [isOpen, onClose]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -128,7 +123,17 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
 
   return (
     <dialog className={`modal ${isOpen ? 'modal-open' : ''}`}>
-      <div className="modal-box max-w-2xl">
+      <div className="modal-box max-w-2xl relative">
+        {/* Close button */}
+        <button 
+          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+          onClick={onClose}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
         <h3 className="font-bold text-lg mb-6">Add Transaction</h3>
         
         <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
@@ -286,9 +291,11 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
           </button>
         </div>
       </div>
-      <form method="dialog" className="modal-backdrop" onClick={onClose}>
-        <button>close</button>
-      </form>
+
+      {/* Add modal backdrop click handler */}
+      <div className="modal-backdrop" onClick={onClose}>
+        <button className="cursor-default">Close</button>
+      </div>
     </dialog>
   );
 } 
