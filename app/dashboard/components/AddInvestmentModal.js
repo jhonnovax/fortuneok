@@ -3,24 +3,44 @@
 import { useState, useEffect } from 'react';
 
 const CATEGORIES = [
-  { value: 'stocks', label: '📈 Stocks' },
-  { value: 'etf', label: '📊 ETF' },
-  { value: 'crypto', label: '₿ Crypto' },
-  { value: 'bonds', label: '📋 Bonds' },
-  { value: 'savings', label: '🏦 Savings' },
-  { value: 'commodities', label: '🪙 Commodities' },
   { value: 'real_estate', label: '🏠 Real Estate' },
-  { value: 'p2p', label: '🤝 P2P Lending' },
-  { value: 'startups', label: '🚀 Startups' },
-  { value: 'other', label: '💼 Other' }
+  { value: 'savings_account', label: '🏦 Savings account' },
+  { value: 'precious_metals', label: '👑 Precious metals' },
+  { value: 'cash', label: '💵 Cash' },
+  { value: 'p2p_loans', label: '🤝 P2P loans' },
+  { value: 'stocks', label: '📈 Stocks' },
+  { value: 'bonds', label: '📈 Bonds' },
+  { value: 'cryptocurrencies', label: '📈 Cryptocurrencies' },
+  { value: 'etf_funds', label: '📈 ETF / Funds' },
+  { value: 'option', label: '📈 Option' },
+  { value: 'futures', label: '📈 Futures' },
+  { value: 'other_custom_assets', label: '🔷 Other custom assets' }
 ];
 
 const TRADEABLE_CATEGORIES = [
-  'stocks', 'bonds', 'cryptocurrencies', 'etfs_funds', 'options', 'futures'
+  'stocks', 'bonds', 'cryptocurrencies', 'etf_funds', 'option', 'futures'
 ];
 
 const INTEREST_RATE_CATEGORIES = [
-  'real_estate', 'savings_account', 'checking_account', 'precious_metals', 'cash', 'loans'
+  'real_estate', 'savings_account', 'p2p_loans'
+];
+
+const SYMBOL_CATEGORIES = [
+  'stocks', 
+  'bonds', 
+  'cryptocurrencies', 
+  'etf_funds', 
+  'option', 
+  'futures'
+];
+
+const DESCRIPTION_CATEGORIES = [
+  'real_estate',
+  'savings_account',
+  'precious_metals',
+  'cash',
+  'p2p_loans',
+  'other_custom_assets'
 ];
 
 const INITIAL_FORM_STATE = {
@@ -35,6 +55,15 @@ const INITIAL_FORM_STATE = {
   annualInterestRate: '',
   notes: ''
 };
+
+const TRADING_CATEGORIES = [
+  'stocks', 
+  'bonds', 
+  'cryptocurrencies', 
+  'etf_funds', 
+  'option', 
+  'futures'
+];
 
 export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
   const [form, setForm] = useState(INITIAL_FORM_STATE);
@@ -84,7 +113,9 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
   };
 
   const showShares = TRADEABLE_CATEGORIES.includes(form.category);
-  const showInterestRate = INTEREST_RATE_CATEGORIES.includes(form.category);
+  const showSymbol = TRADING_CATEGORIES.includes(form.category);
+  const showDescription = !TRADING_CATEGORIES.includes(form.category);
+  const hideInterestRate = TRADING_CATEGORIES.includes(form.category);
 
   // Helper function to render label with required asterisk
   const renderLabel = (text, required = true) => (
@@ -101,8 +132,8 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
         <h3 className="font-bold text-lg mb-6">Add Transaction</h3>
         
         <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-          {/* Category & Description Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Category */}
             <div className="form-control">
               {renderLabel('Category')}
               <select 
@@ -110,7 +141,7 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
                 value={form.category}
                 onChange={(e) => setForm({ ...form, category: e.target.value })}
               >
-                <option value="">🔍 Select...</option>
+                <option value="">Select category...</option>
                 {CATEGORIES.map(cat => (
                   <option key={cat.value} value={cat.value}>{cat.label}</option>
                 ))}
@@ -118,20 +149,34 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
               {errors.category && <span className="text-error text-sm mt-1">{errors.category}</span>}
             </div>
 
-            <div className="form-control">
-              {renderLabel('Description')}
-              <input 
-                type="text"
-                className={`input input-bordered w-full ${errors.description ? 'input-error' : ''}`}
-                value={form.description}
-                onChange={(e) => setForm({ ...form, description: e.target.value })}
-              />
-              {errors.description && <span className="text-error text-sm mt-1">{errors.description}</span>}
-            </div>
-          </div>
+            {/* Description or Symbol based on category */}
+            {showDescription ? (
+              <div className="form-control">
+                {renderLabel('Description')}
+                <input 
+                  type="text"
+                  className={`input input-bordered w-full ${errors.description ? 'input-error' : ''}`}
+                  value={form.description}
+                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  placeholder="Enter description"
+                />
+                {errors.description && <span className="text-error text-sm mt-1">{errors.description}</span>}
+              </div>
+            ) : (
+              <div className="form-control">
+                {renderLabel('Symbol')}
+                <input 
+                  type="text"
+                  className={`input input-bordered w-full ${errors.symbol ? 'input-error' : ''}`}
+                  value={form.symbol}
+                  onChange={(e) => setForm({ ...form, symbol: e.target.value })}
+                  placeholder="Enter symbol"
+                />
+                {errors.symbol && <span className="text-error text-sm mt-1">{errors.symbol}</span>}
+              </div>
+            )}
 
-          {/* Date & Operation Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Date - Moved before Operation */}
             <div className="form-control">
               {renderLabel('Date')}
               <input 
@@ -143,6 +188,7 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
               {errors.date && <span className="text-error text-sm mt-1">{errors.date}</span>}
             </div>
 
+            {/* Operation */}
             <div className="form-control">
               {renderLabel('Operation')}
               <select 
@@ -156,36 +202,8 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
               </select>
               {errors.operation && <span className="text-error text-sm mt-1">{errors.operation}</span>}
             </div>
-          </div>
 
-          {/* Symbol & Shares Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="form-control">
-              {renderLabel('Symbol')}
-              <input 
-                type="text"
-                className={`input input-bordered w-full ${errors.symbol ? 'input-error' : ''}`}
-                value={form.symbol}
-                onChange={(e) => setForm({ ...form, symbol: e.target.value })}
-              />
-              {errors.symbol && <span className="text-error text-sm mt-1">{errors.symbol}</span>}
-            </div>
-
-            <div className="form-control">
-              {renderLabel('Shares')}
-              <input 
-                type="number"
-                step="any"
-                className={`input input-bordered w-full ${errors.shares ? 'input-error' : ''}`}
-                value={form.shares}
-                onChange={(e) => setForm({ ...form, shares: e.target.value })}
-              />
-              {errors.shares && <span className="text-error text-sm mt-1">{errors.shares}</span>}
-            </div>
-          </div>
-
-          {/* Currency & Price Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Currency */}
             <div className="form-control">
               {renderLabel('Currency')}
               <select 
@@ -201,6 +219,7 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
               {errors.currency && <span className="text-error text-sm mt-1">{errors.currency}</span>}
             </div>
 
+            {/* Price */}
             <div className="form-control">
               {renderLabel('Price')}
               <input 
@@ -212,24 +231,39 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
               />
               {errors.price && <span className="text-error text-sm mt-1">{errors.price}</span>}
             </div>
+
+            {/* Shares */}
+            {showShares && (
+              <div className="form-control">
+                {renderLabel('Shares')}
+                <input 
+                  type="number"
+                  step="any"
+                  className={`input input-bordered w-full ${errors.shares ? 'input-error' : ''}`}
+                  value={form.shares}
+                  onChange={(e) => setForm({ ...form, shares: e.target.value })}
+                />
+                {errors.shares && <span className="text-error text-sm mt-1">{errors.shares}</span>}
+              </div>
+            )}
+
+            {/* Annual Interest Rate (shown for non-trading categories) */}
+            {!hideInterestRate && (
+              <div className="form-control">
+                {renderLabel('Annual Interest Rate (%)')}
+                <input 
+                  type="number"
+                  step="any"
+                  className={`input input-bordered w-full ${errors.annualInterestRate ? 'input-error' : ''}`}
+                  value={form.annualInterestRate}
+                  onChange={(e) => setForm({ ...form, annualInterestRate: e.target.value })}
+                />
+                {errors.annualInterestRate && <span className="text-error text-sm mt-1">{errors.annualInterestRate}</span>}
+              </div>
+            )}
           </div>
 
-          {/* Annual Interest Rate (if applicable) */}
-          {showInterestRate && (
-            <div className="form-control">
-              {renderLabel('Annual Interest Rate (%)')}
-              <input 
-                type="number"
-                step="any"
-                className={`input input-bordered w-full ${errors.annualInterestRate ? 'input-error' : ''}`}
-                value={form.annualInterestRate}
-                onChange={(e) => setForm({ ...form, annualInterestRate: e.target.value })}
-              />
-              {errors.annualInterestRate && <span className="text-error text-sm mt-1">{errors.annualInterestRate}</span>}
-            </div>
-          )}
-
-          {/* Notes */}
+          {/* Notes - Full width */}
           <div className="form-control">
             {renderLabel('Notes', false)}
             <textarea 
