@@ -1,0 +1,52 @@
+{
+  "rules": [
+    {
+      "description": "Ensure all components follow the design system using Tailwind CSS and DaisyUI.",
+      "pattern": "app/**/*.jsx",
+      "enforce": [
+        "Use DaisyUI components where possible",
+        "Ensure Tailwind utility classes are used for styling instead of inline styles"
+      ]
+    },
+    {
+      "description": "Authentication should be implemented with Auth.js and should support multiple providers.",
+      "pattern": "app/**/*.js",
+      "enforce": [
+        "Use Auth.js for authentication",
+        "Ensure OAuth providers like Google and GitHub are configured"
+      ]
+    },
+    {
+      "description": "Ensure data is securely stored and retrieved from MongoDB with proper indexes for performance.",
+      "pattern": "app/**/*.js",
+      "enforce": [
+        "Use indexes on frequently queried fields",
+        "Ensure secure storage of sensitive user data"
+      ]
+    },
+    {
+      "description": "Stripe should be used for handling payments and subscriptions.",
+      "pattern": "app/**/*.js",
+      "enforce": [
+        "Use Stripe SDK for payment processing",
+        "Ensure subscription management logic is in place"
+      ]
+    },
+    {
+      "description": "Follow best practices for Next.js API routes and server-side rendering where necessary.",
+      "pattern": "app/api/**/*.js",
+      "enforce": [
+        "Use middleware for authentication where necessary",
+        "Optimize API responses for performance"
+      ]
+    },
+    {
+      "description": "Ensure a clean and user-friendly UI with a focus on investment insights.",
+      "pattern": "app/**/*.jsx",
+      "enforce": [
+        "Keep UI elements minimal and well-structured",
+        "Ensure accessibility and responsiveness"
+      ]
+    }
+  ]
+}
