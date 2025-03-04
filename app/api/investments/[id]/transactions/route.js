@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
+import { getServerSession } from "next-auth/next";
 import mongoose from "mongoose";
 import connectMongo from "@/libs/mongoose";
 import Investment from "@/models/Investment";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/libs/next-auth";
 
 // Helper function to validate MongoDB ObjectId
 const isValidObjectId = (id) => {

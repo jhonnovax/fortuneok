@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import DeleteAssetModal from './DeleteAssetModal';
+import EditAssetModal from './EditAssetModal';
+import TransactionHistoryModal from './TransactionHistoryModal';
+import AddTransactionModal from './AddTransactionModal';
 import { getInvestments, deleteInvestment } from '../services/investmentService';
 
 export default function AssetsList() {
@@ -13,39 +16,58 @@ export default function AssetsList() {
     isOpen: false,
     assetId: null
   });
+  
+  const [editModal, setEditModal] = useState({
+    isOpen: false,
+    assetId: null
+  });
+  
+  const [transactionHistoryModal, setTransactionHistoryModal] = useState({
+    isOpen: false,
+    assetId: null,
+    assetName: '',
+    assetType: ''
+  });
+  
+  const [addTransactionModal, setAddTransactionModal] = useState({
+    isOpen: false,
+    assetId: null,
+    assetName: '',
+    assetType: ''
+  });
 
   // Fetch investments when component mounts
   useEffect(() => {
-    const fetchInvestments = async () => {
-      try {
-        setLoading(true);
-        const investments = await getInvestments();
-        
-        // Transform investments to match the UI format
-        const formattedAssets = investments.map(investment => ({
-          id: investment.id,
-          type: investment.category,
-          symbol: investment.symbol || 'N/A',
-          name: investment.description,
-          shares: calculateTotalShares(investment.transactions),
-          value: calculateTotalValue(investment.transactions),
-          change: '0.00', // This would need to be calculated based on historical data
-          changePercent: '0.00%', // This would need to be calculated based on historical data
-          checked: false,
-          rawData: investment // Keep the original data for reference
-        }));
-        
-        setAssets(formattedAssets);
-      } catch (err) {
-        console.error('Failed to fetch investments:', err);
-        setError('Failed to load investments. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchInvestments();
   }, []);
+  
+  const fetchInvestments = async () => {
+    try {
+      setLoading(true);
+      const investments = await getInvestments();
+      
+      // Transform investments to match the UI format
+      const formattedAssets = investments.map(investment => ({
+        id: investment.id,
+        type: investment.category,
+        symbol: investment.symbol || 'N/A',
+        name: investment.description,
+        shares: calculateTotalShares(investment.transactions),
+        value: calculateTotalValue(investment.transactions),
+        change: '0.00', // This would need to be calculated based on historical data
+        changePercent: '0.00%', // This would need to be calculated based on historical data
+        checked: false,
+        rawData: investment // Keep the original data for reference
+      }));
+      
+      setAssets(formattedAssets);
+    } catch (err) {
+      console.error('Failed to fetch investments:', err);
+      setError('Failed to load investments. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Helper function to calculate total shares from transactions
   const calculateTotalShares = (transactions) => {
@@ -102,6 +124,34 @@ export default function AssetsList() {
         // You might want to show an error message to the user here
       }
     }
+  };
+  
+  const handleEditAsset = (updatedAsset) => {
+    // Update the asset in the local state
+    setAssets(assets.map(asset => 
+      asset.id === editModal.assetId 
+        ? { 
+            ...asset, 
+            type: updatedAsset.category,
+            name: updatedAsset.description,
+            symbol: updatedAsset.symbol || 'N/A'
+          } 
+        : asset
+    ));
+    
+    // Close the modal
+    setEditModal({ isOpen: false, assetId: null });
+    
+    // Refresh the investments to get the latest data
+    fetchInvestments();
+  };
+  
+  const handleAddTransaction = () => {
+    // Refresh the investments to get the latest data
+    fetchInvestments();
+    
+    // Close the modal
+    setAddTransactionModal({ isOpen: false, assetId: null, assetName: '', assetType: '' });
   };
 
   const allChecked = assets.every(asset => asset.checked);
@@ -200,7 +250,7 @@ export default function AssetsList() {
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-bold">{asset.symbol}</h3>
+                      <h3 className="font-bold">{asset.name}</h3>
                       <p className="text-sm opacity-70">{asset.shares}</p>
                     </div>
                     <div className="flex items-center gap-4">
@@ -224,9 +274,40 @@ export default function AssetsList() {
                           </svg>
                         </label>
                         <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52">
-                          <li><a>View Details</a></li>
-                          <li><a>Edit Asset</a></li>
-                          <li><a>Transaction History</a></li>
+                          <li>
+                            <a 
+                              onClick={() => setEditModal({ 
+                                isOpen: true, 
+                                assetId: asset.id 
+                              })}
+                            >
+                              Edit Investment
+                            </a>
+                          </li>
+                          <li>
+                            <a 
+                              onClick={() => setAddTransactionModal({ 
+                                isOpen: true, 
+                                assetId: asset.id,
+                                assetName: asset.name,
+                                assetType: asset.type
+                              })}
+                            >
+                              Add Transaction
+                            </a>
+                          </li>
+                          <li>
+                            <a 
+                              onClick={() => setTransactionHistoryModal({ 
+                                isOpen: true, 
+                                assetId: asset.id,
+                                assetName: asset.name,
+                                assetType: asset.type
+                              })}
+                            >
+                              Transaction History
+                            </a>
+                          </li>
                           <li>
                             <a 
                               className="text-error"
@@ -252,6 +333,33 @@ export default function AssetsList() {
         onClose={() => setDeleteModal({ isOpen: false, assetId: null })}
         onConfirm={handleDeleteAsset}
         assetSymbol={assets.find(a => a.id === deleteModal.assetId)?.symbol}
+      />
+      
+      {/* Edit Asset Modal */}
+      <EditAssetModal
+        isOpen={editModal.isOpen}
+        onClose={() => setEditModal({ isOpen: false, assetId: null })}
+        onSave={handleEditAsset}
+        investmentId={editModal.assetId}
+      />
+      
+      {/* Transaction History Modal */}
+      <TransactionHistoryModal
+        isOpen={transactionHistoryModal.isOpen}
+        onClose={() => setTransactionHistoryModal({ isOpen: false, assetId: null, assetName: '', assetType: '' })}
+        investmentId={transactionHistoryModal.assetId}
+        investmentName={transactionHistoryModal.assetName}
+        investmentType={transactionHistoryModal.assetType}
+      />
+      
+      {/* Add Transaction Modal */}
+      <AddTransactionModal
+        isOpen={addTransactionModal.isOpen}
+        onClose={() => setAddTransactionModal({ isOpen: false, assetId: null, assetName: '', assetType: '' })}
+        onSave={handleAddTransaction}
+        investmentId={addTransactionModal.assetId}
+        investmentName={addTransactionModal.assetName}
+        investmentType={addTransactionModal.assetType}
       />
     </div>
   );

@@ -222,7 +222,7 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
           </svg>
         </button>
 
-        <h3 className="font-bold text-lg mb-6">Add Transaction</h3>
+        <h3 className="font-bold text-lg mb-6">Add Investment</h3>
         
         {submitError && (
           <div className="alert alert-error mb-4">
