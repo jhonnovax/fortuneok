@@ -96,7 +96,7 @@ const Pricing = () => {
                       <ButtonLead extraStyle="!max-w-none !w-full" />
                     )}
                     <p className="flex items-center justify-center gap-2 text-sm text-center text-base-content/80 font-medium relative">
-                      One-time payment. Access forever.
+                      One-time payment. Access for one year.
                     </p>
                   </div>
                 </div>
