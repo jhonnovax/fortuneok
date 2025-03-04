@@ -10,24 +10,13 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { useEffect, useState } from 'react';
+import { getInvestments } from '../services/investmentService';
 
-const data = [
-  { date: 'Jan', value: 4000, deposits: 3000 },
-  { date: 'Feb', value: 3000, deposits: 3000 },
-  { date: 'Mar', value: 5000, deposits: 3500 },
-  { date: 'Apr', value: 2780, deposits: 3500 },
-  { date: 'May', value: 1890, deposits: 3500 },
-  { date: 'Jun', value: 2390, deposits: 4000 },
-  { date: 'Jul', value: 3490, deposits: 4000 },
-  { date: 'Aug', value: 4000, deposits: 4000 },
-  { date: 'Sep', value: 3000, deposits: 4500 },
-  { date: 'Oct', value: 5000, deposits: 4500 },
-  { date: 'Nov', value: 2780, deposits: 4500 },
-  { date: 'Dec', value: 3890, deposits: 5000 },
-];
-
-export default function PerformanceChart() {
+export default function PerformanceChart({ timeframe = 'all' }) {
   const [theme, setTheme] = useState('light');
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
   useEffect(() => {
     // Check if dark theme is active
@@ -52,6 +41,126 @@ export default function PerformanceChart() {
     return () => observer.disconnect();
   }, []);
 
+  // Fetch investment data and calculate performance
+  useEffect(() => {
+    const fetchPerformanceData = async () => {
+      try {
+        setLoading(true);
+        const investments = await getInvestments();
+        
+        // Process investments to create performance data
+        const performanceData = processInvestmentsForPerformance(investments, timeframe);
+        setData(performanceData);
+      } catch (err) {
+        console.error('Failed to fetch performance data:', err);
+        setError('Failed to load performance data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPerformanceData();
+  }, [timeframe]);
+
+  // Process investments to create performance data
+  const processInvestmentsForPerformance = (investments, timeframe) => {
+    if (!investments || investments.length === 0) {
+      return [];
+    }
+
+    // Get all transactions from all investments
+    const allTransactions = investments.flatMap(investment => 
+      investment.transactions.map(transaction => ({
+        ...transaction,
+        date: new Date(transaction.date),
+        investmentCategory: investment.category
+      }))
+    );
+
+    // Sort transactions by date
+    allTransactions.sort((a, b) => a.date - b.date);
+
+    // Determine date range based on timeframe
+    const now = new Date();
+    let startDate = new Date(allTransactions[0]?.date || now);
+    
+    if (timeframe === '1m') {
+      startDate = new Date(now.setMonth(now.getMonth() - 1));
+    } else if (timeframe === '3m') {
+      startDate = new Date(now.setMonth(now.getMonth() - 3));
+    } else if (timeframe === '6m') {
+      startDate = new Date(now.setMonth(now.getMonth() - 6));
+    } else if (timeframe === '1y') {
+      startDate = new Date(now.setFullYear(now.getFullYear() - 1));
+    } else if (timeframe === 'ytd') {
+      startDate = new Date(now.getFullYear(), 0, 1); // January 1st of current year
+    }
+    // 'all' timeframe uses the earliest transaction date
+
+    // Group transactions by month
+    const monthlyData = {};
+    let runningDeposits = 0;
+    let runningValue = 0;
+
+    allTransactions.forEach(transaction => {
+      if (transaction.date < startDate) {
+        // For transactions before our timeframe, just update the running totals
+        if (['buy', 'deposit'].includes(transaction.operation)) {
+          runningDeposits += transaction.pricePerUnit * (transaction.shares || 1);
+          runningValue += transaction.pricePerUnit * (transaction.shares || 1);
+        } else if (['sell', 'withdrawal'].includes(transaction.operation)) {
+          runningDeposits -= transaction.pricePerUnit * (transaction.shares || 1);
+          runningValue -= transaction.pricePerUnit * (transaction.shares || 1);
+        } else if (['dividend', 'interest'].includes(transaction.operation)) {
+          runningValue += transaction.pricePerUnit;
+        }
+        return;
+      }
+
+      const monthYear = `${transaction.date.getFullYear()}-${transaction.date.getMonth() + 1}`;
+      
+      if (!monthlyData[monthYear]) {
+        monthlyData[monthYear] = {
+          date: `${transaction.date.toLocaleString('default', { month: 'short' })} ${transaction.date.getFullYear()}`,
+          deposits: runningDeposits,
+          value: runningValue,
+          timestamp: new Date(transaction.date.getFullYear(), transaction.date.getMonth(), 1).getTime()
+        };
+      }
+
+      // Update running totals based on transaction type
+      if (['buy', 'deposit'].includes(transaction.operation)) {
+        runningDeposits += transaction.pricePerUnit * (transaction.shares || 1);
+        runningValue += transaction.pricePerUnit * (transaction.shares || 1);
+      } else if (['sell', 'withdrawal'].includes(transaction.operation)) {
+        runningDeposits -= transaction.pricePerUnit * (transaction.shares || 1);
+        runningValue -= transaction.pricePerUnit * (transaction.shares || 1);
+      } else if (['dividend', 'interest'].includes(transaction.operation)) {
+        runningValue += transaction.pricePerUnit;
+      }
+
+      // Update the monthly data
+      monthlyData[monthYear].deposits = runningDeposits;
+      monthlyData[monthYear].value = runningValue;
+    });
+
+    // Convert to array and sort by date
+    const result = Object.values(monthlyData).sort((a, b) => a.timestamp - b.timestamp);
+    
+    // Add current month if not present
+    const currentMonthYear = `${now.getFullYear()}-${now.getMonth() + 1}`;
+    if (!monthlyData[currentMonthYear] && result.length > 0) {
+      result.push({
+        date: `${now.toLocaleString('default', { month: 'short' })} ${now.getFullYear()}`,
+        deposits: result[result.length - 1].deposits,
+        value: result[result.length - 1].value,
+        timestamp: now.getTime()
+      });
+    }
+
+    return result;
+  };
+
   const formatValue = (value) => `$${value.toLocaleString()}`;
   
   // Theme-specific colors
@@ -59,6 +168,37 @@ export default function PerformanceChart() {
     primary: theme === 'dark' ? '#009b00' : '#006e00',
     deposits: theme === 'dark' ? '#ffd700' : '#b8860b', // Brighter yellow for dark theme, darker for light
   };
+
+  if (loading) {
+    return (
+      <div className="w-full h-[300px] flex items-center justify-center">
+        <span className="loading loading-spinner loading-lg text-primary"></span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full h-[300px] flex items-center justify-center">
+        <div className="text-error text-center">
+          <p>{error}</p>
+          <button className="btn btn-sm btn-outline mt-2" onClick={() => window.location.reload()}>
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (data.length === 0) {
+    return (
+      <div className="w-full h-[300px] flex items-center justify-center">
+        <p className="text-center text-gray-500">
+          No performance data available. Add investments to see your portfolio performance.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-[300px]">

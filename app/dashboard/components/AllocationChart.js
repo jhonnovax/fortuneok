@@ -5,23 +5,10 @@ import {
   Pie,
   Cell,
   ResponsiveContainer,
+  Legend,
 } from 'recharts';
-
-const data = [
-  { name: 'Stocks', value: 45000 },
-  { name: 'ETFs', value: 25000 },
-  { name: 'Crypto', value: 15000 },
-  { name: 'Real Estate', value: 10000 },
-  { name: 'Cash', value: 5000 },
-];
-
-// Calculate total for percentages
-const total = data.reduce((sum, item) => sum + item.value, 0);
-// Add percentage to each item
-const dataWithPercentage = data.map(item => ({
-  ...item,
-  percentage: ((item.value / total) * 100).toFixed(1)
-}));
+import { useState, useEffect } from 'react';
+import { getInvestments } from '../services/investmentService';
 
 const COLORS = [
   '#006e00', // Primary green
@@ -29,6 +16,11 @@ const COLORS = [
   '#0891b2', // Cyan
   '#c026d3', // Fuchsia
   '#ea580c', // Orange
+  '#0369a1', // Blue
+  '#15803d', // Green
+  '#b91c1c', // Red
+  '#7e22ce', // Purple
+  '#ca8a04', // Yellow
 ];
 
 const RADIAN = Math.PI / 180;
@@ -107,43 +99,291 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, nam
 };
 
 export default function AllocationChart() {
+  const [categoryData, setCategoryData] = useState([]);
+  const [categoryDataWithPercentage, setCategoryDataWithPercentage] = useState([]);
+  const [assetData, setAssetData] = useState([]);
+  const [assetDataWithPercentage, setAssetDataWithPercentage] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchAllocationData = async () => {
+      try {
+        setLoading(true);
+        const investments = await getInvestments();
+        
+        // Process investments to create category allocation data
+        const categoryAllocationData = processInvestmentsForCategoryAllocation(investments);
+        setCategoryData(categoryAllocationData);
+        
+        // Calculate total for percentages
+        const categoryTotal = categoryAllocationData.reduce((sum, item) => sum + item.value, 0);
+        
+        // Add percentage to each category item
+        const categoryWithPercentage = categoryAllocationData.map(item => ({
+          ...item,
+          percentage: ((item.value / categoryTotal) * 100).toFixed(1)
+        }));
+        
+        setCategoryDataWithPercentage(categoryWithPercentage);
+
+        // Process investments to create asset allocation data
+        const assetAllocationData = processInvestmentsForAssetAllocation(investments);
+        setAssetData(assetAllocationData);
+        
+        // Calculate total for percentages
+        const assetTotal = assetAllocationData.reduce((sum, item) => sum + item.value, 0);
+        
+        // Add percentage to each asset item
+        const assetWithPercentage = assetAllocationData.map(item => ({
+          ...item,
+          percentage: ((item.value / assetTotal) * 100).toFixed(1)
+        }));
+        
+        setAssetDataWithPercentage(assetWithPercentage);
+      } catch (err) {
+        console.error('Failed to fetch allocation data:', err);
+        setError('Failed to load allocation data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAllocationData();
+  }, []);
+
+  // Process investments to create category allocation data
+  const processInvestmentsForCategoryAllocation = (investments) => {
+    if (!investments || investments.length === 0) {
+      return [];
+    }
+
+    // Create a map to store values by category
+    const categoryMap = {};
+
+    // Process each investment
+    investments.forEach(investment => {
+      const category = investment.category;
+      
+      if (!categoryMap[category]) {
+        categoryMap[category] = {
+          name: getCategoryDisplayName(category),
+          value: 0
+        };
+      }
+
+      // Calculate total value from transactions
+      let investmentValue = 0;
+      
+      investment.transactions.forEach(transaction => {
+        if (['buy', 'deposit'].includes(transaction.operation)) {
+          investmentValue += transaction.pricePerUnit * (transaction.shares || 1);
+        } else if (['sell', 'withdrawal'].includes(transaction.operation)) {
+          investmentValue -= transaction.pricePerUnit * (transaction.shares || 1);
+        } else if (['dividend', 'interest'].includes(transaction.operation)) {
+          investmentValue += transaction.pricePerUnit;
+        }
+      });
+
+      categoryMap[category].value += investmentValue;
+    });
+
+    // Convert to array and filter out categories with zero or negative value
+    return Object.values(categoryMap)
+      .filter(item => item.value > 0)
+      .sort((a, b) => b.value - a.value);
+  };
+
+  // Process investments to create asset allocation data
+  const processInvestmentsForAssetAllocation = (investments) => {
+    if (!investments || investments.length === 0) {
+      return [];
+    }
+
+    // Create a map to store values by asset
+    const assetMap = {};
+
+    // Process each investment
+    investments.forEach(investment => {
+      const assetName = investment.symbol || investment.description;
+      const assetKey = `${investment.id}`;
+      
+      if (!assetMap[assetKey]) {
+        assetMap[assetKey] = {
+          name: assetName,
+          value: 0,
+          category: investment.category
+        };
+      }
+
+      // Calculate total value from transactions
+      let investmentValue = 0;
+      
+      investment.transactions.forEach(transaction => {
+        if (['buy', 'deposit'].includes(transaction.operation)) {
+          investmentValue += transaction.pricePerUnit * (transaction.shares || 1);
+        } else if (['sell', 'withdrawal'].includes(transaction.operation)) {
+          investmentValue -= transaction.pricePerUnit * (transaction.shares || 1);
+        } else if (['dividend', 'interest'].includes(transaction.operation)) {
+          investmentValue += transaction.pricePerUnit;
+        }
+      });
+
+      assetMap[assetKey].value += investmentValue;
+    });
+
+    // Convert to array and filter out assets with zero or negative value
+    const result = Object.values(assetMap)
+      .filter(item => item.value > 0)
+      .sort((a, b) => b.value - a.value);
+    
+    // Limit to top 10 assets for better visualization
+    return result.slice(0, 10);
+  };
+
+  // Helper function to get display name for category
+  const getCategoryDisplayName = (category) => {
+    const displayNames = {
+      'Stock': 'Stocks',
+      'ETF': 'ETFs',
+      'Bond': 'Bonds',
+      'Real Estate': 'Real Estate',
+      'Crypto': 'Crypto',
+      'Cash': 'Cash',
+      'Other': 'Other'
+    };
+    
+    return displayNames[category] || category;
+  };
+
+  if (loading) {
+    return (
+      <div className="w-full h-[400px] flex items-center justify-center">
+        <span className="loading loading-spinner loading-lg text-primary"></span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full h-[400px] flex items-center justify-center">
+        <div className="text-error text-center">
+          <p>{error}</p>
+          <button className="btn btn-sm btn-outline mt-2" onClick={() => window.location.reload()}>
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (categoryDataWithPercentage.length === 0) {
+    return (
+      <div className="w-full h-[400px] flex items-center justify-center">
+        <p className="text-center text-gray-500">
+          No allocation data available. Add investments to see your portfolio allocation.
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full h-[400px]">
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          <Pie
-            data={dataWithPercentage}
-            cx="50%"
-            cy="50%"
-            labelLine={false}
-            label={renderPercentageLabel}
-            outerRadius={120}
-            innerRadius={60}
-            fill="#8884d8"
-            dataKey="value"
-          >
-            {dataWithPercentage.map((entry, index) => (
-              <Cell 
-                key={`cell-${index}`} 
-                fill={COLORS[index % COLORS.length]}
-                stroke="hsl(var(--b1))"
-                strokeWidth={2}
-              />
-            ))}
-          </Pie>
-          <Pie
-            data={dataWithPercentage}
-            cx="50%"
-            cy="50%"
-            labelLine={false}
-            label={renderCustomizedLabel}
-            outerRadius={120}
-            innerRadius={60}
-            fill="none"
-            dataKey="value"
-          />
-        </PieChart>
-      </ResponsiveContainer>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {/* Category Allocation Chart */}
+      <div className="card bg-base-100 shadow-xl">
+        <div className="card-body p-6">
+          <h3 className="card-title text-lg font-bold text-center w-full border-b pb-3 mb-2">Allocation by Category</h3>
+          <div className="h-[350px] flex items-center justify-center">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={categoryDataWithPercentage}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={renderPercentageLabel}
+                  outerRadius={100}
+                  innerRadius={50}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {categoryDataWithPercentage.map((entry, index) => (
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={COLORS[index % COLORS.length]}
+                      stroke="hsl(var(--b1))"
+                      strokeWidth={2}
+                    />
+                  ))}
+                </Pie>
+                <Pie
+                  data={categoryDataWithPercentage}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={renderCustomizedLabel}
+                  outerRadius={100}
+                  innerRadius={50}
+                  fill="none"
+                  dataKey="value"
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
+      {/* Asset Allocation Chart */}
+      <div className="card bg-base-100 shadow-xl">
+        <div className="card-body p-6">
+          <h3 className="card-title text-lg font-bold text-center w-full border-b pb-3 mb-2">Allocation by Asset</h3>
+          {assetDataWithPercentage.length === 0 ? (
+            <div className="h-[350px] flex items-center justify-center">
+              <p className="text-center text-gray-500">
+                No asset data available.
+              </p>
+            </div>
+          ) : (
+            <div className="h-[350px] flex items-center justify-center">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={assetDataWithPercentage}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={renderPercentageLabel}
+                    outerRadius={100}
+                    innerRadius={50}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {assetDataWithPercentage.map((entry, index) => (
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={COLORS[index % COLORS.length]}
+                        stroke="hsl(var(--b1))"
+                        strokeWidth={2}
+                      />
+                    ))}
+                  </Pie>
+                  <Pie
+                    data={assetDataWithPercentage}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={renderCustomizedLabel}
+                    outerRadius={100}
+                    innerRadius={50}
+                    fill="none"
+                    dataKey="value"
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 } 
