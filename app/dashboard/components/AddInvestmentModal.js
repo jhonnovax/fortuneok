@@ -146,6 +146,7 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
         category: apiCategory,
         description: form.description || form.symbol,
         symbol: form.symbol || null,
+        status: 'active',
         annualInterestRate: form.annualInterestRate ? Number(form.annualInterestRate) : 0
       };
       

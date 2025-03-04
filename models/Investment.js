@@ -60,6 +60,12 @@ const investmentSchema = mongoose.Schema(
       uppercase: true,
       default: null,
     },
+    status: {
+      type: String,
+      required: true,
+      enum: ["active", "sold", "pending"],
+      default: "active",
+    },
     annualInterestRate: {
       type: Number,
       default: 0,
