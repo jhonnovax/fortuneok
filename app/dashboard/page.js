@@ -13,7 +13,8 @@ export const dynamic = "force-dynamic";
 // It's a server compoment which means you can fetch data (like the user profile) before the page is rendered.
 // See https://shipfa.st/docs/tutorials/private-page
 export default function Dashboard() {
-  const [timeframe, setTimeframe] = useState('all');
+  // Default to 1 month timeframe
+  const [timeframe, setTimeframe] = useState('1M');
   const [activeTab, setActiveTab] = useState('performance');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isValueVisible, setIsValueVisible] = useState(true);
@@ -72,25 +73,38 @@ export default function Dashboard() {
     let startDate = new Date(allTransactions[0]?.date || now);
     let periodLabel = 'all time';
     
-    if (timeframe === '1m') {
+    if (timeframe === '1D') {
+      startDate = new Date(now);
+      startDate.setDate(now.getDate() - 1);
+      periodLabel = 'past day';
+    } else if (timeframe === '1W') {
+      startDate = new Date(now);
+      startDate.setDate(now.getDate() - 7);
+      periodLabel = 'past week';
+    } else if (timeframe === '1M') {
       startDate = new Date(now);
       startDate.setMonth(now.getMonth() - 1);
       periodLabel = 'past month';
-    } else if (timeframe === '3m') {
+    } else if (timeframe === '3M') {
       startDate = new Date(now);
       startDate.setMonth(now.getMonth() - 3);
       periodLabel = 'past 3 months';
-    } else if (timeframe === '6m') {
+    } else if (timeframe === '6M') {
       startDate = new Date(now);
       startDate.setMonth(now.getMonth() - 6);
       periodLabel = 'past 6 months';
-    } else if (timeframe === '1y') {
+    } else if (timeframe === '1Y') {
       startDate = new Date(now);
       startDate.setFullYear(now.getFullYear() - 1);
       periodLabel = 'past year';
-    } else if (timeframe === 'ytd') {
-      startDate = new Date(now.getFullYear(), 0, 1); // January 1st of current year
-      periodLabel = 'year to date';
+    } else if (timeframe === '5Y') {
+      startDate = new Date(now);
+      startDate.setFullYear(now.getFullYear() - 5);
+      periodLabel = 'past 5 years';
+    } else if (timeframe === '10Y') {
+      startDate = new Date(now);
+      startDate.setFullYear(now.getFullYear() - 10);
+      periodLabel = 'past 10 years';
     }
 
     // Calculate total value and deposits
