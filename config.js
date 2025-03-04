@@ -31,28 +31,13 @@ const config = {
         // If you have an anchor price (i.e. $29) that you want to display crossed out, put it here. Otherwise, leave it empty
         priceAnchor: 99,
         features: [
-          { name: "Stocks, ETFs, Funds, Cryptos" },
           { name: "Unlimited Holdings" },
-          { name: '1 Currency' }
+          { name: 'Multi-Currency Support' },
+          { name: "Stocks, ETFs, Funds, Cryptos, and more" },
+          { name: "Cash, Real Estate, Savings Accounts, and more" },
+          { name: 'Visualize performance, allocation, and category trends'}
         ],
-      },
-      {
-        // This plan will look different on the pricing page, it will be highlighted. You can only have one plan with isFeatured: true
-        isFeatured: true,
-        priceId:
-          process.env.NODE_ENV === "development"
-            ? "price_1Qv36zDvX2TSHq7dqtNqaRPg"
-            : "",
-        name: "Advanced",
-        description: "Experimented investors",
-        price: 69,
-        priceAnchor: 119,
-        features: [
-          { name: "Stocks, ETFs, Funds, Cryptos" },
-          { name: "Unlimited Holdings" },
-          { name: 'Unlimited Currencies' }
-        ],
-      },
+      }
     ],
   },
   aws: {
