@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createInvestment, addTransaction } from '../services/investmentService';
 import CurrencyInput from 'react-currency-input-field';
+import SymbolCombobox from './SymbolCombobox';
 
 // Map UI categories to API categories
 const CATEGORY_MAPPING = {
@@ -278,15 +279,14 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
             ) : (
               <div className="form-control">
                 {renderLabel('Symbol')}
-                <input 
-                  type="text"
-                  className={`input input-bordered w-full ${errors.symbol ? 'input-error' : ''}`}
+                <SymbolCombobox
                   value={form.symbol}
-                  onChange={(e) => setForm({ ...form, symbol: e.target.value })}
-                  placeholder="Enter symbol"
+                  onChange={(value) => setForm({ ...form, symbol: value })}
+                  type={form.category}
+                  placeholder="Search for a symbol..."
+                  error={errors.symbol}
                   disabled={isSubmitting}
                 />
-                {errors.symbol && <span className="text-error text-sm mt-1">{errors.symbol}</span>}
               </div>
             )}
 
