@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { updateTransaction } from '../services/investmentService';
+import CurrencyInput from 'react-currency-input-field';
 
 const OPERATIONS = [
   { value: 'buy', label: 'Buy' },
@@ -211,13 +212,18 @@ export default function EditTransactionModal({
             {showShares && (
               <div className="form-control">
                 {renderLabel('Shares/Units')}
-                <input 
-                  type="text" 
-                  className={`input input-bordered w-full ${errors.shares ? 'input-error' : ''}`}
+                <CurrencyInput
+                  id="shares-input"
+                  name="shares"
                   placeholder="e.g. 10.5"
+                  className={`input input-bordered w-full ${errors.shares ? 'input-error' : ''}`}
                   value={form.shares}
-                  onChange={(e) => setForm({ ...form, shares: e.target.value })}
+                  decimalsLimit={6}
+                  onValueChange={(value) => setForm({ ...form, shares: value })}
                   disabled={isSubmitting}
+                  allowNegativeValue={false}
+                  thousandSeparator=","
+                  decimalSeparator="."
                 />
                 {errors.shares && <span className="text-error text-sm mt-1">{errors.shares}</span>}
               </div>
@@ -243,13 +249,18 @@ export default function EditTransactionModal({
             {/* Price */}
             <div className="form-control">
               {renderLabel(showShares ? 'Price per Unit' : 'Amount')}
-              <input 
-                type="text" 
-                className={`input input-bordered w-full ${errors.price ? 'input-error' : ''}`}
+              <CurrencyInput
+                id="price-input"
+                name="price"
                 placeholder="e.g. 150.75"
+                className={`input input-bordered w-full ${errors.price ? 'input-error' : ''}`}
                 value={form.price}
-                onChange={(e) => setForm({ ...form, price: e.target.value })}
+                decimalsLimit={2}
+                onValueChange={(value) => setForm({ ...form, price: value })}
                 disabled={isSubmitting}
+                allowNegativeValue={false}
+                thousandSeparator=","
+                decimalSeparator="."
               />
               {errors.price && <span className="text-error text-sm mt-1">{errors.price}</span>}
             </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getInvestmentById, updateInvestment } from '../services/investmentService';
+import CurrencyInput from 'react-currency-input-field';
 
 // Map UI categories to API categories
 const CATEGORY_MAPPING = {
@@ -132,8 +133,17 @@ export default function EditAssetModal({ isOpen, onClose, onSave, investmentId }
     }
     
     // Number validation
-    if (form.annualInterestRate && isNaN(Number(form.annualInterestRate))) {
-      newErrors.annualInterestRate = 'Must be a valid number';
+    if (form.annualInterestRate) {
+      if (isNaN(Number(form.annualInterestRate))) {
+        newErrors.annualInterestRate = 'Must be a valid number';
+      } else {
+        const interestRate = Number(form.annualInterestRate);
+        if (interestRate > 100) {
+          newErrors.annualInterestRate = 'Cannot exceed 100%';
+        } else if (interestRate < -50) {
+          newErrors.annualInterestRate = 'Cannot be less than -50%';
+        }
+      }
     }
 
     setErrors(newErrors);
@@ -272,13 +282,27 @@ export default function EditAssetModal({ isOpen, onClose, onSave, investmentId }
               {!hideInterestRate && (
                 <div className="form-control">
                   {renderLabel('Annual Interest Rate (%)', false)}
-                  <input 
-                    type="text" 
-                    className={`input input-bordered w-full ${errors.annualInterestRate ? 'input-error' : ''}`}
+                  <CurrencyInput
+                    id="interest-rate-input"
+                    name="annualInterestRate"
                     placeholder="e.g. 2.5"
+                    className={`input input-bordered w-full ${errors.annualInterestRate ? 'input-error' : ''}`}
                     value={form.annualInterestRate}
-                    onChange={(e) => setForm({ ...form, annualInterestRate: e.target.value })}
+                    decimalsLimit={2}
+                    decimalScale={2}
+                    onValueChange={(value) => {
+                      // Validate min/max here to prevent invalid input
+                      if (value) {
+                        const numValue = Number(value);
+                        if (numValue > 100) value = "100";
+                        if (numValue < -50) value = "-50";
+                      }
+                      setForm({ ...form, annualInterestRate: value });
+                    }}
                     disabled={isSubmitting}
+                    allowNegativeValue={true}
+                    thousandSeparator=","
+                    decimalSeparator="."
                   />
                   {errors.annualInterestRate && <span className="text-error text-sm mt-1">{errors.annualInterestRate}</span>}
                 </div>

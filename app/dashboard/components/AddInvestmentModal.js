@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createInvestment, addTransaction } from '../services/investmentService';
+import CurrencyInput from 'react-currency-input-field';
 
 // Map UI categories to API categories
 const CATEGORY_MAPPING = {
@@ -123,8 +124,17 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
     if (form.price && isNaN(Number(form.price))) {
       newErrors.price = 'Must be a valid number';
     }
-    if (form.annualInterestRate && isNaN(Number(form.annualInterestRate))) {
-      newErrors.annualInterestRate = 'Must be a valid number';
+    if (form.annualInterestRate) {
+      if (isNaN(Number(form.annualInterestRate))) {
+        newErrors.annualInterestRate = 'Must be a valid number';
+      } else {
+        const interestRate = Number(form.annualInterestRate);
+        if (interestRate > 100) {
+          newErrors.annualInterestRate = 'Cannot exceed 100%';
+        } else if (interestRate < -50) {
+          newErrors.annualInterestRate = 'Cannot be less than -50%';
+        }
+      }
     }
 
     setErrors(newErrors);
@@ -333,13 +343,18 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
             {/* Price */}
             <div className="form-control">
               {renderLabel('Price')}
-              <input 
-                type="number"
-                step="any"
+              <CurrencyInput
+                id="price-input"
+                name="price"
+                placeholder="75,530"
                 className={`input input-bordered w-full ${errors.price ? 'input-error' : ''}`}
                 value={form.price}
-                onChange={(e) => setForm({ ...form, price: e.target.value })}
+                decimalsLimit={2}
+                onValueChange={(value) => setForm({ ...form, price: value })}
                 disabled={isSubmitting}
+                allowNegativeValue={false}
+                thousandSeparator=","
+                decimalSeparator="."
               />
               {errors.price && <span className="text-error text-sm mt-1">{errors.price}</span>}
             </div>
@@ -348,13 +363,18 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
             {showShares && (
               <div className="form-control">
                 {renderLabel('Shares')}
-                <input 
-                  type="number"
-                  step="any"
+                <CurrencyInput
+                  id="shares-input"
+                  name="shares"
+                  placeholder="62.7345"
                   className={`input input-bordered w-full ${errors.shares ? 'input-error' : ''}`}
                   value={form.shares}
-                  onChange={(e) => setForm({ ...form, shares: e.target.value })}
+                  decimalsLimit={6}
+                  onValueChange={(value) => setForm({ ...form, shares: value })}
                   disabled={isSubmitting}
+                  allowNegativeValue={false}
+                  disableGroupSeparators={true}
+                  decimalSeparator="."
                 />
                 {errors.shares && <span className="text-error text-sm mt-1">{errors.shares}</span>}
               </div>
@@ -364,14 +384,26 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
             {!hideInterestRate && (
               <div className="form-control">
                 {renderLabel('Annual Interest Rate (%)', false)}
-                <input 
-                  type="number"
-                  step="any"
+                <CurrencyInput
+                  id="interest-rate-input"
+                  name="annualInterestRate"
+                  placeholder="0.00"
                   className={`input input-bordered w-full ${errors.annualInterestRate ? 'input-error' : ''}`}
                   value={form.annualInterestRate}
-                  onChange={(e) => setForm({ ...form, annualInterestRate: e.target.value })}
-                  placeholder="0.00"
+                  decimalsLimit={2}
+                  onValueChange={(value) => {
+                    // Validate min/max here to prevent invalid input
+                    if (value) {
+                      const numValue = Number(value);
+                      if (numValue > 100) value = "100";
+                      if (numValue < -50) value = "-50";
+                    }
+                    setForm({ ...form, annualInterestRate: value });
+                  }}
                   disabled={isSubmitting}
+                  allowNegativeValue={true}
+                  thousandSeparator=","
+                  decimalSeparator="."
                 />
                 {errors.annualInterestRate && <span className="text-error text-sm mt-1">{errors.annualInterestRate}</span>}
               </div>
