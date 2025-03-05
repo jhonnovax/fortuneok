@@ -314,7 +314,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 md:space-y-8">
       <div className="flex flex-col items-center">
         <h1 className="sr-only">Portfolio Overview</h1>
       </div>
