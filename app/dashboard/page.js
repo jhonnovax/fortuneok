@@ -317,13 +317,17 @@ export default function Dashboard() {
     <div className="space-y-6">
       <div className="flex flex-col items-center">
         <h1 className="sr-only">Portfolio Overview</h1>
-        <TimeframeToggle selected={timeframe} onSelect={setTimeframe} />
       </div>
 
       {/* Tabs and Add Transaction button in same row */}
       <div className="flex justify-between items-center">
         <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
         <AddInvestmentButton onClick={handleAddInvestmentClick} />
+      </div>
+
+      {/* Timeframe Toggle */}
+      <div className="flex justify-start">
+        <TimeframeToggle selected={timeframe} onSelect={setTimeframe} />
       </div>
 
       {/* Render the appropriate component based on the active tab */}
