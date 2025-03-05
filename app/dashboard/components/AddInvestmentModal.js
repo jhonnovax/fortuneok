@@ -346,7 +346,7 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
               <CurrencyInput
                 id="price-input"
                 name="price"
-                placeholder="75,530"
+                placeholder="$75,530"
                 className={`input input-bordered w-full ${errors.price ? 'input-error' : ''}`}
                 value={form.price}
                 decimalsLimit={2}
@@ -387,7 +387,7 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
                 <CurrencyInput
                   id="interest-rate-input"
                   name="annualInterestRate"
-                  placeholder="0.00"
+                  placeholder="7%"
                   className={`input input-bordered w-full ${errors.annualInterestRate ? 'input-error' : ''}`}
                   value={form.annualInterestRate}
                   decimalsLimit={2}

@@ -196,7 +196,7 @@ export default function AddTransactionModal({ isOpen, onClose, onSave, investmen
                 <CurrencyInput
                   id="shares-input"
                   name="shares"
-                  placeholder="e.g. 10.5"
+                  placeholder="6.786"
                   className={`input input-bordered w-full ${errors.shares ? 'input-error' : ''}`}
                   value={form.shares}
                   decimalsLimit={6}
@@ -232,7 +232,7 @@ export default function AddTransactionModal({ isOpen, onClose, onSave, investmen
               <CurrencyInput
                 id="price-input"
                 name="price"
-                placeholder="e.g. 150.75"
+                placeholder="$245.76"
                 className={`input input-bordered w-full ${errors.price ? 'input-error' : ''}`}
                 value={form.price}
                 decimalsLimit={2}

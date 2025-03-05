@@ -252,7 +252,7 @@ export default function EditTransactionModal({
               <CurrencyInput
                 id="price-input"
                 name="price"
-                placeholder="e.g. 150.75"
+                placeholder="$125.76"
                 className={`input input-bordered w-full ${errors.price ? 'input-error' : ''}`}
                 value={form.price}
                 decimalsLimit={2}

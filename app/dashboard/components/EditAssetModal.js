@@ -285,7 +285,7 @@ export default function EditAssetModal({ isOpen, onClose, onSave, investmentId }
                   <CurrencyInput
                     id="interest-rate-input"
                     name="annualInterestRate"
-                    placeholder="e.g. 2.5"
+                    placeholder="7%"
                     className={`input input-bordered w-full ${errors.annualInterestRate ? 'input-error' : ''}`}
                     value={form.annualInterestRate}
                     decimalsLimit={2}
