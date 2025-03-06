@@ -244,7 +244,6 @@ export default function EditTransactionModal({
                 onValueChange={(value) => setForm({ ...form, price: value })}
                 disabled={isSubmitting}
                 allowNegativeValue={false}
-                thousandSeparator=","
                 decimalSeparator="."
               />
               {errors.price && <span className="text-error text-sm mt-1">{errors.price}</span>}
