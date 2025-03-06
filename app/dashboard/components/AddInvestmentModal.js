@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { createInvestment, addTransaction } from '../services/investmentService';
 import CurrencyInput from 'react-currency-input-field';
 import SymbolCombobox from './SymbolCombobox';
+import CurrencyCombobox from './CurrencyCombobox';
 
 // Map UI categories to API categories
 const CATEGORY_MAPPING = {
@@ -326,18 +327,12 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
             {/* Currency */}
             <div className="form-control">
               {renderLabel('Currency')}
-              <select 
-                className={`select select-bordered w-full ${errors.currency ? 'select-error' : ''}`}
+              <CurrencyCombobox
                 value={form.currency}
-                onChange={(e) => setForm({ ...form, currency: e.target.value })}
+                onChange={(value) => setForm({ ...form, currency: value })}
+                error={errors.currency}
                 disabled={isSubmitting}
-              >
-                <option value="">Select...</option>
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-                <option value="GBP">GBP</option>
-              </select>
-              {errors.currency && <span className="text-error text-sm mt-1">{errors.currency}</span>}
+              />
             </div>
 
             {/* Price */}

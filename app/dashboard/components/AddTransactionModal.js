@@ -3,20 +3,11 @@
 import { useState, useEffect } from 'react';
 import { addTransaction } from '../services/investmentService';
 import CurrencyInput from 'react-currency-input-field';
+import CurrencyCombobox from './CurrencyCombobox';
 
 const OPERATIONS = [
   { value: 'buy', label: 'Buy' },
   { value: 'sell', label: 'Sell' }
-];
-
-const CURRENCIES = [
-  { value: 'USD', label: 'USD - US Dollar' },
-  { value: 'EUR', label: 'EUR - Euro' },
-  { value: 'GBP', label: 'GBP - British Pound' },
-  { value: 'JPY', label: 'JPY - Japanese Yen' },
-  { value: 'CAD', label: 'CAD - Canadian Dollar' },
-  { value: 'AUD', label: 'AUD - Australian Dollar' },
-  { value: 'CHF', label: 'CHF - Swiss Franc' }
 ];
 
 const INITIAL_FORM_STATE = {
@@ -213,17 +204,12 @@ export default function AddTransactionModal({ isOpen, onClose, onSave, investmen
             {/* Currency */}
             <div className="form-control">
               {renderLabel('Currency')}
-              <select 
-                className={`select select-bordered w-full ${errors.currency ? 'select-error' : ''}`}
+              <CurrencyCombobox
                 value={form.currency}
-                onChange={(e) => setForm({ ...form, currency: e.target.value })}
+                onChange={(value) => setForm({ ...form, currency: value })}
+                error={errors.currency}
                 disabled={isSubmitting}
-              >
-                {CURRENCIES.map(curr => (
-                  <option key={curr.value} value={curr.value}>{curr.label}</option>
-                ))}
-              </select>
-              {errors.currency && <span className="text-error text-sm mt-1">{errors.currency}</span>}
+              />
             </div>
 
             {/* Price */}
