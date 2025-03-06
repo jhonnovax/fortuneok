@@ -353,7 +353,6 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
                 onValueChange={(value) => setForm({ ...form, price: value })}
                 disabled={isSubmitting}
                 allowNegativeValue={false}
-                thousandSeparator=","
                 decimalSeparator="."
               />
               {errors.price && <span className="text-error text-sm mt-1">{errors.price}</span>}
@@ -402,7 +401,7 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
                   }}
                   disabled={isSubmitting}
                   allowNegativeValue={true}
-                  thousandSeparator=","
+                  disableGroupSeparators={true}
                   decimalSeparator="."
                 />
                 {errors.annualInterestRate && <span className="text-error text-sm mt-1">{errors.annualInterestRate}</span>}

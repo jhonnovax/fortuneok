@@ -203,7 +203,7 @@ export default function AddTransactionModal({ isOpen, onClose, onSave, investmen
                   onValueChange={(value) => setForm({ ...form, shares: value })}
                   disabled={isSubmitting}
                   allowNegativeValue={false}
-                  thousandSeparator=","
+                  disableGroupSeparators={true}
                   decimalSeparator="."
                 />
                 {errors.shares && <span className="text-error text-sm mt-1">{errors.shares}</span>}

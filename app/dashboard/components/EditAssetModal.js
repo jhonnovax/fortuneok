@@ -301,7 +301,7 @@ export default function EditAssetModal({ isOpen, onClose, onSave, investmentId }
                     }}
                     disabled={isSubmitting}
                     allowNegativeValue={true}
-                    thousandSeparator=","
+                    disableGroupSeparators={true}
                     decimalSeparator="."
                   />
                   {errors.annualInterestRate && <span className="text-error text-sm mt-1">{errors.annualInterestRate}</span>}

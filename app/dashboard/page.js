@@ -288,6 +288,35 @@ export default function Dashboard() {
     return result;
   };
 
+  // Define operations by category
+  const getOperationsByCategory = (category) => {
+    switch(category) {
+      case 'real_estate':
+      case 'precious_metals':
+      case 'custom_asset':
+        return ['buy', 'sell', 'improvement'];
+      case 'p2p_loans':
+      case 'savings_accounts':
+      case 'cash':
+        return ['deposit', 'interest', 'withdrawal'];
+      case 'stocks':
+      case 'bonds':
+      case 'cryptocurrencies':
+      case 'etfs_funds':
+      case 'options':
+      case 'futures':
+        return ['buy', 'sell', 'dividend'];
+      default:
+        return ['buy', 'sell'];
+    }
+  };
+
+  // Get default operation based on category
+  const getDefaultOperation = (category) => {
+    const operations = getOperationsByCategory(category);
+    return operations[0] || 'buy';
+  };
+
   const handleSaveInvestment = async (formData, saveAndAdd) => {
     console.log('Saving investment:', formData);
     
@@ -347,6 +376,8 @@ export default function Dashboard() {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onSave={handleSaveInvestment}
+        getOperationsByCategory={getOperationsByCategory}
+        getDefaultOperation={getDefaultOperation}
       />
     </div>
   );
