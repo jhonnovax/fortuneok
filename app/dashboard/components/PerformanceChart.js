@@ -49,10 +49,11 @@ export default function PerformanceChart({
   // Helper function to mask value
   const maskValue = () => '$ • • • • • • ';
   
-  // Theme-specific colors
+  // IMPORTANT: Replace the colors completely
   const colors = {
-    primary: theme === 'dark' ? '#009b00' : '#006e00',
-    deposits: theme === 'dark' ? '#ffd700' : '#b8860b', // Brighter yellow for dark theme, darker for light
+    // Use primary color directly without any theme-specific logic
+    primary: 'hsl(var(--p))',
+    secondary: 'hsl(var(--s))'
   };
 
   if (loading) {
@@ -101,7 +102,7 @@ export default function PerformanceChart({
                 }
               </span>
               <button 
-                className="btn btn-circle btn-ghost btn-sm"
+                className="btn btn-circle btn-ghost btn-sm text-primary"
                 onClick={() => setIsValueVisible(!isValueVisible)}
               >
                 {isValueVisible ? (
@@ -118,17 +119,17 @@ export default function PerformanceChart({
             </div>
             
             <div className="flex items-center gap-2 text-lg">
-              <span className={`font-medium ${portfolioSummary.profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              <span className={`font-medium ${portfolioSummary.profit >= 0 ? 'text-success' : 'text-error'}`}>
                 {isValueVisible ? (
                   `${portfolioSummary.profit >= 0 ? '+' : ''}$${Math.abs(portfolioSummary.profit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
                 ) : '$ • • •'}
               </span>
               {isValueVisible &&
                 <>
-                  <span className={`font-medium ${portfolioSummary.profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <span className={`font-medium ${portfolioSummary.profit >= 0 ? 'text-success' : 'text-error'}`}>
                     ({portfolioSummary.profit >= 0 ? '+' : ''}{portfolioSummary.profitPercentage}%)
                   </span>
-                  <span className="text-gray-500">{portfolioSummary.period}</span>
+                  <span className="text-base-content/60">{portfolioSummary.period}</span>
                 </>
               }
             </div>
@@ -137,7 +138,7 @@ export default function PerformanceChart({
           {/* Performance Chart */}
           {data.length === 0 ? (
             <div className="w-full h-[300px] flex items-center justify-center">
-              <p className="text-center text-gray-500">
+              <p className="text-center text-base-content/60">
                 No performance data available. Add investments to see your portfolio performance.
               </p>
             </div>
@@ -150,27 +151,27 @@ export default function PerformanceChart({
                 >
                   <defs>
                     <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={colors.primary} stopOpacity={0.4}/>
-                      <stop offset="50%" stopColor={colors.primary} stopOpacity={0.2}/>
-                      <stop offset="100%" stopColor={colors.primary} stopOpacity={0.05}/>
+                      <stop offset="0%" stopColor="hsl(var(--p))" stopOpacity={0.6}/>
+                      <stop offset="50%" stopColor="hsl(var(--p))" stopOpacity={0.3}/>
+                      <stop offset="100%" stopColor="hsl(var(--p))" stopOpacity={0.1}/>
                     </linearGradient>
                   </defs>
                   <CartesianGrid 
                     strokeDasharray="3 3" 
                     vertical={false}
-                    stroke="hsl(var(--bc) / 0.1)"
+                    stroke="hsl(var(--bc) / 0.2)"
                   />
                   <XAxis 
                     dataKey="date" 
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: 'hsl(var(--bc) / 0.5)', fontSize: 12 }}
+                    tick={{ fill: 'hsl(var(--bc))', fontSize: 12 }}
                     dy={10}
                   />
                   <YAxis 
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: 'hsl(var(--bc) / 0.5)', fontSize: 12 }}
+                    tick={{ fill: 'hsl(var(--bc))', fontSize: 12 }}
                     tickFormatter={formatValue}
                     dx={-10}
                   />
@@ -181,6 +182,7 @@ export default function PerformanceChart({
                       borderRadius: '0.5rem',
                       padding: '0.75rem',
                       boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+                      color: 'hsl(var(--bc))'
                     }}
                     labelStyle={{ 
                       color: 'hsl(var(--bc))', 
@@ -195,11 +197,11 @@ export default function PerformanceChart({
                   <Area
                     type="monotone"
                     dataKey="value"
-                    stroke={colors.primary}
+                    stroke="hsl(var(--p))"
                     strokeWidth={2}
                     fillOpacity={1}
                     fill="url(#colorValue)"
-                    activeDot={{ r: 6, strokeWidth: 0, fill: colors.primary }}
+                    activeDot={{ r: 6, strokeWidth: 0, fill: "hsl(var(--p))" }}
                   />
                 </AreaChart>
               </ResponsiveContainer>
