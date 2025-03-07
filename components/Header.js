@@ -114,7 +114,7 @@ const Header = () => {
           <div className="flex items-center justify-between">
             <Link
               className="flex items-center gap-2 shrink-0 "
-              title={`${config.appName} hompage`}
+              title={`${config.appName} homepage`}
               href="/"
             >
               <Image
