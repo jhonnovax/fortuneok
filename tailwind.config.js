@@ -63,7 +63,18 @@ module.exports = {
     // You can add another theme among the list of 30+
     // Add "data-theme='theme_name" to any HTML tag to enable the 'theme_name' theme.
     // https://daisyui.com/
-    themes: ["lemonade", "forest"],
+    themes: [
+      {
+        lemonade: {
+          ...require("daisyui/src/theming/themes")["lemonade"],
+          success: "#3e5e17", // custom success color
+          "success-content": "#ffffff",
+          error: "#e74c3c", // custom danger/error color
+          "error-content": "#ffffff",
+        },
+      },
+      "forest",
+    ],
     lightTheme: "lemonade",
     darkTheme: "forest",
   },
