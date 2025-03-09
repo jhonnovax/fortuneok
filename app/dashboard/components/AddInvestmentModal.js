@@ -24,6 +24,7 @@ const CATEGORY_MAPPING = {
 
 const CATEGORIES = [
   { value: 'real_estate', label: '🏠 Real Estate' },
+  { value: 'certificates_of_deposit', label: '🏦 Certificates of deposit' },
   { value: 'savings_account', label: '🏦 Savings account' },
   { value: 'precious_metals', label: '👑 Precious metals' },
   { value: 'cash', label: '💵 Cash' },

@@ -117,7 +117,6 @@ export default function TransactionHistoryModal({ isOpen, onClose, investmentId,
                   <th>Shares</th>
                   <th>Price</th>
                   <th>Total</th>
-                  <th>Note</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -138,7 +137,6 @@ export default function TransactionHistoryModal({ isOpen, onClose, investmentId,
                       <td>{transaction.shares || '-'}</td>
                       <td>{formatCurrency(transaction.pricePerUnit, transaction.currency)}</td>
                       <td>{formatCurrency(total, transaction.currency)}</td>
-                      <td>{transaction.note || '-'}</td>
                       <td className="flex gap-2">
                         {/* Edit Button with Icon and Tooltip */}
                         <div className="tooltip tooltip-left" data-tip="Edit Transaction">
