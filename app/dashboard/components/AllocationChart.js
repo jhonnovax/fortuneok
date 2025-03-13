@@ -9,6 +9,7 @@ import {
 } from 'recharts';
 import { useState, useEffect } from 'react';
 import { getInvestments } from '../services/investmentService';
+import { formatNumber } from '../services/formatService';
 
 const COLORS = [
   '#006e00', // Primary green
@@ -92,7 +93,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, nam
         fill="currentColor"
         className="text-sm"
       >
-        ${value.toLocaleString()}
+        ${formatNumber(value)}
       </text>
     </g>
   );
