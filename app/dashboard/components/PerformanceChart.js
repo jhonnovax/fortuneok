@@ -146,18 +146,18 @@ export default function PerformanceChart({
                 <div className="flex flex-col items-center">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full bg-[#6b8e23]"></div>
-                    <span className="text-gray-400">Portfolio value</span>
+                    <span className="text-gray-600 dark:text-gray-300">Portfolio value</span>
                   </div>
-                  <span className="font-semibold text-gray-300 mt-1">
+                  <span className="font-semibold text-gray-600 dark:text-gray-300 mt-1">
                     {formatCurrency(hoveredData ? hoveredData.value : portfolioSummary.total)}
                   </span>
                 </div>
                 <div className="flex flex-col items-center">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full border border-gray-500"></div>
-                    <span className="text-gray-400">Net deposits</span>
+                    <span className="text-gray-600 dark:text-gray-300">Net deposits</span>
                   </div>
-                  <span className="font-semibold text-gray-300 mt-1">
+                  <span className="font-semibold text-gray-600 dark:text-gray-300 mt-1">
                     {formatCurrency(hoveredData ? 
                       hoveredData.deposits : 
                       (portfolioSummary.total - portfolioSummary.profit))}
@@ -169,7 +169,6 @@ export default function PerformanceChart({
                 <AreaChart
                   data={data}
                   margin={{ top: 30, right: 30, left: 40, bottom: 0 }}
-                  className="dark:bg-black"
                   onMouseMove={(data) => {
                     if (data && data.activePayload && data.activePayload.length) {
                       setHoveredData({
@@ -205,7 +204,7 @@ export default function PerformanceChart({
                   <YAxis 
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#9ca3af', fontSize: 12 }}
+                    tick={{ fill: theme === 'dark' ? '#9ca3af' : '#6b7280', fontSize: 12 }}
                     tickFormatter={(value) => formatCurrency(value)}
                     dx={-5}
                     width={60}
@@ -213,7 +212,7 @@ export default function PerformanceChart({
                   />
                   <Tooltip
                     cursor={{ 
-                      stroke: 'rgba(255, 255, 255, 0.2)', 
+                      stroke: theme === 'dark' ? '#9ca3af' : '#6b7280',
                       strokeDasharray: '3 3',
                       strokeWidth: 1
                     }}
@@ -227,8 +226,7 @@ export default function PerformanceChart({
                       if (active && payload && payload.length) {
                         return (
                           <div className="flex flex-col items-center">
-                            <div className="text-base font-medium text-gray-300">{label}</div>
-                            <div className="w-[1px] h-[20px] bg-gray-500 my-1"></div>
+                            <div className="text-base font-medium text-gray-600 dark:text-gray-300">{label}</div>
                           </div>
                         );
                       }
