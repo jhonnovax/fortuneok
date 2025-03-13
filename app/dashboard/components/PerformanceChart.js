@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { useEffect, useState } from 'react';
+import { formatCurrency, formatFullCurrency, maskValue } from '../services/formatService';
 
 export default function PerformanceChart({ 
   timeframe = 'all',
@@ -20,6 +21,7 @@ export default function PerformanceChart({
 }) {
   const [theme, setTheme] = useState('light');
   const [isValueVisible, setIsValueVisible] = useState(true);
+  const [hoveredData, setHoveredData] = useState(null);
   
   useEffect(() => {
     // Check if dark theme is active
@@ -44,11 +46,6 @@ export default function PerformanceChart({
     return () => observer.disconnect();
   }, []);
 
-  const formatValue = (value) => `$${value.toLocaleString()}`;
-  
-  // Helper function to mask value
-  const maskValue = () => '$ • • • • • • ';
-  
   // IMPORTANT: Replace the colors completely
   const colors = {
     // Use primary color directly without any theme-specific logic
@@ -97,7 +94,7 @@ export default function PerformanceChart({
             <div className="flex items-center gap-3">
               <span className="text-4xl font-bold">
                 {isValueVisible 
-                  ? `$${portfolioSummary.total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                  ? formatFullCurrency(portfolioSummary.total)
                   : maskValue()
                 }
               </span>
@@ -121,7 +118,7 @@ export default function PerformanceChart({
             <div className="flex items-center gap-2 text-lg">
               <span className={`font-medium ${portfolioSummary.profit >= 0 ? 'text-success' : 'text-error'}`}>
                 {isValueVisible ? (
-                  `${portfolioSummary.profit >= 0 ? '+' : ''}$${Math.abs(portfolioSummary.profit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                  `${portfolioSummary.profit >= 0 ? '+' : ''}${formatFullCurrency(Math.abs(portfolioSummary.profit))}`
                 ) : '$ • • •'}
               </span>
               {isValueVisible &&
@@ -143,65 +140,122 @@ export default function PerformanceChart({
               </p>
             </div>
           ) : (
-            <div className="w-full h-[300px]">
+            <div className="w-full h-[300px] relative">
+              {/* Legend in top right with values below labels */}
+              <div className="absolute top-0 right-0 flex items-center gap-8 text-sm z-10">
+                <div className="flex flex-col items-center">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-[#6b8e23]"></div>
+                    <span className="text-gray-400">Portfolio value</span>
+                  </div>
+                  <span className="font-semibold text-gray-300 mt-1">
+                    {formatCurrency(hoveredData ? hoveredData.value : portfolioSummary.total)}
+                  </span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full border border-gray-500"></div>
+                    <span className="text-gray-400">Net deposits</span>
+                  </div>
+                  <span className="font-semibold text-gray-300 mt-1">
+                    {formatCurrency(hoveredData ? 
+                      hoveredData.deposits : 
+                      (portfolioSummary.total - portfolioSummary.profit))}
+                  </span>
+                </div>
+              </div>
+              
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart
                   data={data}
-                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                  margin={{ top: 30, right: 30, left: 40, bottom: 0 }}
+                  className="dark:bg-black"
+                  onMouseMove={(data) => {
+                    if (data && data.activePayload && data.activePayload.length) {
+                      setHoveredData({
+                        date: data.activePayload[0].payload.date,
+                        value: data.activePayload[0].payload.value,
+                        deposits: data.activePayload[0].payload.deposits
+                      });
+                    }
+                  }}
+                  onMouseLeave={() => {
+                    setHoveredData(null);
+                  }}
                 >
                   <defs>
                     <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="hsl(var(--p))" stopOpacity={0.6}/>
-                      <stop offset="50%" stopColor="hsl(var(--p))" stopOpacity={0.3}/>
-                      <stop offset="100%" stopColor="hsl(var(--p))" stopOpacity={0.1}/>
+                      <stop offset="5%" stopColor="#6b8e23" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#6b8e23" stopOpacity={0.05}/>
                     </linearGradient>
                   </defs>
                   <CartesianGrid 
                     strokeDasharray="3 3" 
                     vertical={false}
-                    stroke="hsl(var(--bc) / 0.2)"
+                    stroke="rgba(255, 255, 255, 0.1)"
+                    horizontal={true}
                   />
                   <XAxis 
                     dataKey="date" 
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: 'hsl(var(--bc))', fontSize: 12 }}
+                    tick={{ fill: '#9ca3af', fontSize: 12 }}
                     dy={10}
                   />
                   <YAxis 
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: 'hsl(var(--bc))', fontSize: 12 }}
-                    tickFormatter={formatValue}
-                    dx={-10}
+                    tick={{ fill: '#9ca3af', fontSize: 12 }}
+                    tickFormatter={(value) => formatCurrency(value)}
+                    dx={-5}
+                    width={60}
+                    allowDecimals={false}
                   />
                   <Tooltip
+                    cursor={{ 
+                      stroke: 'rgba(255, 255, 255, 0.2)', 
+                      strokeDasharray: '3 3',
+                      strokeWidth: 1
+                    }}
                     contentStyle={{
-                      backgroundColor: 'hsl(var(--b1))',
-                      border: '1px solid hsl(var(--bc) / 0.2)',
-                      borderRadius: '0.5rem',
-                      padding: '0.75rem',
-                      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-                      color: 'hsl(var(--bc))'
+                      backgroundColor: 'transparent',
+                      border: 'none',
+                      padding: 0,
+                      boxShadow: 'none',
                     }}
-                    labelStyle={{ 
-                      color: 'hsl(var(--bc))', 
-                      marginBottom: '0.5rem',
-                      fontWeight: 'bold',
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="flex flex-col items-center">
+                            <div className="text-base font-medium text-gray-300">{label}</div>
+                            <div className="w-[1px] h-[20px] bg-gray-500 my-1"></div>
+                          </div>
+                        );
+                      }
+                      return null;
                     }}
-                    formatter={(value, name) => [
-                      formatValue(value),
-                      name === 'value' ? 'Portfolio Value' : 'Total Deposits'
-                    ]}
+                    formatter={(value, name) => {
+                      return [formatCurrency(value), name === 'value' ? 'Portfolio Value' : 'Net Deposits'];
+                    }}
                   />
                   <Area
                     type="monotone"
                     dataKey="value"
-                    stroke="hsl(var(--p))"
+                    stroke="#6b8e23"
                     strokeWidth={2}
                     fillOpacity={1}
                     fill="url(#colorValue)"
-                    activeDot={{ r: 6, strokeWidth: 0, fill: "hsl(var(--p))" }}
+                    activeDot={{ r: 6, strokeWidth: 0, fill: "#6b8e23" }}
+                  />
+                  {/* Add the deposits line */}
+                  <Area
+                    type="monotone"
+                    dataKey="deposits"
+                    stroke="rgba(255, 255, 255, 0.4)"
+                    strokeWidth={1}
+                    strokeDasharray="3 3"
+                    fill="none"
+                    dot={false}
                   />
                 </AreaChart>
               </ResponsiveContainer>
