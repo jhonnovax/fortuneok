@@ -198,7 +198,7 @@ export default function PerformanceChart({
                     dataKey="date" 
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#9ca3af', fontSize: 12 }}
+                    tick={{ fill: theme === 'dark' ? '#9ca3af' : '#6b7280', fontSize: 12 }}
                     dy={10}
                   />
                   <YAxis 
