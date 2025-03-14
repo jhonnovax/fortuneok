@@ -350,7 +350,7 @@ export default function Dashboard() {
       </div>
 
       {/* Tabs and Add Transaction button in same row */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center !mt-0">
         <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
         <AddInvestmentButton onClick={handleAddInvestmentClick} />
       </div>
