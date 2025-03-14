@@ -352,7 +352,7 @@ export default function AllocationChart() {
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Legend layout="vertical" verticalAlign="middle" align="right" />
+                    <Legend layout="horizontal" verticalAlign="bottom" align="center" />
                     <Tooltip content={<CustomTooltip />} />
                   </PieChart>
                 </ResponsiveContainer>
@@ -386,7 +386,7 @@ export default function AllocationChart() {
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Legend layout="vertical" verticalAlign="middle" align="right" />
+                    <Legend layout="horizontal" verticalAlign="bottom" align="center" />
                     <Tooltip content={<CustomTooltip />} />
                   </PieChart>
                 </ResponsiveContainer>
