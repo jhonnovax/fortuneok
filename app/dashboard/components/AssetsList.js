@@ -103,16 +103,6 @@ export default function AssetsList() {
     return `$${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 
-  const toggleAll = (checked) => {
-    setAssets(assets.map(asset => ({ ...asset, checked })));
-  };
-
-  const toggleAsset = (id) => {
-    setAssets(assets.map(asset => 
-      asset.id === id ? { ...asset, checked: !asset.checked } : asset
-    ));
-  };
-
   const handleDeleteAsset = async () => {
     if (deleteModal.assetId) {
       try {
@@ -153,9 +143,6 @@ export default function AssetsList() {
     // Close the modal
     setAddTransactionModal({ isOpen: false, assetId: null, assetName: '', assetType: '' });
   };
-
-  const allChecked = assets.every(asset => asset.checked);
-  const selectedCount = assets.filter(asset => asset.checked).length;
 
   const renderChangeIndicator = (changePercent) => {
     const cleanPercentage = changePercent.replace(/^[+-]/, '');
@@ -211,42 +198,12 @@ export default function AssetsList() {
 
   return (
     <div className="">
-      {/* Sticky Select All Toggle */}
-      <div className="sticky top-0 bg-base-100 py-2 -mx-4 px-6 border-b border-base-content/10 z-10">
-        <label className="cursor-pointer flex items-center gap-2">
-          <input
-            type="checkbox"
-            className="checkbox checkbox-primary checkbox-sm"
-            checked={allChecked}
-            ref={input => {
-              if (input) {
-                input.indeterminate = selectedCount > 0 && !allChecked;
-              }
-            }}
-            onChange={(e) => toggleAll(e.target.checked)}
-          />
-          <span className="text-sm font-medium">
-            {allChecked 
-              ? 'Select All' 
-              : selectedCount === 0 
-                ? 'None Selected'
-                : `${selectedCount} selected`}
-          </span>
-        </label>
-      </div>
-
       {/* Assets List */}
       <div className="divide-y divide-base-content/10">
         {assets.map((asset) => (
           <div key={asset.id} className="hover:bg-base-200/50 transition-colors">
-            <div className="p-4">
+            <div className="px-2 py-4">
               <div className="flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  className="checkbox checkbox-primary checkbox-sm"
-                  checked={asset.checked}
-                  onChange={() => toggleAsset(asset.id)}
-                />
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <div>
