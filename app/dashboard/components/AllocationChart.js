@@ -6,10 +6,11 @@ import {
   Cell,
   ResponsiveContainer,
   Legend,
+  Tooltip,
 } from 'recharts';
 import { useState, useEffect } from 'react';
 import { getInvestments } from '../services/investmentService';
-import { formatNumber } from '../services/formatService';
+import { formatCurrency } from '../services/formatService';
 
 const COLORS = [
   '#006e00', // Primary green
@@ -27,21 +28,24 @@ const COLORS = [
 const RADIAN = Math.PI / 180;
 
 // Render the percentage inside the slice
-const renderPercentageLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percentage }) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+const renderPercentageLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, value, name }) => {
+  const radius = 0.5 * outerRadius;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
+  
+  if (percent < 0.05) return null;
+  
   return (
     <text
       x={x}
       y={y}
       fill="white"
       textAnchor="middle"
-      dominantBaseline="middle"
-      className="text-sm font-medium"
+      dominantBaseline="central"
+      fontSize={12}
+      fontWeight="bold"
     >
-      {percentage}%
+      {`${(percent * 100).toFixed(0)}%`}
     </text>
   );
 };
@@ -93,10 +97,29 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, nam
         fill="currentColor"
         className="text-sm"
       >
-        ${formatNumber(value)}
+        ${formatCurrency(value)}
       </text>
     </g>
   );
+};
+
+// Custom tooltip component
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-base-100 p-2 border border-base-300 shadow-md rounded-md">
+        <div className="flex items-center gap-2">
+          <div 
+            className="w-3 h-3 rounded-sm" 
+            style={{ backgroundColor: payload[0].payload.fill || payload[0].color }}
+          />
+          <span className="font-medium">{payload[0].payload.name}</span>
+        </div>
+        <p className="text-sm mt-1">{formatCurrency(payload[0].value)}</p>
+      </div>
+    );
+  }
+  return null;
 };
 
 export default function AllocationChart() {
@@ -257,6 +280,17 @@ export default function AllocationChart() {
     return displayNames[category] || category;
   };
 
+  // Add fill property to data for tooltip color
+  const categoryDataWithFill = categoryData.map((item, index) => ({
+    ...item,
+    fill: COLORS[index % COLORS.length]
+  }));
+  
+  const assetDataWithFill = assetData.map((item, index) => ({
+    ...item,
+    fill: COLORS[index % COLORS.length]
+  }));
+  
   if (loading) {
     return (
       <div className="w-full h-[400px] flex items-center justify-center">
@@ -289,100 +323,76 @@ export default function AllocationChart() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      {/* Category Allocation Chart */}
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body p-6">
-          <h3 className="card-title text-lg font-bold text-center w-full border-b pb-3 mb-2">Allocation by Category</h3>
-          <div className="h-[350px] flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={categoryDataWithPercentage}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={renderPercentageLabel}
-                  outerRadius={100}
-                  innerRadius={50}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {categoryDataWithPercentage.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill={COLORS[index % COLORS.length]}
-                      stroke="hsl(var(--b1))"
-                      strokeWidth={2}
-                    />
-                  ))}
-                </Pie>
-                <Pie
-                  data={categoryDataWithPercentage}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={renderCustomizedLabel}
-                  outerRadius={100}
-                  innerRadius={50}
-                  fill="none"
-                  dataKey="value"
-                />
-              </PieChart>
-            </ResponsiveContainer>
+    <div className="card bg-base-100 shadow-xl">
+      <div className="card-body">
+        <div className="flex flex-col 2xl:flex-row gap-8">
+          {/* Category Allocation */}
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold mb-4 text-center">Category Allocation</h3>
+            <div className="h-[300px]">
+              {categoryData.length === 0 ? (
+                <div className="h-full flex items-center justify-center">
+                  <p className="text-gray-500">No data available</p>
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={categoryDataWithFill}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={renderPercentageLabel}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      nameKey="name"
+                      dataKey="value"
+                    >
+                      {categoryDataWithFill.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Legend layout="vertical" verticalAlign="middle" align="right" />
+                    <Tooltip content={<CustomTooltip />} />
+                  </PieChart>
+                </ResponsiveContainer>
+              )}
+            </div>
           </div>
-        </div>
-      </div>
-
-      {/* Asset Allocation Chart */}
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body p-6">
-          <h3 className="card-title text-lg font-bold text-center w-full border-b pb-3 mb-2">Allocation by Asset</h3>
-          {assetDataWithPercentage.length === 0 ? (
-            <div className="h-[350px] flex items-center justify-center">
-              <p className="text-center text-gray-500">
-                No asset data available.
-              </p>
+          
+          {/* Asset Type Allocation */}
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold mb-4 text-center">Asset Allocation</h3>
+            <div className="h-[300px]">
+              {assetData.length === 0 ? (
+                <div className="h-full flex items-center justify-center">
+                  <p className="text-gray-500">No data available</p>
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={assetDataWithFill}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={renderPercentageLabel}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      nameKey="name"
+                      dataKey="value"
+                    >
+                      {assetDataWithFill.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Legend layout="vertical" verticalAlign="middle" align="right" />
+                    <Tooltip content={<CustomTooltip />} />
+                  </PieChart>
+                </ResponsiveContainer>
+              )}
             </div>
-          ) : (
-            <div className="h-[350px] flex items-center justify-center">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={assetDataWithPercentage}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={renderPercentageLabel}
-                    outerRadius={100}
-                    innerRadius={50}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {assetDataWithPercentage.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={COLORS[index % COLORS.length]}
-                        stroke="hsl(var(--b1))"
-                        strokeWidth={2}
-                      />
-                    ))}
-                  </Pie>
-                  <Pie
-                    data={assetDataWithPercentage}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={renderCustomizedLabel}
-                    outerRadius={100}
-                    innerRadius={50}
-                    fill="none"
-                    dataKey="value"
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
