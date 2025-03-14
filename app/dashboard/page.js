@@ -8,6 +8,7 @@ import AddInvestmentModal from './components/AddInvestmentModal';
 import TabNavigation from './components/TabNavigation';
 import AddInvestmentButton from './components/AddInvestmentButton';
 import { getInvestments } from './services/investmentService';
+import PortfolioSummaryCard from './components/PortfolioSummaryCard';
 
 export const dynamic = "force-dynamic";
 
@@ -358,6 +359,13 @@ export default function Dashboard() {
       <div className="flex justify-start">
         <TimeframeToggle selected={timeframe} onSelect={setTimeframe} />
       </div>
+
+      {/* Portfolio Summary Card */}
+      <PortfolioSummaryCard 
+        portfolioSummary={portfolioSummary}
+        loading={loading}
+        error={error}
+      />
 
       {/* Render the appropriate component based on the active tab */}
       {activeTab === 'performance' && (
