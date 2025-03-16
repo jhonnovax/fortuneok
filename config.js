@@ -35,7 +35,9 @@ const config = {
           { name: 'Multi-Currency Support' },
           { name: "Stocks, ETFs, Funds, Cryptos, and more" },
           { name: "Cash, Real Estate, Savings Accounts, and more" },
-          { name: 'Visualize performance, allocation, and category trends'}
+          { name: 'Performance and allocation charts'},
+          { name: 'Top winners, losers, and more volume'}
+          
         ],
       }
     ],

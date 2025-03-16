@@ -19,8 +19,8 @@ const faqList = [
     answer: <div className="space-y-2 leading-relaxed">Yes! FortuneOK supports multiple currencies. You can add your investments in different currencies and FortuneOK will convert them to your base currency for you.</div>,
   },
   {
-    question: "Can I migrate my existing investments?",
-    answer: <div className="space-y-2 leading-relaxed">Yes! For now you can import or export your investments to Excel/CSV.</div>,
+    question: "How FortuneOK improve my investment decisions?",
+    answer: <div className="space-y-2 leading-relaxed">FortuneOK provides you with a comprehensive overview of your portfolio, including performance, allocation, and category trends. This information helps you make informed decisions about your investments.</div>,
   },
   {
     question: 'It is secure?',
