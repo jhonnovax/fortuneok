@@ -98,7 +98,7 @@ export default function PerformanceChart({
           ) : (
             <div className="w-full h-[300px] relative">
               {/* Legend in top right with values below labels */}
-              <div className="absolute top-0 right-0 flex items-center gap-8 text-sm z-10">
+              <div className="absolute top-0 right-0 flex items-center gap-8 text-sm">
                 <div className="flex flex-col items-center">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full bg-[#6b8e23]"></div>
