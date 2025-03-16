@@ -18,7 +18,21 @@ export default function TransactionHistoryModal({ isOpen, onClose, investmentId,
     if (isOpen && investmentId) {
       fetchTransactions();
     }
-  }, [isOpen, investmentId]);
+
+    // Add event listener for escape key
+    const handleEscapeKey = (event) => {
+      if (event.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleEscapeKey);
+
+    // Cleanup event listener
+    return () => {
+      window.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [isOpen, investmentId, onClose]);
 
   const fetchTransactions = async () => {
     try {
@@ -127,7 +141,7 @@ export default function TransactionHistoryModal({ isOpen, onClose, investmentId,
                     : transaction.pricePerUnit;
                   
                   return (
-                    <tr key={transaction.id}>
+                    <tr key={transaction._id}>
                       <td>{formatDate(transaction.date)}</td>
                       <td>
                         <span className={`badge ${transaction.operation === 'buy' ? 'badge-success' : 'badge-error'}`}>
