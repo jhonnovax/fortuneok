@@ -8,22 +8,22 @@ export default function TimeframeToggle({ selected, onSelect }) {
 
   // Short timeframe options (displayed as buttons)
   const shortTimeframes = [
-    { value: '1D', label: '1 day' },
-    { value: '1W', label: '1 week' },
+    { value: '1D', label: '1 Day' },
+    { value: '1W', label: '1 Week' },
   ];
 
   // Month options for dropdown
   const monthOptions = [
-    { value: '1M', label: '1 month' },
-    { value: '3M', label: '3 months' },
-    { value: '6M', label: '6 months' },
+    { value: '1M', label: '1 Month' },
+    { value: '3M', label: '3 Months' },
+    { value: '6M', label: '6 Months' },
   ];
 
   // Year options for dropdown
   const yearOptions = [
-    { value: '1Y', label: '1 year' },
-    { value: '5Y', label: '5 years' },
-    { value: '10Y', label: '10 years' },
+    { value: '1Y', label: '1 Year' },
+    { value: '5Y', label: '5 Years' },
+    { value: '10Y', label: '10 Years' },
   ];
 
   // Get the current selected option's label
