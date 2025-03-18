@@ -11,7 +11,7 @@ const transactionSchema = mongoose.Schema(
     operation: {
       type: String,
       required: true,
-      enum: ["buy", "sell", "dividend", "interest", "deposit", "withdrawal"],
+      enum: ["buy", "sell", "dividend", "interest", "deposit", "withdrawal", "improvement"],
     },
     currency: {
       type: String,
