@@ -14,9 +14,12 @@ const Pricing = () => {
           <h2 className="font-bold text-3xl lg:text-5xl tracking-tight">
             Invest Smarter and Take Control Today!
           </h2>
+          <p className="text-base-content/80 mt-4">
+            🤑 Take Control of Your Finances for Less Than $5/Month! 🤑
+          </p>
         </div>
 
-        <div className="relative flex justify-center flex-col lg:flex-row items-center lg:items-stretch gap-8">
+        <div className="relative flex justify-center flex-col lg:flex-row items-center lg:items-stretch gap-6">
           {config.stripe.plans.map((plan) => (
             <div key={plan.priceId} className="rounded-[1.3rem] border border-base-content/5 bg-neutral/5 p-1.5 dark:bg-neutral/50 ">
               <div className="relative w-full max-w-lg">
