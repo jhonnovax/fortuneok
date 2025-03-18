@@ -9,7 +9,6 @@ import {
   Tooltip,
 } from 'recharts';
 import { useState, useEffect } from 'react';
-import { getInvestments } from '../services/investmentService';
 import { formatCurrency } from '../services/formatService';
 
 const COLORS = [
@@ -28,7 +27,7 @@ const COLORS = [
 const RADIAN = Math.PI / 180;
 
 // Render the percentage inside the slice
-const renderPercentageLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, value, name }) => {
+const renderPercentageLabel = ({ cx, cy, midAngle, outerRadius, percent }) => {
   const radius = 0.5 * outerRadius;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -50,61 +49,8 @@ const renderPercentageLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   );
 };
 
-// Render the external label with connecting line
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, name, value }) => {
-  // Calculate the point on the pie edge
-  const radius = outerRadius * 1.4; // Increase this value to push labels further out
-  
-  // Calculate end point for the label
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-  
-  // Calculate the point where line starts (on the pie)
-  const startX = cx + (outerRadius * 0.95) * Math.cos(-midAngle * RADIAN);
-  const startY = cy + (outerRadius * 0.95) * Math.sin(-midAngle * RADIAN);
-
-  // Determine text anchor based on position
-  const textAnchor = x > cx ? 'start' : 'end';
-
-  return (
-    <g>
-      {/* Simple straight line */}
-      <line
-        x1={startX}
-        y1={startY}
-        x2={x}
-        y2={y}
-        stroke="hsl(var(--bc) / 0.5)"
-        strokeWidth="1"
-      />
-      
-      {/* Label text */}
-      <text
-        x={x}
-        y={y}
-        dy={-2}
-        textAnchor={textAnchor}
-        fill="currentColor"
-        className="text-sm"
-      >
-        <tspan fontWeight="bold">{name}</tspan>
-      </text>
-      <text
-        x={x}
-        y={y}
-        dy={16}
-        textAnchor={textAnchor}
-        fill="currentColor"
-        className="text-sm"
-      >
-        ${formatCurrency(value)}
-      </text>
-    </g>
-  );
-};
-
 // Custom tooltip component
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-base-100 p-2 border border-base-300 shadow-md rounded-md">
@@ -122,59 +68,31 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-export default function AllocationChart() {
+export default function AllocationChart({ loading, data, error }) {
   const [categoryData, setCategoryData] = useState([]);
   const [categoryDataWithPercentage, setCategoryDataWithPercentage] = useState([]);
   const [assetData, setAssetData] = useState([]);
-  const [assetDataWithPercentage, setAssetDataWithPercentage] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchAllocationData = async () => {
-      try {
-        setLoading(true);
-        const investments = await getInvestments();
-        
-        // Process investments to create category allocation data
-        const categoryAllocationData = processInvestmentsForCategoryAllocation(investments);
-        setCategoryData(categoryAllocationData);
-        
-        // Calculate total for percentages
-        const categoryTotal = categoryAllocationData.reduce((sum, item) => sum + item.value, 0);
-        
-        // Add percentage to each category item
-        const categoryWithPercentage = categoryAllocationData.map(item => ({
-          ...item,
-          percentage: ((item.value / categoryTotal) * 100).toFixed(1)
-        }));
-        
-        setCategoryDataWithPercentage(categoryWithPercentage);
+    // Process investments to create category allocation data
+    const categoryAllocationData = processInvestmentsForCategoryAllocation(data);
+    setCategoryData(categoryAllocationData);
+    
+    // Calculate total for percentages
+    const categoryTotal = categoryAllocationData.reduce((sum, item) => sum + item.value, 0);
+    
+    // Add percentage to each category item
+    const categoryWithPercentage = categoryAllocationData.map(item => ({
+      ...item,
+      percentage: ((item.value / categoryTotal) * 100).toFixed(1)
+    }));
+    
+    setCategoryDataWithPercentage(categoryWithPercentage);
 
-        // Process investments to create asset allocation data
-        const assetAllocationData = processInvestmentsForAssetAllocation(investments);
-        setAssetData(assetAllocationData);
-        
-        // Calculate total for percentages
-        const assetTotal = assetAllocationData.reduce((sum, item) => sum + item.value, 0);
-        
-        // Add percentage to each asset item
-        const assetWithPercentage = assetAllocationData.map(item => ({
-          ...item,
-          percentage: ((item.value / assetTotal) * 100).toFixed(1)
-        }));
-        
-        setAssetDataWithPercentage(assetWithPercentage);
-      } catch (err) {
-        console.error('Failed to fetch allocation data:', err);
-        setError('Failed to load allocation data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAllocationData();
-  }, []);
+    // Process investments to create asset allocation data
+    const assetAllocationData = processInvestmentsForAssetAllocation(data);
+    setAssetData(assetAllocationData);
+  }, [data]);
 
   // Process investments to create category allocation data
   const processInvestmentsForCategoryAllocation = (investments) => {
@@ -186,7 +104,7 @@ export default function AllocationChart() {
     const categoryMap = {};
 
     // Process each investment
-    investments.forEach(investment => {
+    data.forEach(investment => {
       const category = investment.category;
       
       if (!categoryMap[category]) {

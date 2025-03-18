@@ -11,16 +11,19 @@ import {
 } from 'recharts';
 import { useEffect, useState } from 'react';
 import { formatCurrency } from '../services/formatService';
+import { processInvestmentsForPerformance } from '../services/performanceChartService';
 
 export default function PerformanceChart({ 
   data = [],
+  timeframe = 'all',
   portfolioSummary = { total: 0, profit: 0, profitPercentage: 0, period: 'all' },
   loading = false,
   error = null
 }) {
   const [theme, setTheme] = useState('light');
   const [hoveredData, setHoveredData] = useState(null);
-  
+  const [performanceData, setPerformanceData] = useState([]);
+
   useEffect(() => {
     // Check if dark theme is active
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
@@ -43,6 +46,12 @@ export default function PerformanceChart({
 
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    // Process investments to create performance data
+    const chartData = processInvestmentsForPerformance(data, timeframe);
+    setPerformanceData(chartData);
+  }, [data, timeframe]);
 
   // IMPORTANT: Replace the colors completely
   const colors = {
@@ -89,7 +98,7 @@ export default function PerformanceChart({
         <div className="space-y-6">
           
           {/* Performance Chart */}
-          {data.length === 0 ? (
+          {performanceData.length === 0 ? (
             <div className="w-full h-[300px] flex items-center justify-center">
               <p className="text-center text-base-content/60">
                 No performance data available. Add investments to see your portfolio performance.
@@ -123,7 +132,7 @@ export default function PerformanceChart({
               
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart
-                  data={data}
+                  data={performanceData}
                   margin={{ top: 30, right: 30, left: 40, bottom: 0 }}
                   onMouseMove={(data) => {
                     if (data && data.activePayload && data.activePayload.length) {
