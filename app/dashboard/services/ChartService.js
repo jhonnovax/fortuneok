@@ -179,41 +179,72 @@ export const processInvestmentsForPerformance = (investments, timeframe) => {
   const now = new Date();
   let startDate = new Date(allTransactions[0]?.date || now);
 
-  if (timeframe === '1M') {
-    startDate = new Date(now);
-    startDate.setMonth(now.getMonth() - 1);
-  } else if (timeframe === '3M') {
-    startDate = new Date(now);
-    startDate.setMonth(now.getMonth() - 3);
-  } else if (timeframe === '6M') {
-    startDate = new Date(now);
-    startDate.setMonth(now.getMonth() - 6);
-  } else if (timeframe === '1Y') {
-    startDate = new Date(now);
-    startDate.setFullYear(now.getFullYear() - 1);
-  } else if (timeframe === '5Y') {
-    startDate = new Date(now);
-    startDate.setFullYear(now.getFullYear() - 5);
-  } else if (timeframe === '10Y') {
-    startDate = new Date(now);
-    startDate.setFullYear(now.getFullYear() - 10);
-  } else if (timeframe === '1D') {
+  // Create data points based on timeframe
+  const dataPoints = {};
+  
+  if (timeframe === '1D') {
+    // For 1 day, create hourly data points
     startDate = new Date(now);
     startDate.setDate(now.getDate() - 1);
+    for (let i = 0; i <= 24; i++) {
+      const date = new Date(startDate);
+      date.setHours(startDate.getHours() + i);
+      const key = date.toISOString();
+      dataPoints[key] = {
+        date: `${date.getHours()}:00`,
+        deposits: 0,
+        value: 0,
+        timestamp: date.getTime()
+      };
+    }
   } else if (timeframe === '1W') {
+    // For 1 week, create daily data points
     startDate = new Date(now);
     startDate.setDate(now.getDate() - 7);
-  }
-  // 'all' timeframe uses the earliest transaction date
+    for (let i = 0; i <= 7; i++) {
+      const date = new Date(startDate);
+      date.setDate(startDate.getDate() + i);
+      const key = date.toISOString().split('T')[0];
+      dataPoints[key] = {
+        date: date.toLocaleString('default', { weekday: 'short' }),
+        deposits: 0,
+        value: 0,
+        timestamp: date.getTime()
+      };
+    }
+  } else {
+    // For other timeframes, use monthly data points
+    const monthlyData = {};
+    let runningDeposits = 0;
+    let runningValue = 0;
 
-  // Group transactions by month
-  const monthlyData = {};
-  let runningDeposits = 0;
-  let runningValue = 0;
+    allTransactions.forEach(transaction => {
+      if (transaction.date < startDate) {
+        // For transactions before our timeframe, just update the running totals
+        if (['buy', 'deposit'].includes(transaction.operation)) {
+          runningDeposits += transaction.pricePerUnit * (transaction.shares || 1);
+          runningValue += transaction.pricePerUnit * (transaction.shares || 1);
+        } else if (['sell', 'withdrawal'].includes(transaction.operation)) {
+          runningDeposits -= transaction.pricePerUnit * (transaction.shares || 1);
+          runningValue -= transaction.pricePerUnit * (transaction.shares || 1);
+        } else if (['dividend', 'interest'].includes(transaction.operation)) {
+          runningValue += transaction.pricePerUnit;
+        }
+        return;
+      }
 
-  allTransactions.forEach(transaction => {
-    if (transaction.date < startDate) {
-      // For transactions before our timeframe, just update the running totals
+      const monthYear = `${transaction.date.getFullYear()}-${transaction.date.getMonth() + 1}`;
+      
+      if (!monthlyData[monthYear]) {
+        monthlyData[monthYear] = {
+          date: `${transaction.date.toLocaleString('default', { month: 'short' })} ${transaction.date.getFullYear()}`,
+          deposits: runningDeposits,
+          value: runningValue,
+          timestamp: new Date(transaction.date.getFullYear(), transaction.date.getMonth(), 1).getTime()
+        };
+      }
+
+      // Update running totals based on transaction type
       if (['buy', 'deposit'].includes(transaction.operation)) {
         runningDeposits += transaction.pricePerUnit * (transaction.shares || 1);
         runningValue += transaction.pricePerUnit * (transaction.shares || 1);
@@ -223,54 +254,87 @@ export const processInvestmentsForPerformance = (investments, timeframe) => {
       } else if (['dividend', 'interest'].includes(transaction.operation)) {
         runningValue += transaction.pricePerUnit;
       }
+
+      // Update the monthly data
+      monthlyData[monthYear].deposits = runningDeposits;
+      monthlyData[monthYear].value = runningValue;
+
+      if (transaction.calculatedValue) {
+        // For non-stock assets, use the calculated value
+        monthlyData[monthYear].value += transaction.calculatedValue;
+      }
+    });
+
+    // Convert to array and sort by date
+    const result = Object.values(monthlyData).sort((a, b) => a.timestamp - b.timestamp);
+
+    // Add current month if not present
+    const currentMonthYear = `${now.getFullYear()}-${now.getMonth() + 1}`;
+    if (!monthlyData[currentMonthYear] && result.length > 0) {
+      result.push({
+        date: `${now.toLocaleString('default', { month: 'short' })} ${now.getFullYear()}`,
+        deposits: result[result.length - 1].deposits,
+        value: result[result.length - 1].value,
+        timestamp: now.getTime()
+      });
+    }
+
+    return result;
+  }
+
+  // Calculate running totals
+  let runningDeposits = 0;
+  let runningValue = 0;
+
+  // Process transactions for the specific timeframe
+  allTransactions.forEach(transaction => {
+    if (transaction.date < startDate) {
+      // Calculate initial running totals from earlier transactions
+      if (['buy', 'deposit'].includes(transaction.operation)) {
+        runningDeposits += transaction.pricePerUnit * (transaction.shares || 1);
+        runningValue += transaction.pricePerUnit * (transaction.shares || 1);
+      } else if (['sell', 'withdrawal'].includes(transaction.operation)) {
+        runningDeposits -= transaction.pricePerUnit * (transaction.shares || 1);
+        runningValue -= transaction.pricePerUnit * (transaction.shares || 1);
+      }
       return;
     }
 
-    const monthYear = `${transaction.date.getFullYear()}-${transaction.date.getMonth() + 1}`;
-    
-    if (!monthlyData[monthYear]) {
-      monthlyData[monthYear] = {
-        date: `${transaction.date.toLocaleString('default', { month: 'short' })} ${transaction.date.getFullYear()}`,
-        deposits: runningDeposits,
-        value: runningValue,
-        timestamp: new Date(transaction.date.getFullYear(), transaction.date.getMonth(), 1).getTime()
-      };
+    let key;
+    if (timeframe === '1D') {
+      key = transaction.date.toISOString();
+    } else if (timeframe === '1W') {
+      key = transaction.date.toISOString().split('T')[0];
     }
 
-    // Update running totals based on transaction type
-    if (['buy', 'deposit'].includes(transaction.operation)) {
-      runningDeposits += transaction.pricePerUnit * (transaction.shares || 1);
-      runningValue += transaction.pricePerUnit * (transaction.shares || 1);
-    } else if (['sell', 'withdrawal'].includes(transaction.operation)) {
-      runningDeposits -= transaction.pricePerUnit * (transaction.shares || 1);
-      runningValue -= transaction.pricePerUnit * (transaction.shares || 1);
-    } else if (['dividend', 'interest'].includes(transaction.operation)) {
-      runningValue += transaction.pricePerUnit;
-    }
+    if (dataPoints[key]) {
+      if (['buy', 'deposit'].includes(transaction.operation)) {
+        runningDeposits += transaction.pricePerUnit * (transaction.shares || 1);
+        runningValue += transaction.pricePerUnit * (transaction.shares || 1);
+      } else if (['sell', 'withdrawal'].includes(transaction.operation)) {
+        runningDeposits -= transaction.pricePerUnit * (transaction.shares || 1);
+        runningValue -= transaction.pricePerUnit * (transaction.shares || 1);
+      }
 
-    // Update the monthly data
-    monthlyData[monthYear].deposits = runningDeposits;
-    monthlyData[monthYear].value = runningValue;
+      dataPoints[key].deposits = runningDeposits;
+      dataPoints[key].value = runningValue;
 
-    if (transaction.calculatedValue) {
-      // For non-stock assets, use the calculated value
-      monthlyData[monthYear].value += transaction.calculatedValue;
+      if (transaction.calculatedValue) {
+        dataPoints[key].value += transaction.calculatedValue;
+      }
     }
   });
 
-  // Convert to array and sort by date
-  const result = Object.values(monthlyData).sort((a, b) => a.timestamp - b.timestamp);
+  // Fill in gaps with previous values
+  let lastValue = { deposits: runningDeposits, value: runningValue };
+  Object.values(dataPoints).forEach(point => {
+    if (point.value === 0) {
+      point.deposits = lastValue.deposits;
+      point.value = lastValue.value;
+    } else {
+      lastValue = { deposits: point.deposits, value: point.value };
+    }
+  });
 
-  // Add current month if not present
-  const currentMonthYear = `${now.getFullYear()}-${now.getMonth() + 1}`;
-  if (!monthlyData[currentMonthYear] && result.length > 0) {
-    result.push({
-      date: `${now.toLocaleString('default', { month: 'short' })} ${now.getFullYear()}`,
-      deposits: result[result.length - 1].deposits,
-      value: result[result.length - 1].value,
-      timestamp: now.getTime()
-    });
-  }
-
-  return result;
+  return Object.values(dataPoints);
 };
