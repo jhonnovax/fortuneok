@@ -117,20 +117,60 @@ export const calculatePortfolioSummary = (investments, timeframe) => {
   };
 };
 
+export function calculateNonStockPerformance(investment, timeframe) {
+  const { annualInterestRate, transactions } = investment;
+  if (!annualInterestRate || !transactions.length) return 0;
+
+  const dailyRate = annualInterestRate / 365;
+  const now = new Date();
+  let totalValue = 0;
+
+  transactions.forEach(transaction => {
+    if (['buy', 'deposit'].includes(transaction.operation)) {
+      const daysHeld = (now - new Date(transaction.date)) / (1000 * 60 * 60 * 24);
+      const interest = transaction.pricePerUnit * (dailyRate * daysHeld / 100);
+      totalValue += transaction.pricePerUnit + interest;
+    }
+  });
+
+  return totalValue;
+}
+
 // Process investments to create performance data
 export const processInvestmentsForPerformance = (investments, timeframe) => {
   if (!investments || investments.length === 0) {
-      return [];
+    return [];
   }
 
-  // Get all transactions from all investments
-  const allTransactions = investments.flatMap(investment => 
-      investment.transactions.map(transaction => ({
+  // Separate stock and non-stock investments
+  const stockInvestments = investments.filter(inv => inv.category === 'Stock');
+  const nonStockInvestments = investments.filter(inv => 
+    inv.category !== 'Stock' && inv.annualInterestRate
+  );
+
+  // Process stock investments as before
+  const allTransactions = stockInvestments.flatMap(investment => 
+    investment.transactions.map(transaction => ({
       ...transaction,
       date: new Date(transaction.date),
       investmentCategory: investment.category
-      }))
+    }))
   );
+
+  // Add calculated non-stock performance
+  nonStockInvestments.forEach(investment => {
+    const value = calculateNonStockPerformance(investment, timeframe);
+    investment.transactions.forEach(transaction => {
+      if (['buy', 'deposit'].includes(transaction.operation)) {
+        allTransactions.push({
+          ...transaction,
+          date: new Date(transaction.date),
+          investmentCategory: investment.category,
+          calculatedValue: value
+        });
+      }
+    });
+  });
 
   // Sort transactions by date
   allTransactions.sort((a, b) => a.date - b.date);
@@ -140,29 +180,29 @@ export const processInvestmentsForPerformance = (investments, timeframe) => {
   let startDate = new Date(allTransactions[0]?.date || now);
 
   if (timeframe === '1M') {
-      startDate = new Date(now);
-      startDate.setMonth(now.getMonth() - 1);
+    startDate = new Date(now);
+    startDate.setMonth(now.getMonth() - 1);
   } else if (timeframe === '3M') {
-      startDate = new Date(now);
-      startDate.setMonth(now.getMonth() - 3);
+    startDate = new Date(now);
+    startDate.setMonth(now.getMonth() - 3);
   } else if (timeframe === '6M') {
-      startDate = new Date(now);
-      startDate.setMonth(now.getMonth() - 6);
+    startDate = new Date(now);
+    startDate.setMonth(now.getMonth() - 6);
   } else if (timeframe === '1Y') {
-      startDate = new Date(now);
-      startDate.setFullYear(now.getFullYear() - 1);
+    startDate = new Date(now);
+    startDate.setFullYear(now.getFullYear() - 1);
   } else if (timeframe === '5Y') {
-      startDate = new Date(now);
-      startDate.setFullYear(now.getFullYear() - 5);
+    startDate = new Date(now);
+    startDate.setFullYear(now.getFullYear() - 5);
   } else if (timeframe === '10Y') {
-      startDate = new Date(now);
-      startDate.setFullYear(now.getFullYear() - 10);
+    startDate = new Date(now);
+    startDate.setFullYear(now.getFullYear() - 10);
   } else if (timeframe === '1D') {
-      startDate = new Date(now);
-      startDate.setDate(now.getDate() - 1);
+    startDate = new Date(now);
+    startDate.setDate(now.getDate() - 1);
   } else if (timeframe === '1W') {
-      startDate = new Date(now);
-      startDate.setDate(now.getDate() - 7);
+    startDate = new Date(now);
+    startDate.setDate(now.getDate() - 7);
   }
   // 'all' timeframe uses the earliest transaction date
 
@@ -172,45 +212,50 @@ export const processInvestmentsForPerformance = (investments, timeframe) => {
   let runningValue = 0;
 
   allTransactions.forEach(transaction => {
-      if (transaction.date < startDate) {
+    if (transaction.date < startDate) {
       // For transactions before our timeframe, just update the running totals
       if (['buy', 'deposit'].includes(transaction.operation)) {
-          runningDeposits += transaction.pricePerUnit * (transaction.shares || 1);
-          runningValue += transaction.pricePerUnit * (transaction.shares || 1);
+        runningDeposits += transaction.pricePerUnit * (transaction.shares || 1);
+        runningValue += transaction.pricePerUnit * (transaction.shares || 1);
       } else if (['sell', 'withdrawal'].includes(transaction.operation)) {
-          runningDeposits -= transaction.pricePerUnit * (transaction.shares || 1);
-          runningValue -= transaction.pricePerUnit * (transaction.shares || 1);
+        runningDeposits -= transaction.pricePerUnit * (transaction.shares || 1);
+        runningValue -= transaction.pricePerUnit * (transaction.shares || 1);
       } else if (['dividend', 'interest'].includes(transaction.operation)) {
-          runningValue += transaction.pricePerUnit;
+        runningValue += transaction.pricePerUnit;
       }
       return;
-      }
+    }
 
-      const monthYear = `${transaction.date.getFullYear()}-${transaction.date.getMonth() + 1}`;
-      
-      if (!monthlyData[monthYear]) {
+    const monthYear = `${transaction.date.getFullYear()}-${transaction.date.getMonth() + 1}`;
+    
+    if (!monthlyData[monthYear]) {
       monthlyData[monthYear] = {
-          date: `${transaction.date.toLocaleString('default', { month: 'short' })} ${transaction.date.getFullYear()}`,
-          deposits: runningDeposits,
-          value: runningValue,
-          timestamp: new Date(transaction.date.getFullYear(), transaction.date.getMonth(), 1).getTime()
+        date: `${transaction.date.toLocaleString('default', { month: 'short' })} ${transaction.date.getFullYear()}`,
+        deposits: runningDeposits,
+        value: runningValue,
+        timestamp: new Date(transaction.date.getFullYear(), transaction.date.getMonth(), 1).getTime()
       };
-      }
+    }
 
-      // Update running totals based on transaction type
-      if (['buy', 'deposit'].includes(transaction.operation)) {
+    // Update running totals based on transaction type
+    if (['buy', 'deposit'].includes(transaction.operation)) {
       runningDeposits += transaction.pricePerUnit * (transaction.shares || 1);
       runningValue += transaction.pricePerUnit * (transaction.shares || 1);
-      } else if (['sell', 'withdrawal'].includes(transaction.operation)) {
+    } else if (['sell', 'withdrawal'].includes(transaction.operation)) {
       runningDeposits -= transaction.pricePerUnit * (transaction.shares || 1);
       runningValue -= transaction.pricePerUnit * (transaction.shares || 1);
-      } else if (['dividend', 'interest'].includes(transaction.operation)) {
+    } else if (['dividend', 'interest'].includes(transaction.operation)) {
       runningValue += transaction.pricePerUnit;
-      }
+    }
 
-      // Update the monthly data
-      monthlyData[monthYear].deposits = runningDeposits;
-      monthlyData[monthYear].value = runningValue;
+    // Update the monthly data
+    monthlyData[monthYear].deposits = runningDeposits;
+    monthlyData[monthYear].value = runningValue;
+
+    if (transaction.calculatedValue) {
+      // For non-stock assets, use the calculated value
+      monthlyData[monthYear].value += transaction.calculatedValue;
+    }
   });
 
   // Convert to array and sort by date
@@ -219,12 +264,12 @@ export const processInvestmentsForPerformance = (investments, timeframe) => {
   // Add current month if not present
   const currentMonthYear = `${now.getFullYear()}-${now.getMonth() + 1}`;
   if (!monthlyData[currentMonthYear] && result.length > 0) {
-      result.push({
+    result.push({
       date: `${now.toLocaleString('default', { month: 'short' })} ${now.getFullYear()}`,
       deposits: result[result.length - 1].deposits,
       value: result[result.length - 1].value,
       timestamp: now.getTime()
-      });
+    });
   }
 
   return result;

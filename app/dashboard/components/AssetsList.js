@@ -6,6 +6,7 @@ import EditAssetModal from './EditAssetModal';
 import TransactionHistoryModal from './TransactionHistoryModal';
 import AddTransactionModal from './AddTransactionModal';
 import { getInvestments, deleteInvestment } from '../services/investmentService';
+import { calculateNonStockPerformance } from '../services/ChartService';
 
 export default function AssetsList() {
   const [assets, setAssets] = useState([]);
@@ -46,19 +47,26 @@ export default function AssetsList() {
       setLoading(true);
       const investments = await getInvestments();
       
-      // Transform investments to match the UI format
-      const formattedAssets = investments.map(investment => ({
-        id: investment.id,
-        type: investment.category,
-        symbol: investment.symbol || 'N/A',
-        name: investment.description,
-        shares: calculateTotalShares(investment.transactions),
-        value: calculateTotalValue(investment.transactions),
-        change: '0.00', // This would need to be calculated based on historical data
-        changePercent: '0.00%', // This would need to be calculated based on historical data
-        checked: false,
-        rawData: investment // Keep the original data for reference
-      }));
+      const formattedAssets = investments.map(investment => {
+        const isNonStock = investment.category !== 'Stock' && investment.annualInterestRate;
+        const value = isNonStock 
+          ? calculateNonStockPerformance(investment, 'all')
+          : calculateTotalValue(investment.transactions);
+
+        return {
+          id: investment.id,
+          type: investment.category,
+          symbol: investment.symbol || 'N/A',
+          name: investment.description,
+          shares: calculateTotalShares(investment.transactions),
+          value,
+          annualRate: investment.annualInterestRate,
+          change: isNonStock ? (investment.annualInterestRate + '%') : '0.00',
+          changePercent: isNonStock ? (investment.annualInterestRate + '%') : '0.00%',
+          checked: false,
+          rawData: investment
+        };
+      });
       
       setAssets(formattedAssets);
     } catch (err) {
