@@ -19,7 +19,7 @@ export default function PortfolioSummary({ totalValue, totalProfit }) {
       <div className="flex items-center justify-between">
         <span className="text-sm text-base-content/70">Total Portfolio Value</span>
         <div className="flex items-center gap-2">
-          <span className="text-xl font-bold text-primary-content">
+          <span className="text-xl font-bold text-success-content">
             {isHidden ? (
               <span className="flex items-center gap-1">
                 <span className="text-2xl">$</span>
@@ -31,7 +31,7 @@ export default function PortfolioSummary({ totalValue, totalProfit }) {
           </span>
           <button
             onClick={() => setIsHidden(!isHidden)}
-            className="btn btn-ghost btn-sm btn-circle text-primary"
+            className="btn btn-ghost btn-sm btn-circle text-success"
             aria-label={isHidden ? "Show values" : "Hide values"}
           >
             {isHidden ? (

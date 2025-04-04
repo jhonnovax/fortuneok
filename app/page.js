@@ -1,34 +1,154 @@
-import { Suspense } from 'react'
-import Header from "@/components/Header";
-import Hero from "@/components/Hero";
-import Problem from "@/components/Problem";
-import FeaturesAccordion from "@/components/FeaturesAccordion";
-import Pricing from "@/components/Pricing";
-import FAQ from "@/components/FAQ";
-import CTA from "@/components/CTA";
-import Footer from "@/components/Footer";
-import { getSEOTags } from "@/libs/seo";
+'use client';
 
-export const metadata = getSEOTags({
-  title: "FortuneOK | Grow and Simplify your Investments",
-  canonicalUrlRelative: "/tos",
-});
+import { useState, useEffect } from 'react';
+import TimeframeToggle from './dashboard/components/TimeframeToggle';
+import PerformanceChart from './dashboard/components/PerformanceChart';
+import AllocationChart from './dashboard/components/AllocationChart';
+import AddInvestmentModal from './dashboard/components/AddInvestmentModal';
+import TabNavigation from './dashboard/components/TabNavigation';
+import AddInvestmentButton from './dashboard/components/AddInvestmentButton';
+import { getInvestments } from './dashboard/services/investmentService';
+import PortfolioSummaryCard from './dashboard/components/PortfolioSummaryCard';
+import { calculatePortfolioSummary } from './dashboard/services/ChartService';
+export const dynamic = "force-dynamic";
 
-export default function Home() {
+// This is a private page: It's protected by the layout.js component which ensures the user is authenticated.
+// It's a server compoment which means you can fetch data (like the user profile) before the page is rendered.
+// See https://shipfa.st/docs/tutorials/private-page
+export default function Dashboard() {
+  // Default to 1 month timeframe
+  const [timeframe, setTimeframe] = useState('all');
+  const [activeTab, setActiveTab] = useState('performance');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [investmentData, setInvestmentData] = useState([]);
+  const [portfolioSummary, setPortfolioSummary] = useState({
+    total: 0,
+    profit: 0,
+    profitPercentage: 0,
+    period: 'all'
+  });
+
+  // Fetch data when timeframe changes or after adding a new investment
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const investments = await getInvestments();
+        setInvestmentData(investments)
+
+        // Calculate portfolio summary
+        const summary = calculatePortfolioSummary(investments, timeframe);
+        setPortfolioSummary(summary);
+      } catch (err) {
+        console.error('Failed to fetch data:', err);
+        setError('Failed to load data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [timeframe]);
+
+  // Define operations by category
+  const getOperationsByCategory = (category) => {
+    switch(category) {
+      case 'real_estate':
+      case 'precious_metals':
+      case 'custom_asset':
+        return ['buy', 'sell', 'improvement'];
+      case 'p2p_loans':
+      case 'savings_accounts':
+      case 'cash':
+        return ['deposit', 'interest', 'withdrawal'];
+      case 'stocks':
+      case 'bonds':
+      case 'cryptocurrencies':
+      case 'etfs_funds':
+      case 'options':
+      case 'futures':
+        return ['buy', 'sell', 'dividend'];
+      default:
+        return ['buy', 'sell'];
+    }
+  };
+
+  // Get default operation based on category
+  const getDefaultOperation = (category) => {
+    const operations = getOperationsByCategory(category);
+    return operations[0] || 'buy';
+  };
+
+  const handleSaveInvestment = async (formData, saveAndAdd) => {
+    console.log('Saving investment:', formData);
+    
+    // Refresh data after saving
+    if (!saveAndAdd) {
+      const investments = await getInvestments();
+      setInvestmentData(investments);
+    }
+  };
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
+
+  const handleAddInvestmentClick = () => {
+    setIsAddModalOpen(true);
+  };
+
   return (
-    <>
-      <Suspense>
-        <Header />
-      </Suspense>
-      <main>
-        <Hero />
-        <Problem />
-        {/* <FeaturesAccordion /> */}
-        <Pricing />
-        <FAQ />
-        {/* <CTA /> */}
-      </main>
-      <Footer />
-    </>
+    <div className="space-y-6 md:space-y-8">
+      <div className="flex flex-col items-center">
+        <h1 className="sr-only">Portfolio Overview</h1>
+      </div>
+
+      {/* Tabs and Add Transaction button in same row */}
+      <div className="flex justify-between items-center !mt-0">
+        <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
+        <AddInvestmentButton onClick={handleAddInvestmentClick} />
+      </div>
+
+      {/* Timeframe Toggle */}
+      <div className="flex justify-start">
+        <TimeframeToggle selected={timeframe} onSelect={setTimeframe} />
+      </div>
+
+      {/* Portfolio Summary Card */}
+      <PortfolioSummaryCard 
+        portfolioSummary={portfolioSummary}
+        loading={loading}
+        error={error}
+      />
+
+      {/* Render the appropriate component based on the active tab */}
+      {activeTab === 'performance' && (
+        <PerformanceChart 
+          timeframe={timeframe} 
+          data={investmentData} 
+          portfolioSummary={portfolioSummary}
+          loading={loading}
+          error={error}
+        />
+      )}
+      {activeTab === 'allocation' && (
+        <AllocationChart 
+          data={investmentData} 
+          loading={loading}
+          error={error}
+        />
+      )}
+
+      {/* Add Investment Modal */}
+      <AddInvestmentModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSave={handleSaveInvestment}
+        getOperationsByCategory={getOperationsByCategory}
+        getDefaultOperation={getDefaultOperation}
+      />
+    </div>
   );
 }

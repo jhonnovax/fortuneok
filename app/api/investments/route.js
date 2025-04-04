@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next";
 import connectMongo from "@/libs/mongoose";
 import Investment from "@/models/Investment";
 import { authOptions } from "@/libs/next-auth";
+import { dummyData } from "./dummy-data";
 
 // GET - Retrieve all investments for the current user
 export async function GET(req) {
@@ -10,7 +11,7 @@ export async function GET(req) {
     const session = await getServerSession(authOptions);
     
     if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(dummyData);
     }
     
     await connectMongo();

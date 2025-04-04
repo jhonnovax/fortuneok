@@ -65,17 +65,19 @@ module.exports = {
     // https://daisyui.com/
     themes: [
       {
-        lemonade: {
-          ...require("daisyui/src/theming/themes")["lemonade"],
-          success: "#3e5e17", // custom success color
-          "success-content": "#ffffff",
-          error: "#e74c3c", // custom danger/error color
-          "error-content": "#ffffff",
+        bumblebee: {
+          ...require("daisyui/src/theming/themes")["bumblebee"],
+          primary: "#a9ff68",
         },
       },
-      "forest",
+      {
+        dim: {
+          ...require("daisyui/src/theming/themes")["dim"],
+          primary: "#a9ff68",
+        },
+      }
     ],
-    lightTheme: "lemonade",
-    darkTheme: "forest",
+    lightTheme: "bumblebee",
+    darkTheme: "dim",
   },
 };
