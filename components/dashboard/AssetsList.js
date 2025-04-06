@@ -3,8 +3,6 @@
 import { useState, useEffect } from 'react';
 import DeleteAssetModal from './DeleteAssetModal';
 import EditAssetModal from './EditAssetModal';
-import TransactionHistoryModal from './TransactionHistoryModal';
-import AddTransactionModal from './AddTransactionModal';
 import { getInvestments, deleteInvestment } from '../../services/investmentService';
 import { calculateNonStockPerformance } from '../../services/ChartService';
 
@@ -22,25 +20,6 @@ export default function AssetsList() {
     isOpen: false,
     assetId: null
   });
-  
-  const [transactionHistoryModal, setTransactionHistoryModal] = useState({
-    isOpen: false,
-    assetId: null,
-    assetName: '',
-    assetType: ''
-  });
-  
-  const [addTransactionModal, setAddTransactionModal] = useState({
-    isOpen: false,
-    assetId: null,
-    assetName: '',
-    assetType: ''
-  });
-
-  // Fetch investments when component mounts
-  useEffect(() => {
-    fetchInvestments();
-  }, []);
   
   const fetchInvestments = async () => {
     try {
@@ -143,14 +122,11 @@ export default function AssetsList() {
     // Refresh the investments to get the latest data
     fetchInvestments();
   };
-  
-  const handleAddTransaction = () => {
-    // Refresh the investments to get the latest data
+
+   // Fetch investments when component mounts
+   useEffect(() => {
     fetchInvestments();
-    
-    // Close the modal
-    setAddTransactionModal({ isOpen: false, assetId: null, assetName: '', assetType: '' });
-  };
+  }, []);
 
   const renderChangeIndicator = (changePercent) => {
     const cleanPercentage = changePercent.replace(/^[+-]/, '');
@@ -251,30 +227,6 @@ export default function AssetsList() {
                           </li>
                           <li>
                             <a 
-                              onClick={() => setAddTransactionModal({ 
-                                isOpen: true, 
-                                assetId: asset.id,
-                                assetName: asset.name,
-                                assetType: asset.type
-                              })}
-                            >
-                              Add Transaction
-                            </a>
-                          </li>
-                          <li>
-                            <a 
-                              onClick={() => setTransactionHistoryModal({ 
-                                isOpen: true, 
-                                assetId: asset.id,
-                                assetName: asset.name,
-                                assetType: asset.type
-                              })}
-                            >
-                              Transaction History
-                            </a>
-                          </li>
-                          <li>
-                            <a 
                               className="text-error"
                               onClick={() => setDeleteModal({ isOpen: true, assetId: asset.id })}
                             >
@@ -307,25 +259,7 @@ export default function AssetsList() {
         onSave={handleEditAsset}
         investmentId={editModal.assetId}
       />
-      
-      {/* Transaction History Modal */}
-      <TransactionHistoryModal
-        isOpen={transactionHistoryModal.isOpen}
-        onClose={() => setTransactionHistoryModal({ isOpen: false, assetId: null, assetName: '', assetType: '' })}
-        investmentId={transactionHistoryModal.assetId}
-        investmentName={transactionHistoryModal.assetName}
-        investmentType={transactionHistoryModal.assetType}
-      />
-      
-      {/* Add Transaction Modal */}
-      <AddTransactionModal
-        isOpen={addTransactionModal.isOpen}
-        onClose={() => setAddTransactionModal({ isOpen: false, assetId: null, assetName: '', assetType: '' })}
-        onSave={handleAddTransaction}
-        investmentId={addTransactionModal.assetId}
-        investmentName={addTransactionModal.assetName}
-        investmentType={addTransactionModal.assetType}
-      />
+  
     </div>
   );
 } 
