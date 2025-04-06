@@ -26,8 +26,6 @@ export default function RootLayout({ children }) {
 			data-theme={config.colors.theme}
 			className={font.className}
 		>
-			<Analytics />
-			<SpeedInsights />
 			<body>
 				{/* ClientLayout contains all the client wrappers (Crisp chat support, toast messages, tooltips, etc.) */}
 				<ClientLayout>
@@ -35,6 +33,13 @@ export default function RootLayout({ children }) {
 						{children}
 					</DashboardLayout>
 				</ClientLayout>
+
+				{process.env.NODE_ENV === 'production' && (
+					<>
+						<Analytics />
+						<SpeedInsights />
+					</>
+				)}
 			</body>
 		</html>
 	);
