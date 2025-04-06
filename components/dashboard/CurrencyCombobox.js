@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { currencies } from '../assets/currencies';
+import currencies from '@/public/currencies.json';
 
 export default function CurrencyCombobox({ 
   value, 

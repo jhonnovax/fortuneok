@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { addTransaction } from '../services/investmentService';
+import { updateTransaction } from '../../services/investmentService';
 import CurrencyInput from 'react-currency-input-field';
 import CurrencyCombobox from './CurrencyCombobox';
 
@@ -11,29 +11,47 @@ const OPERATIONS = [
 ];
 
 const INITIAL_FORM_STATE = {
-  date: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
-  operation: 'buy',
+  date: '',
+  operation: '',
   shares: '',
-  currency: 'USD',
+  currency: '',
   price: '',
   notes: ''
 };
 
-export default function AddTransactionModal({ isOpen, onClose, onSave, investmentId, investmentName, investmentType }) {
+export default function EditTransactionModal({ 
+  isOpen, 
+  onClose, 
+  onSave, 
+  investmentId, 
+  transaction,
+  investmentType 
+}) {
   const [form, setForm] = useState(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
 
-  // Reset form when modal opens
+  // Load transaction data when modal opens
   useEffect(() => {
-    if (isOpen) {
-      setForm(INITIAL_FORM_STATE);
+    if (isOpen && transaction) {
+      // Format date from ISO string to YYYY-MM-DD for input
+      const date = transaction.date ? new Date(transaction.date).toISOString().split('T')[0] : '';
+      
+      setForm({
+        date: date,
+        operation: transaction.operation || '',
+        shares: transaction.shares ? transaction.shares.toString() : '',
+        currency: transaction.currency || 'USD',
+        price: transaction.pricePerUnit ? transaction.pricePerUnit.toString() : '',
+        notes: transaction.note || ''
+      });
+      
       setErrors({});
       setSubmitError(null);
       setIsSubmitting(false);
     }
-  }, [isOpen]);
+  }, [isOpen, transaction]);
 
   // Add escape key handler
   useEffect(() => {
@@ -96,8 +114,8 @@ export default function AddTransactionModal({ isOpen, onClose, onSave, investmen
         note: form.notes || ''
       };
       
-      // Add the transaction to the investment
-      await addTransaction(investmentId, transactionData);
+      // Update the transaction
+      await updateTransaction(investmentId, transaction.id, transactionData);
       
       // Call the onSave callback with the form data
       if (onSave) {
@@ -107,8 +125,8 @@ export default function AddTransactionModal({ isOpen, onClose, onSave, investmen
       // Close the modal
       onClose();
     } catch (error) {
-      console.error('Error adding transaction:', error);
-      setSubmitError('Failed to add transaction. Please try again.');
+      console.error('Error updating transaction:', error);
+      setSubmitError('Failed to update transaction. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -140,7 +158,7 @@ export default function AddTransactionModal({ isOpen, onClose, onSave, investmen
           </svg>
         </button>
 
-        <h3 className="font-bold text-lg mb-6">Add Transaction for {investmentName}</h3>
+        <h3 className="font-bold text-lg mb-6">Edit Transaction</h3>
         
         {submitError && (
           <div className="alert alert-error mb-4">
@@ -150,7 +168,7 @@ export default function AddTransactionModal({ isOpen, onClose, onSave, investmen
         )}
         
         <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             {/* Date */}
             <div className="form-control">
               {renderLabel('Date')}
@@ -173,6 +191,7 @@ export default function AddTransactionModal({ isOpen, onClose, onSave, investmen
                 onChange={(e) => setForm({ ...form, operation: e.target.value })}
                 disabled={isSubmitting}
               >
+                <option value="">Select operation...</option>
                 {OPERATIONS.map(op => (
                   <option key={op.value} value={op.value}>{op.label}</option>
                 ))}
@@ -187,7 +206,7 @@ export default function AddTransactionModal({ isOpen, onClose, onSave, investmen
                 <CurrencyInput
                   id="shares-input"
                   name="shares"
-                  placeholder="6.786"
+                  placeholder="e.g. 10.5"
                   className={`input input-bordered w-full ${errors.shares ? 'input-error' : ''}`}
                   value={form.shares}
                   decimalsLimit={6}
@@ -218,7 +237,7 @@ export default function AddTransactionModal({ isOpen, onClose, onSave, investmen
               <CurrencyInput
                 id="price-input"
                 name="price"
-                placeholder="$245.76"
+                placeholder="$125.76"
                 className={`input input-bordered w-full ${errors.price ? 'input-error' : ''}`}
                 value={form.price}
                 decimalsLimit={2}
@@ -231,7 +250,7 @@ export default function AddTransactionModal({ isOpen, onClose, onSave, investmen
             </div>
 
             {/* Notes */}
-            <div className="form-control md:col-span-2">
+            <div className="form-control">
               {renderLabel('Notes', false)}
               <textarea 
                 className="textarea textarea-bordered w-full"
@@ -262,7 +281,7 @@ export default function AddTransactionModal({ isOpen, onClose, onSave, investmen
                   <span className="loading loading-spinner loading-xs"></span>
                   Saving...
                 </>
-              ) : 'Add Transaction'}
+              ) : 'Save Changes'}
             </button>
           </div>
         </form>

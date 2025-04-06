@@ -4,7 +4,7 @@ import ClientLayout from "@/components/LayoutClient";
 import config from "@/config";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import DashboardLayout from './dashboard/components/DashboardLayout';
+import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import "./globals.css";
 const font = Inter({ subsets: ["latin"] });
 

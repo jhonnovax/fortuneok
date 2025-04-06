@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { updateTransaction } from '../services/investmentService';
+import { addTransaction } from '../../services/investmentService';
 import CurrencyInput from 'react-currency-input-field';
 import CurrencyCombobox from './CurrencyCombobox';
 
@@ -11,47 +11,29 @@ const OPERATIONS = [
 ];
 
 const INITIAL_FORM_STATE = {
-  date: '',
-  operation: '',
+  date: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
+  operation: 'buy',
   shares: '',
-  currency: '',
+  currency: 'USD',
   price: '',
   notes: ''
 };
 
-export default function EditTransactionModal({ 
-  isOpen, 
-  onClose, 
-  onSave, 
-  investmentId, 
-  transaction,
-  investmentType 
-}) {
+export default function AddTransactionModal({ isOpen, onClose, onSave, investmentId, investmentName, investmentType }) {
   const [form, setForm] = useState(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
 
-  // Load transaction data when modal opens
+  // Reset form when modal opens
   useEffect(() => {
-    if (isOpen && transaction) {
-      // Format date from ISO string to YYYY-MM-DD for input
-      const date = transaction.date ? new Date(transaction.date).toISOString().split('T')[0] : '';
-      
-      setForm({
-        date: date,
-        operation: transaction.operation || '',
-        shares: transaction.shares ? transaction.shares.toString() : '',
-        currency: transaction.currency || 'USD',
-        price: transaction.pricePerUnit ? transaction.pricePerUnit.toString() : '',
-        notes: transaction.note || ''
-      });
-      
+    if (isOpen) {
+      setForm(INITIAL_FORM_STATE);
       setErrors({});
       setSubmitError(null);
       setIsSubmitting(false);
     }
-  }, [isOpen, transaction]);
+  }, [isOpen]);
 
   // Add escape key handler
   useEffect(() => {
@@ -114,8 +96,8 @@ export default function EditTransactionModal({
         note: form.notes || ''
       };
       
-      // Update the transaction
-      await updateTransaction(investmentId, transaction.id, transactionData);
+      // Add the transaction to the investment
+      await addTransaction(investmentId, transactionData);
       
       // Call the onSave callback with the form data
       if (onSave) {
@@ -125,8 +107,8 @@ export default function EditTransactionModal({
       // Close the modal
       onClose();
     } catch (error) {
-      console.error('Error updating transaction:', error);
-      setSubmitError('Failed to update transaction. Please try again.');
+      console.error('Error adding transaction:', error);
+      setSubmitError('Failed to add transaction. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -158,7 +140,7 @@ export default function EditTransactionModal({
           </svg>
         </button>
 
-        <h3 className="font-bold text-lg mb-6">Edit Transaction</h3>
+        <h3 className="font-bold text-lg mb-6">Add Transaction for {investmentName}</h3>
         
         {submitError && (
           <div className="alert alert-error mb-4">
@@ -168,7 +150,7 @@ export default function EditTransactionModal({
         )}
         
         <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Date */}
             <div className="form-control">
               {renderLabel('Date')}
@@ -191,7 +173,6 @@ export default function EditTransactionModal({
                 onChange={(e) => setForm({ ...form, operation: e.target.value })}
                 disabled={isSubmitting}
               >
-                <option value="">Select operation...</option>
                 {OPERATIONS.map(op => (
                   <option key={op.value} value={op.value}>{op.label}</option>
                 ))}
@@ -206,7 +187,7 @@ export default function EditTransactionModal({
                 <CurrencyInput
                   id="shares-input"
                   name="shares"
-                  placeholder="e.g. 10.5"
+                  placeholder="6.786"
                   className={`input input-bordered w-full ${errors.shares ? 'input-error' : ''}`}
                   value={form.shares}
                   decimalsLimit={6}
@@ -237,7 +218,7 @@ export default function EditTransactionModal({
               <CurrencyInput
                 id="price-input"
                 name="price"
-                placeholder="$125.76"
+                placeholder="$245.76"
                 className={`input input-bordered w-full ${errors.price ? 'input-error' : ''}`}
                 value={form.price}
                 decimalsLimit={2}
@@ -250,7 +231,7 @@ export default function EditTransactionModal({
             </div>
 
             {/* Notes */}
-            <div className="form-control">
+            <div className="form-control md:col-span-2">
               {renderLabel('Notes', false)}
               <textarea 
                 className="textarea textarea-bordered w-full"
@@ -281,7 +262,7 @@ export default function EditTransactionModal({
                   <span className="loading loading-spinner loading-xs"></span>
                   Saving...
                 </>
-              ) : 'Save Changes'}
+              ) : 'Add Transaction'}
             </button>
           </div>
         </form>

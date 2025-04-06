@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { formatFullCurrency, maskValue } from '../services/formatService';
+import { formatFullCurrency, maskValue } from '../../services/formatService';
 
 export default function PortfolioSummaryCard({ 
   portfolioSummary = { total: 0, profit: 0, profitPercentage: 0, period: 'all' },

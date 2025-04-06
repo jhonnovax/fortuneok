@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getInvestmentById, updateInvestment } from '../services/investmentService';
+import { getInvestmentById, updateInvestment } from '../../services/investmentService';
 import CurrencyInput from 'react-currency-input-field';
 
 // Map UI categories to API categories

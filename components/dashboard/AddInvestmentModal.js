@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createInvestment, addTransaction } from '../services/investmentService';
+import { createInvestment, addTransaction } from '../../services/investmentService';
 import CurrencyInput from 'react-currency-input-field';
 import SymbolCombobox from './SymbolCombobox';
 import CurrencyCombobox from './CurrencyCombobox';

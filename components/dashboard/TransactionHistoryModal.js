@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getTransactions, deleteTransaction } from '../services/investmentService';
+import { getTransactions, deleteTransaction } from '../../services/investmentService';
 import EditTransactionModal from './EditTransactionModal';
 
 export default function TransactionHistoryModal({ isOpen, onClose, investmentId, investmentName, investmentType }) {

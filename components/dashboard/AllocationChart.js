@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from 'recharts';
 import { useState, useEffect } from 'react';
-import { formatCurrency } from '../services/formatService';
+import { formatCurrency } from '../../services/formatService';
 
 const COLORS = [
   '#006e00', // Primary green

@@ -1,15 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import TimeframeToggle from './dashboard/components/TimeframeToggle';
-import PerformanceChart from './dashboard/components/PerformanceChart';
-import AllocationChart from './dashboard/components/AllocationChart';
-import AddInvestmentModal from './dashboard/components/AddInvestmentModal';
-import TabNavigation from './dashboard/components/TabNavigation';
-import AddInvestmentButton from './dashboard/components/AddInvestmentButton';
-import { getInvestments } from './dashboard/services/investmentService';
-import PortfolioSummaryCard from './dashboard/components/PortfolioSummaryCard';
-import { calculatePortfolioSummary } from './dashboard/services/ChartService';
+import TimeframeToggle from '../components/dashboard/TimeframeToggle';
+import PerformanceChart from '../components/dashboard/PerformanceChart';
+import AllocationChart from '../components/dashboard/AllocationChart';
+import AddInvestmentModal from '../components/dashboard/AddInvestmentModal';
+import TabNavigation from '../components/dashboard/TabNavigation';
+import AddInvestmentButton from '../components/dashboard/AddInvestmentButton';
+import { getInvestments } from '../services/investmentService';
+import PortfolioSummaryCard from '../components/dashboard/PortfolioSummaryCard';
+import { calculatePortfolioSummary } from '../services/ChartService';
 export const dynamic = "force-dynamic";
 
 // This is a private page: It's protected by the layout.js component which ensures the user is authenticated.

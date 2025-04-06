@@ -5,8 +5,8 @@ import DeleteAssetModal from './DeleteAssetModal';
 import EditAssetModal from './EditAssetModal';
 import TransactionHistoryModal from './TransactionHistoryModal';
 import AddTransactionModal from './AddTransactionModal';
-import { getInvestments, deleteInvestment } from '../services/investmentService';
-import { calculateNonStockPerformance } from '../services/ChartService';
+import { getInvestments, deleteInvestment } from '../../services/investmentService';
+import { calculateNonStockPerformance } from '../../services/ChartService';
 
 export default function AssetsList() {
   const [assets, setAssets] = useState([]);
