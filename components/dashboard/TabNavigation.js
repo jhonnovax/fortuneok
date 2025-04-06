@@ -9,7 +9,7 @@ export default function TabNavigation({ activeTab, onTabChange }) {
         className={`pb-4 px-1 relative flex items-center gap-2 ${
           activeTab === 'performance' 
             ? 'text-success font-medium' 
-            : 'text-gray-500 hover:text-gray-700'
+            : 'text-base-content hover:text-base-content/80'
         }`}
         onClick={() => onTabChange('performance')}
       >
@@ -25,7 +25,7 @@ export default function TabNavigation({ activeTab, onTabChange }) {
         className={`pb-4 px-1 relative flex items-center gap-2 ${
           activeTab === 'allocation' 
             ? 'text-success font-medium' 
-            : 'text-gray-500 hover:text-gray-700'
+            : 'text-base-content hover:text-base-content/80'
         }`}
         onClick={() => onTabChange('allocation')}
       >

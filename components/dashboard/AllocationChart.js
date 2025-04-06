@@ -232,10 +232,16 @@ export default function AllocationChart({ loading, data, error }) {
 
   if (categoryDataWithPercentage.length === 0) {
     return (
-      <div className="w-full h-[400px] flex items-center justify-center">
-        <p className="text-center text-gray-500">
-          No allocation data available. Add investments to see your portfolio allocation.
-        </p>
+      <div className="card bg-base-100 shadow-xl">
+        <div className="card-body">
+          <div className="space-y-6"> 
+            <div className="w-full h-[300px] flex items-center justify-center">
+              <p className="text-center text-base-content/60">
+                No allocation data available. Add investments to see your portfolio allocation.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

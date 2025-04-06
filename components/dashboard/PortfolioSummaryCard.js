@@ -83,7 +83,7 @@ export default function PortfolioSummaryCard({
                   <span className={`font-medium ${portfolioSummary.profit >= 0 ? 'text-success' : 'text-error'}`}>
                     ({portfolioSummary.profit >= 0 ? '+' : ''}{portfolioSummary.profitPercentage}%)
                   </span>
-                  <span className="text-base-content/60">{portfolioSummary.period}</span>
+                  <span className="text-base-content">{portfolioSummary.period}</span>
                 </>
               }
             </div>
