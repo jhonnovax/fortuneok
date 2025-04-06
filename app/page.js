@@ -10,12 +10,15 @@ import AddInvestmentButton from '../components/dashboard/AddInvestmentButton';
 import { getInvestments } from '../services/investmentService';
 import PortfolioSummaryCard from '../components/dashboard/PortfolioSummaryCard';
 import { calculatePortfolioSummary } from '../services/ChartService';
+import config from '@/config';
+import Footer from '@/components/Footer';
 export const dynamic = "force-dynamic";
 
 // This is a private page: It's protected by the layout.js component which ensures the user is authenticated.
 // It's a server compoment which means you can fetch data (like the user profile) before the page is rendered.
 // See https://shipfa.st/docs/tutorials/private-page
 export default function Dashboard() {
+  const { appName, appDescription } = config;
   // Default to 1 month timeframe
   const [timeframe, setTimeframe] = useState('all');
   const [activeTab, setActiveTab] = useState('performance');
@@ -101,8 +104,9 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6 md:space-y-8">
-      <div className="flex flex-col items-center">
-        <h1 className="sr-only">Portfolio Overview</h1>
+      <div className="flex flex-col items-center sr-only">
+        <h1>{appName} | Investorso</h1>
+        <p>{appDescription}</p>
       </div>
 
       {/* Tabs and Add Transaction button in same row */}
@@ -140,6 +144,9 @@ export default function Dashboard() {
           error={error}
         />
       )}
+
+      {/* Footer */}  
+      <Footer />
 
       {/* Add Investment Modal */}
       <AddInvestmentModal

@@ -2,7 +2,7 @@ import { daisyui } from "@/tailwind.config";
 
 const config = {
   // REQUIRED
-  appName: "FortuneOK",
+  appName: "Quick and easy portfolio tracking",
   // REQUIRED: a short description of your app for SEO tags (can be overwritten)
   appDescription: "Manage your investments effortlessly! Track everything in one place, no more spreadsheets or scattered records. Stay organized, make smarter decisions, and grow your wealth!",
   // REQUIRED (no https://, not trialing slash at the end, just the naked domain)
