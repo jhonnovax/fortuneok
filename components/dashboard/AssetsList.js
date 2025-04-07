@@ -3,13 +3,11 @@
 import { useState, useEffect } from 'react';
 import DeleteAssetModal from './DeleteAssetModal';
 import EditAssetModal from './EditAssetModal';
-import { getInvestments, deleteInvestment } from '../../services/investmentService';
+import { deleteInvestment } from '../../services/investmentService';
 import { calculateNonStockPerformance } from '../../services/ChartService';
 
-export default function AssetsList() {
+export default function AssetsList({ loading, error, investmentData }) {
   const [assets, setAssets] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
@@ -20,41 +18,6 @@ export default function AssetsList() {
     isOpen: false,
     assetId: null
   });
-  
-  const fetchInvestments = async () => {
-    try {
-      setLoading(true);
-      const investments = await getInvestments();
-      
-      const formattedAssets = investments.map(investment => {
-        const isNonStock = investment.category !== 'Stock' && investment.annualInterestRate;
-        const value = isNonStock 
-          ? calculateNonStockPerformance(investment, 'all')
-          : calculateTotalValue(investment.transactions);
-
-        return {
-          id: investment.id,
-          type: investment.category,
-          symbol: investment.symbol || 'N/A',
-          name: investment.description,
-          shares: calculateTotalShares(investment.transactions),
-          value,
-          annualRate: investment.annualInterestRate,
-          change: isNonStock ? (investment.annualInterestRate + '%') : '0.00',
-          changePercent: isNonStock ? (investment.annualInterestRate + '%') : '0.00%',
-          checked: false,
-          rawData: investment
-        };
-      });
-      
-      setAssets(formattedAssets);
-    } catch (err) {
-      console.error('Failed to fetch investments:', err);
-      setError('Failed to load investments. Please try again later.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Helper function to calculate total shares from transactions
   const calculateTotalShares = (transactions) => {
@@ -118,15 +81,33 @@ export default function AssetsList() {
     
     // Close the modal
     setEditModal({ isOpen: false, assetId: null });
-    
-    // Refresh the investments to get the latest data
-    fetchInvestments();
   };
 
    // Fetch investments when component mounts
    useEffect(() => {
-    fetchInvestments();
-  }, []);
+    const formattedAssets = investmentData.map(investment => {
+      const isNonStock = investment.category !== 'Stock' && investment.annualInterestRate;
+      const value = isNonStock 
+        ? calculateNonStockPerformance(investment, 'all')
+        : calculateTotalValue(investment.transactions);
+
+      return {
+        id: investment.id,
+        type: investment.category,
+        symbol: investment.symbol || 'N/A',
+        name: investment.description,
+        shares: calculateTotalShares(investment.transactions),
+        value,
+        annualRate: investment.annualInterestRate,
+        change: isNonStock ? (investment.annualInterestRate + '%') : '0.00',
+        changePercent: isNonStock ? (investment.annualInterestRate + '%') : '0.00%',
+        checked: false,
+        rawData: investment
+      };
+    });
+    
+    setAssets(formattedAssets);
+  }, [investmentData]);
 
   const renderChangeIndicator = (changePercent) => {
     const cleanPercentage = changePercent.replace(/^[+-]/, '');

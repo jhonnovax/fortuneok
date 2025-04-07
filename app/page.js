@@ -174,12 +174,12 @@ export default function Dashboard() {
 
         {/* Desktop sidebar */}
         <RightSidebar onAddInvestment={handleAddInvestmentClick}>
-          <AssetsList />
+          <AssetsList loading={loading} error={error} investmentData={investmentData} />
         </RightSidebar>
 
         {/* Mobile sidebar */}
         <MobileSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen}>
-          <AssetsList />
+          <AssetsList loading={loading} error={error} investmentData={investmentData} />
         </MobileSidebar>
       </div>
     </div>
