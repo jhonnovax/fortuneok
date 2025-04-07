@@ -153,7 +153,7 @@ export default function Dashboard() {
             {/* Tabs and Add Transaction button in same row */}
             <div className="flex justify-between items-center !mt-0">
               <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
-              <AddInvestmentButton onClick={handleAddInvestmentClick} />
+              <AddInvestmentButton extraStyle="block md:hidden" onClick={handleAddInvestmentClick} />
             </div>
 
             {/* Timeframe Toggle */}
@@ -201,7 +201,7 @@ export default function Dashboard() {
         </main>
 
         {/* Desktop sidebar */}
-        <RightSidebar>
+        <RightSidebar onAddInvestment={handleAddInvestmentClick}>
           <AssetsList />
         </RightSidebar>
 
