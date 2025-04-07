@@ -1,15 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from "next/image";
-import logo from "@/app/icon.png";
-import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { handlePayment, PLAN_BASIC } from "@/services/paymentService";
-import ButtonAccount from "@/components/ButtonAccount";
+import TopNavbar from "@/components/dashboard/TopNavbar";
 import RightSidebar from "@/components/dashboard/RightSidebar";
 import MobileSidebar from "@/components/dashboard/MobileSidebar";
-import SidebarToggle from "@/components/dashboard/SidebarToggle";
 import AssetsList from "@/components/dashboard/AssetsList";
 import TimeframeToggle from "@/components/dashboard/TimeframeToggle";
 import PerformanceChart from "@/components/dashboard/PerformanceChart";
@@ -31,7 +25,6 @@ export default function Dashboard() {
   const { appName, appDescription } = config;
   // Default to 1 month timeframe
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { data: session } = useSession();
   const [timeframe, setTimeframe] = useState('all');
   const [activeTab, setActiveTab] = useState('performance');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -114,32 +107,11 @@ export default function Dashboard() {
     setIsAddModalOpen(true);
   };
 
-  const ctaButton = session 
-    ? <ButtonAccount /> 
-    : <button className="btn btn-primary btn-sm" onClick={() => handlePayment(PLAN_BASIC)}>Get Started</button>;  
-
   return (
     <div className="min-h-screen flex flex-col bg-base-200">
+      
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 h-16 bg-base-100 border-b border-base-content/10 z-50">
-        <div className="h-full px-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <Image
-              src={logo}
-              alt="FortuneOK logo"
-              className="w-8"
-              priority={true}
-              width={32}
-              height={32}
-            />
-            <span className="font-extrabold text-lg">FortuneOK</span>
-          </Link>
-          <div className="flex items-center gap-2">
-            {ctaButton}
-            <SidebarToggle onClick={() => setIsSidebarOpen(true)} />
-          </div>
-        </div>
-      </nav>
+      <TopNavbar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
       {/* Main content */}
       <div className="flex pt-16 min-h-screen">
