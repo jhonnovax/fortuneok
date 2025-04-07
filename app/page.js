@@ -1,15 +1,25 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import TimeframeToggle from '../components/dashboard/TimeframeToggle';
-import PerformanceChart from '../components/dashboard/PerformanceChart';
-import AllocationChart from '../components/dashboard/AllocationChart';
-import AddInvestmentModal from '../components/dashboard/AddInvestmentModal';
-import TabNavigation from '../components/dashboard/TabNavigation';
-import AddInvestmentButton from '../components/dashboard/AddInvestmentButton';
-import { getInvestments } from '../services/investmentService';
-import PortfolioSummaryCard from '../components/dashboard/PortfolioSummaryCard';
-import { calculatePortfolioSummary } from '../services/ChartService';
+import Image from "next/image";
+import logo from "@/app/icon.png";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { handlePayment, PLAN_BASIC } from "@/services/paymentService";
+import ButtonAccount from "@/components/ButtonAccount";
+import RightSidebar from "@/components/dashboard/RightSidebar";
+import MobileSidebar from "@/components/dashboard/MobileSidebar";
+import SidebarToggle from "@/components/dashboard/SidebarToggle";
+import AssetsList from "@/components/dashboard/AssetsList";
+import TimeframeToggle from "@/components/dashboard/TimeframeToggle";
+import PerformanceChart from "@/components/dashboard/PerformanceChart";
+import AllocationChart from "@/components/dashboard/AllocationChart";
+import AddInvestmentModal from "@/components/dashboard/AddInvestmentModal";
+import TabNavigation from "@/components/dashboard/TabNavigation";
+import AddInvestmentButton from "@/components/dashboard/AddInvestmentButton";
+import { getInvestments } from "@/services/investmentService";
+import PortfolioSummaryCard from "@/components/dashboard/PortfolioSummaryCard";
+import { calculatePortfolioSummary } from "@/services/ChartService";
 import config from '@/config';
 import Footer from '@/components/Footer';
 export const dynamic = "force-dynamic";
@@ -20,6 +30,8 @@ export const dynamic = "force-dynamic";
 export default function Dashboard() {
   const { appName, appDescription } = config;
   // Default to 1 month timeframe
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { data: session } = useSession();
   const [timeframe, setTimeframe] = useState('all');
   const [activeTab, setActiveTab] = useState('performance');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -102,60 +114,102 @@ export default function Dashboard() {
     setIsAddModalOpen(true);
   };
 
+  const ctaButton = session 
+    ? <ButtonAccount /> 
+    : <button className="btn btn-primary btn-sm" onClick={() => handlePayment(PLAN_BASIC)}>Get Started</button>;  
+
   return (
-    <div className="space-y-6 md:space-y-8">
-      <div className="flex flex-col items-center sr-only">
-        <h1>{appName} | Investorso</h1>
-        <p>{appDescription}</p>
+    <div className="min-h-screen flex flex-col bg-base-200">
+      {/* Navbar */}
+      <nav className="fixed top-0 left-0 right-0 h-16 bg-base-100 border-b border-base-content/10 z-50">
+        <div className="h-full px-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src={logo}
+              alt="FortuneOK logo"
+              className="w-8"
+              priority={true}
+              width={32}
+              height={32}
+            />
+            <span className="font-extrabold text-lg">FortuneOK</span>
+          </Link>
+          <div className="flex items-center gap-2">
+            {ctaButton}
+            <SidebarToggle onClick={() => setIsSidebarOpen(true)} />
+          </div>
+        </div>
+      </nav>
+
+      {/* Main content */}
+      <div className="flex pt-16 min-h-screen">
+        <main className="flex-1 lg:mr-[420px] p-3 md:p-6">
+          <div className="space-y-6 md:space-y-8">
+            <div className="flex flex-col items-center sr-only">
+              <h1>{appName} | Investorso</h1>
+              <p>{appDescription}</p>
+            </div>
+
+            {/* Tabs and Add Transaction button in same row */}
+            <div className="flex justify-between items-center !mt-0">
+              <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
+              <AddInvestmentButton onClick={handleAddInvestmentClick} />
+            </div>
+
+            {/* Timeframe Toggle */}
+            <div className="flex justify-start">
+              <TimeframeToggle selected={timeframe} onSelect={setTimeframe} />
+            </div>
+
+            {/* Portfolio Summary Card */}
+            <PortfolioSummaryCard 
+              portfolioSummary={portfolioSummary}
+              loading={loading}
+              error={error}
+            />
+
+            {/* Render the appropriate component based on the active tab */}
+            {activeTab === 'performance' && (
+              <PerformanceChart 
+                timeframe={timeframe} 
+                data={investmentData} 
+                portfolioSummary={portfolioSummary}
+                loading={loading}
+                error={error}
+              />
+            )}
+            {activeTab === 'allocation' && (
+              <AllocationChart 
+                data={investmentData} 
+                loading={loading}
+                error={error}
+              />
+            )}
+
+            {/* Footer */}  
+            <Footer />
+
+            {/* Add Investment Modal */}
+            <AddInvestmentModal
+              isOpen={isAddModalOpen}
+              onClose={() => setIsAddModalOpen(false)}
+              onSave={handleSaveInvestment}
+              getOperationsByCategory={getOperationsByCategory}
+              getDefaultOperation={getDefaultOperation}
+            />
+          </div>
+        </main>
+
+        {/* Desktop sidebar */}
+        <RightSidebar>
+          <AssetsList />
+        </RightSidebar>
+
+        {/* Mobile sidebar */}
+        <MobileSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen}>
+          <AssetsList />
+        </MobileSidebar>
       </div>
-
-      {/* Tabs and Add Transaction button in same row */}
-      <div className="flex justify-between items-center !mt-0">
-        <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
-        <AddInvestmentButton onClick={handleAddInvestmentClick} />
-      </div>
-
-      {/* Timeframe Toggle */}
-      <div className="flex justify-start">
-        <TimeframeToggle selected={timeframe} onSelect={setTimeframe} />
-      </div>
-
-      {/* Portfolio Summary Card */}
-      <PortfolioSummaryCard 
-        portfolioSummary={portfolioSummary}
-        loading={loading}
-        error={error}
-      />
-
-      {/* Render the appropriate component based on the active tab */}
-      {activeTab === 'performance' && (
-        <PerformanceChart 
-          timeframe={timeframe} 
-          data={investmentData} 
-          portfolioSummary={portfolioSummary}
-          loading={loading}
-          error={error}
-        />
-      )}
-      {activeTab === 'allocation' && (
-        <AllocationChart 
-          data={investmentData} 
-          loading={loading}
-          error={error}
-        />
-      )}
-
-      {/* Footer */}  
-      <Footer />
-
-      {/* Add Investment Modal */}
-      <AddInvestmentModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onSave={handleSaveInvestment}
-        getOperationsByCategory={getOperationsByCategory}
-        getDefaultOperation={getDefaultOperation}
-      />
     </div>
   );
 }
