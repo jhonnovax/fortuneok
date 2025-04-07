@@ -9,9 +9,15 @@ import AssetsList from "./AssetsList";
 import Image from "next/image";
 import logo from "@/app/icon.png";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { handlePayment, PLAN_BASIC } from "@/services/paymentService";
 
 export default function DashboardLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { data: session } = useSession();
+  const ctaButton = session 
+    ? <ButtonAccount /> 
+    : <button className="btn btn-primary btn-sm" onClick={() => handlePayment(PLAN_BASIC)}>Get Started</button>;   
 
   return (
     <div className="min-h-screen flex flex-col bg-base-200">
@@ -30,7 +36,7 @@ export default function DashboardLayout({ children }) {
             <span className="font-extrabold text-lg">FortuneOK</span>
           </Link>
           <div className="flex items-center gap-2">
-            <ButtonAccount />
+            {ctaButton}
             <SidebarToggle onClick={() => setIsSidebarOpen(true)} />
           </div>
         </div>
@@ -38,7 +44,7 @@ export default function DashboardLayout({ children }) {
 
       {/* Main content */}
       <div className="flex pt-16 min-h-screen">
-        <main className="flex-1 lg:mr-[420px] p-6">
+        <main className="flex-1 lg:mr-[420px] p-3 md:p-6">
           {children}
         </main>
 

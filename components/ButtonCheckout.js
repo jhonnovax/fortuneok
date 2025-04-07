@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import apiClient from "@/libs/api";
+import { handlePayment } from "@/services/paymentService";
 import config from "@/config";
 
 // This component is used to create Stripe Checkout Sessions
@@ -13,17 +13,11 @@ const ButtonCheckout = ({ priceId, mode = "payment" }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
 
-  const handlePayment = async () => {
+  const onHandlePayment = async () => {
     setIsLoading(true);
 
     try {
-      const res = await apiClient.post("/stripe/create-checkout", {
-        priceId,
-        mode,
-        successUrl: window.location.href,
-        cancelUrl: window.location.href,
-        couponId: 'qEUaRv2F'
-      });
+      const res = await handlePayment(priceId, mode);
 
       window.location.href = res.url;
     } catch (e) {
@@ -36,7 +30,7 @@ const ButtonCheckout = ({ priceId, mode = "payment" }) => {
   return (
     <button
       className="btn btn-primary btn-block group"
-      onClick={() => handlePayment()}
+      onClick={onHandlePayment}
     >
       Get {config?.appName}
       {isLoading ? (

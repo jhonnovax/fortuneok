@@ -18,7 +18,12 @@ export default function MobileSidebar({ isOpen, setIsOpen, children }) {
         <div className="flex flex-col h-full">
           <div className="p-4 border-b border-base-content/10 bg-base-100">
             <div className="flex items-center justify-between">
-              <h2 className="font-semibold">My Assets</h2>
+              <h2 className="font-semibold flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3" />
+                </svg>
+                My Assets
+              </h2>
               <button 
                 onClick={() => setIsOpen(false)}
                 className="btn btn-ghost btn-circle btn-sm"

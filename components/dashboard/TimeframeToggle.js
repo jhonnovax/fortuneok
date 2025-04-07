@@ -8,8 +8,8 @@ export default function TimeframeToggle({ selected, onSelect }) {
 
   // Short timeframe options (displayed as buttons)
   const shortTimeframes = [
-    { value: '1D', label: '1 Day' },
-    { value: '1W', label: '1 Week' },
+    { value: '1D', label: 'Day' },
+    { value: '1W', label: 'Week' },
   ];
 
   // Month options for dropdown
@@ -41,13 +41,13 @@ export default function TimeframeToggle({ selected, onSelect }) {
   const isYearSelected = yearOptions.some(opt => opt.value === selected);
 
   return (
-    <div className="flex items-center gap-1 bg-base-200 rounded-lg p-1">
+    <div className="flex items-center gap-1 bg-base-200 rounded-lg p-1 text-xs sm:text-sm md:text-base">
       {/* Regular timeframe buttons */}
       {shortTimeframes.map(({ value, label }) => (
         <button
           key={value}
           onClick={() => onSelect(value)}
-          className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors
+          className={`px-3 py-1.5 font-medium rounded-md transition-colors
             ${selected === value 
               ? 'bg-primary text-primary-content' 
               : 'text-base-content hover:bg-base-300'
@@ -64,7 +64,7 @@ export default function TimeframeToggle({ selected, onSelect }) {
             setIsMonthsDropdownOpen(!isMonthsDropdownOpen);
             setIsYearsDropdownOpen(false);
           }}
-          className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors flex items-center gap-1
+          className={`px-3 py-1.5 font-medium rounded-md transition-colors flex items-center gap-1
             ${isMonthSelected
               ? 'bg-primary text-primary-content' 
               : 'text-base-content hover:bg-base-300'
@@ -117,7 +117,7 @@ export default function TimeframeToggle({ selected, onSelect }) {
             setIsYearsDropdownOpen(!isYearsDropdownOpen);
             setIsMonthsDropdownOpen(false);
           }}
-          className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors flex items-center gap-1
+          className={`px-3 py-1.5 font-medium rounded-md transition-colors flex items-center gap-1
             ${isYearSelected
               ? 'bg-primary text-primary-content' 
               : 'text-base-content hover:bg-base-300'
@@ -166,13 +166,13 @@ export default function TimeframeToggle({ selected, onSelect }) {
       {/* All Time option */}
       <button
         onClick={() => onSelect('all')}
-        className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors
+        className={`px-3 py-1.5 font-medium rounded-md transition-colors
           ${selected === 'all'
             ? 'bg-primary text-primary-content' 
             : 'text-base-content hover:bg-base-300'
           }`}
       >
-        All time
+        All <span className="hidden md:inline">time</span>
       </button>
     </div>
   );

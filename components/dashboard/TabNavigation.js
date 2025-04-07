@@ -4,7 +4,7 @@ import React from 'react';
 
 export default function TabNavigation({ activeTab, onTabChange }) {
   return (
-    <div className="flex gap-8">
+    <div className="flex gap-4 md:gap-8 text-xs sm:text-sm md:text-base">
       <button 
         className={`pb-4 px-1 relative flex items-center gap-2 ${
           activeTab === 'performance' 
