@@ -63,7 +63,7 @@ const TRADING_CATEGORIES = [
   'futures'
 ];
 
-export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
+export default function AssetEditionModal({ isOpen, onClose, onSave }) {
   const [form, setForm] = useState(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);

@@ -1,63 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import DeleteAssetModal from './DeleteAssetModal';
-import EditAssetModal from './EditAssetModal';
 import { deleteInvestment } from '../../services/investmentService';
-import { calculateNonStockPerformance } from '../../services/ChartService';
 
-export default function AssetsList({ loading, error, investmentData }) {
-  const [assets, setAssets] = useState([]);
+export default function AssetsList({ loading, error, investmentData, onEditAsset }) {
 
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
     assetId: null
   });
-  
-  const [editModal, setEditModal] = useState({
-    isOpen: false,
-    assetId: null
-  });
-
-  // Helper function to calculate total shares from transactions
-  const calculateTotalShares = (transactions) => {
-    if (!transactions || transactions.length === 0) return '0';
-    
-    let totalShares = 0;
-    
-    transactions.forEach(transaction => {
-      if (transaction.operation === 'buy' && transaction.shares) {
-        totalShares += Number(transaction.shares);
-      } else if (transaction.operation === 'sell' && transaction.shares) {
-        totalShares -= Number(transaction.shares);
-      }
-    });
-    
-    return totalShares.toFixed(5);
-  };
-
-  // Helper function to calculate total value from transactions
-  const calculateTotalValue = (transactions) => {
-    if (!transactions || transactions.length === 0) return '$0.00';
-    
-    let totalValue = 0;
-    
-    transactions.forEach(transaction => {
-      if (transaction.operation === 'buy' && transaction.shares) {
-        totalValue += Number(transaction.shares) * Number(transaction.pricePerUnit);
-      } else if (transaction.operation === 'sell' && transaction.shares) {
-        totalValue -= Number(transaction.shares) * Number(transaction.pricePerUnit);
-      }
-    });
-    
-    return `$${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  };
 
   const handleDeleteAsset = async () => {
     if (deleteModal.assetId) {
       try {
         await deleteInvestment(deleteModal.assetId);
-        setAssets(assets.filter(asset => asset.id !== deleteModal.assetId));
         setDeleteModal({ isOpen: false, assetId: null });
       } catch (err) {
         console.error('Failed to delete investment:', err);
@@ -65,51 +22,8 @@ export default function AssetsList({ loading, error, investmentData }) {
       }
     }
   };
-  
-  const handleEditAsset = (updatedAsset) => {
-    // Update the asset in the local state
-    setAssets(assets.map(asset => 
-      asset.id === editModal.assetId 
-        ? { 
-            ...asset, 
-            type: updatedAsset.category,
-            name: updatedAsset.description,
-            symbol: updatedAsset.symbol || 'N/A'
-          } 
-        : asset
-    ));
-    
-    // Close the modal
-    setEditModal({ isOpen: false, assetId: null });
-  };
 
-   // Fetch investments when component mounts
-   useEffect(() => {
-    const formattedAssets = investmentData.map(investment => {
-      const isNonStock = investment.category !== 'Stock' && investment.annualInterestRate;
-      const value = isNonStock 
-        ? calculateNonStockPerformance(investment, 'all')
-        : calculateTotalValue(investment.transactions);
-
-      return {
-        id: investment.id,
-        type: investment.category,
-        symbol: investment.symbol || 'N/A',
-        name: investment.description,
-        shares: calculateTotalShares(investment.transactions),
-        value,
-        annualRate: investment.annualInterestRate,
-        change: isNonStock ? (investment.annualInterestRate + '%') : '0.00',
-        changePercent: isNonStock ? (investment.annualInterestRate + '%') : '0.00%',
-        checked: false,
-        rawData: investment
-      };
-    });
-    
-    setAssets(formattedAssets);
-  }, [investmentData]);
-
-  const renderChangeIndicator = (changePercent) => {
+  const renderChangeIndicator = (changePercent = '3.5%') => {
     const cleanPercentage = changePercent.replace(/^[+-]/, '');
     const value = parseFloat(changePercent);
     const isPositive = value > 0;
@@ -153,7 +67,7 @@ export default function AssetsList({ loading, error, investmentData }) {
     );
   }
 
-  if (assets.length === 0) {
+  if (investmentData.length === 0) {
     return (
       <div className="text-center py-12">
         <p className="text-lg text-gray-500">No investments found. Add your first investment to get started.</p>
@@ -165,14 +79,14 @@ export default function AssetsList({ loading, error, investmentData }) {
     <div className="">
       {/* Assets List */}
       <div className="divide-y divide-base-content/10">
-        {assets.map((asset) => (
+        {investmentData.map((asset) => (
           <div key={asset.id} className="hover:bg-base-200/50 transition-colors">
             <div className="px-2 py-4">
               <div className="flex items-center gap-3">
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-bold">{asset.name}</h3>
+                      <h3 className="font-bold">{asset.description}</h3>
                       <p className="text-sm opacity-70">{asset.shares}</p>
                     </div>
                     <div className="flex items-center gap-4">
@@ -197,12 +111,7 @@ export default function AssetsList({ loading, error, investmentData }) {
                         </label>
                         <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52">
                           <li>
-                            <a 
-                              onClick={() => setEditModal({ 
-                                isOpen: true, 
-                                assetId: asset.id 
-                              })}
-                            >
+                            <a onClick={onEditAsset}>
                               Edit Investment
                             </a>
                           </li>
@@ -230,15 +139,7 @@ export default function AssetsList({ loading, error, investmentData }) {
         isOpen={deleteModal.isOpen}
         onClose={() => setDeleteModal({ isOpen: false, assetId: null })}
         onConfirm={handleDeleteAsset}
-        assetSymbol={assets.find(a => a.id === deleteModal.assetId)?.symbol}
-      />
-      
-      {/* Edit Asset Modal */}
-      <EditAssetModal
-        isOpen={editModal.isOpen}
-        onClose={() => setEditModal({ isOpen: false, assetId: null })}
-        onSave={handleEditAsset}
-        investmentId={editModal.assetId}
+        assetSymbol={investmentData.find(a => a.id === deleteModal.assetId)?.symbol}
       />
   
     </div>

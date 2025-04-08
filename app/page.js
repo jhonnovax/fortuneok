@@ -8,7 +8,7 @@ import AssetsList from "@/components/dashboard/AssetsList";
 import TimeframeToggle from "@/components/dashboard/TimeframeToggle";
 import PerformanceChart from "@/components/dashboard/PerformanceChart";
 import AllocationChart from "@/components/dashboard/AllocationChart";
-import AddInvestmentModal from "@/components/dashboard/AddInvestmentModal";
+import AssetEditionModal from "@/components/dashboard/AssetEditionModal";
 import TabNavigation from "@/components/dashboard/TabNavigation";
 import AddInvestmentButton from "@/components/dashboard/AddInvestmentButton";
 import { getInvestments } from "@/services/investmentService";
@@ -60,36 +60,15 @@ export default function Dashboard() {
     fetchData();
   }, [timeframe]);
 
-  // Define operations by category
-  const getOperationsByCategory = (category) => {
-    switch(category) {
-      case 'real_estate':
-      case 'precious_metals':
-      case 'custom_asset':
-        return ['buy', 'sell', 'improvement'];
-      case 'p2p_loans':
-      case 'savings_accounts':
-      case 'cash':
-        return ['deposit', 'interest', 'withdrawal'];
-      case 'stocks':
-      case 'bonds':
-      case 'cryptocurrencies':
-      case 'etfs_funds':
-      case 'options':
-      case 'futures':
-        return ['buy', 'sell', 'dividend'];
-      default:
-        return ['buy', 'sell'];
-    }
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
   };
 
-  // Get default operation based on category
-  const getDefaultOperation = (category) => {
-    const operations = getOperationsByCategory(category);
-    return operations[0] || 'buy';
+  const handleAddInvestmentClick = () => {
+    setIsAddModalOpen(true);
   };
 
-  const handleSaveInvestment = async (formData, saveAndAdd) => {
+  const handleSaveAsset = async (formData, saveAndAdd) => {
     console.log('Saving investment:', formData);
     
     // Refresh data after saving
@@ -97,14 +76,6 @@ export default function Dashboard() {
       const investments = await getInvestments();
       setInvestmentData(investments);
     }
-  };
-
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-  };
-
-  const handleAddInvestmentClick = () => {
-    setIsAddModalOpen(true);
   };
 
   return (
@@ -160,28 +131,38 @@ export default function Dashboard() {
 
             {/* Footer */}  
             <Footer />
-
-            {/* Add Investment Modal */}
-            <AddInvestmentModal
-              isOpen={isAddModalOpen}
-              onClose={() => setIsAddModalOpen(false)}
-              onSave={handleSaveInvestment}
-              getOperationsByCategory={getOperationsByCategory}
-              getDefaultOperation={getDefaultOperation}
-            />
           </div>
         </main>
 
         {/* Desktop sidebar */}
         <RightSidebar onAddInvestment={handleAddInvestmentClick}>
-          <AssetsList loading={loading} error={error} investmentData={investmentData} />
+          <AssetsList 
+            loading={loading} 
+            error={error} 
+            investmentData={investmentData} 
+            onEditAsset={handleSaveAsset} 
+          />
         </RightSidebar>
 
         {/* Mobile sidebar */}
         <MobileSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen}>
-          <AssetsList loading={loading} error={error} investmentData={investmentData} />
+          <AssetsList 
+            loading={loading} 
+            error={error} 
+            investmentData={investmentData} 
+            onEditAsset={handleSaveAsset}  
+          />
         </MobileSidebar>
+
+        {/* Add Investment Modal */}
+        <AssetEditionModal
+          isOpen={isAddModalOpen}
+          onClose={() => setIsAddModalOpen(false)}
+          onSave={handleSaveAsset}
+        />
+
       </div>
+
     </div>
   );
 }
