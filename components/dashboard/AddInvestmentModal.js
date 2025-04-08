@@ -46,7 +46,6 @@ const INITIAL_FORM_STATE = {
   category: '',
   description: '',
   date: '',
-  operation: '',
   symbol: '',
   shares: '',
   currency: '',
@@ -103,7 +102,6 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
     // Required field validation
     if (!form.category) newErrors.category = 'Category is required';
     if (!form.date) newErrors.date = 'Date is required';
-    if (!form.operation) newErrors.operation = 'Operation is required';
     if (!form.currency) newErrors.currency = 'Currency is required';
     if (!form.price) newErrors.price = 'Price is required';
     
@@ -169,7 +167,6 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
       // Prepare transaction data
       const transactionData = {
         date: new Date(form.date).toISOString(),
-        operation: form.operation,
         currency: form.currency,
         shares: showShares ? Number(form.shares) : null,
         pricePerUnit: Number(form.price),
@@ -303,26 +300,6 @@ export default function AddInvestmentModal({ isOpen, onClose, onSave }) {
                 disabled={isSubmitting}
               />
               {errors.date && <span className="text-error text-sm mt-1">{errors.date}</span>}
-            </div>
-
-            {/* Operation */}
-            <div className="form-control">
-              {renderLabel('Operation')}
-              <select 
-                className={`select select-bordered w-full ${errors.operation ? 'select-error' : ''}`}
-                value={form.operation}
-                onChange={(e) => setForm({ ...form, operation: e.target.value })}
-                disabled={isSubmitting}
-              >
-                <option value="">Select...</option>
-                <option value="buy">Buy</option>
-                <option value="sell">Sell</option>
-                <option value="dividend">Dividend</option>
-                <option value="interest">Interest</option>
-                <option value="deposit">Deposit</option>
-                <option value="withdrawal">Withdrawal</option>
-              </select>
-              {errors.operation && <span className="text-error text-sm mt-1">{errors.operation}</span>}
             </div>
 
             {/* Currency */}
