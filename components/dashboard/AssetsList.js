@@ -2,26 +2,13 @@
 
 import { useState } from 'react';
 import DeleteAssetModal from './DeleteAssetModal';
-import { deleteInvestment } from '../../services/investmentService';
 
-export default function AssetsList({ loading, error, investmentData, onEditAsset }) {
+export default function AssetsList({ loading, error, investmentData, onEditAsset, onDeleteAsset }) {
 
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
     assetId: null
   });
-
-  const handleDeleteAsset = async () => {
-    if (deleteModal.assetId) {
-      try {
-        await deleteInvestment(deleteModal.assetId);
-        setDeleteModal({ isOpen: false, assetId: null });
-      } catch (err) {
-        console.error('Failed to delete investment:', err);
-        // You might want to show an error message to the user here
-      }
-    }
-  };
 
   const renderChangeIndicator = (changePercent = '3.5%') => {
     const cleanPercentage = changePercent.replace(/^[+-]/, '');
@@ -138,7 +125,7 @@ export default function AssetsList({ loading, error, investmentData, onEditAsset
       <DeleteAssetModal
         isOpen={deleteModal.isOpen}
         onClose={() => setDeleteModal({ isOpen: false, assetId: null })}
-        onConfirm={handleDeleteAsset}
+        onConfirm={() => onDeleteAsset(deleteModal.assetId)}
         assetSymbol={investmentData.find(a => a.id === deleteModal.assetId)?.symbol}
       />
   

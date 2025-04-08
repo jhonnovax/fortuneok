@@ -78,6 +78,16 @@ export default function Dashboard() {
     }
   };
 
+  const handleDeleteAsset = async (assetId) => {
+    try {
+      // TODO: Implement delete investment
+      console.log('Deleting asset:', assetId);
+    } catch (err) {
+      console.error('Failed to delete investment:', err);
+      // You might want to show an error message to the user here
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-base-200">
       
@@ -141,6 +151,7 @@ export default function Dashboard() {
             error={error} 
             investmentData={investmentData} 
             onEditAsset={handleSaveAsset} 
+            onDeleteAsset={handleDeleteAsset}
           />
         </RightSidebar>
 
@@ -151,6 +162,7 @@ export default function Dashboard() {
             error={error} 
             investmentData={investmentData} 
             onEditAsset={handleSaveAsset}  
+            onDeleteAsset={handleDeleteAsset}
           />
         </MobileSidebar>
 

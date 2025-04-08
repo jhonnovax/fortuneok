@@ -407,19 +407,6 @@ export default function AssetEditionModal({ isOpen, onClose, onSave }) {
             </button>
             <button 
               type="button" 
-              className="btn btn-outline btn-primary"
-              onClick={() => handleSubmit(true)}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <span className="loading loading-spinner loading-xs"></span>
-                  Saving...
-                </>
-              ) : 'Save & Add Another'}
-            </button>
-            <button 
-              type="button" 
               className="btn btn-primary"
               onClick={() => handleSubmit(false)}
               disabled={isSubmitting}
