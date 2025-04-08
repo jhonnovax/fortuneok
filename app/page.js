@@ -10,7 +10,6 @@ import PerformanceChart from "@/components/dashboard/PerformanceChart";
 import AllocationChart from "@/components/dashboard/AllocationChart";
 import AssetEditionModal from "@/components/dashboard/AssetEditionModal";
 import TabNavigation from "@/components/dashboard/TabNavigation";
-import AddInvestmentButton from "@/components/dashboard/AddInvestmentButton";
 import { getInvestments } from "@/services/investmentService";
 import PortfolioSummaryCard from "@/components/dashboard/PortfolioSummaryCard";
 import { calculatePortfolioSummary } from "@/services/ChartService";
@@ -106,7 +105,15 @@ export default function Dashboard() {
             {/* Tabs and Add Transaction button in same row */}
             <div className="flex justify-between items-center !mt-0">
               <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
-              <AddInvestmentButton extraStyle="block md:hidden" onClick={handleAddInvestmentClick} />
+              <button 
+                className="btn btn-primary flex items-center gap-2 btn-sm md:btn-md md:hidden"
+                onClick={handleAddInvestmentClick}
+                title="Add Asset"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+              </button>
             </div>
 
             {/* Timeframe Toggle */}
