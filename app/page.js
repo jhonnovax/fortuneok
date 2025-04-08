@@ -63,7 +63,7 @@ export default function Dashboard() {
     setActiveTab(tab);
   };
 
-  const handleAddInvestmentClick = () => {
+  const handleAssetEditionModal = () => {
     setIsAddModalOpen(true);
   };
 
@@ -107,7 +107,7 @@ export default function Dashboard() {
               <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
               <button 
                 className="btn btn-primary flex items-center gap-2 btn-sm md:btn-md md:hidden"
-                onClick={handleAddInvestmentClick}
+                onClick={handleAssetEditionModal}
                 title="Add Asset"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
@@ -152,12 +152,12 @@ export default function Dashboard() {
         </main>
 
         {/* Desktop sidebar */}
-        <RightSidebar onAddInvestment={handleAddInvestmentClick}>
+        <RightSidebar onAddInvestment={handleAssetEditionModal}>
           <AssetsList 
             loading={loading} 
             error={error} 
             investmentData={investmentData} 
-            onEditAsset={handleSaveAsset} 
+            onEditAsset={handleAssetEditionModal} 
             onDeleteAsset={handleDeleteAsset}
           />
         </RightSidebar>
@@ -168,7 +168,7 @@ export default function Dashboard() {
             loading={loading} 
             error={error} 
             investmentData={investmentData} 
-            onEditAsset={handleSaveAsset}  
+            onEditAsset={handleAssetEditionModal}  
             onDeleteAsset={handleDeleteAsset}
           />
         </MobileSidebar>
