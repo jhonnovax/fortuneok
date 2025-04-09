@@ -30,6 +30,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [investmentData, setInvestmentData] = useState([]);
+  const [selectedAsset, setSelectedAsset] = useState(null);
   const [portfolioSummary, setPortfolioSummary] = useState({
     total: 0,
     profit: 0,
@@ -63,18 +64,22 @@ export default function Dashboard() {
     setActiveTab(tab);
   };
 
-  const handleAssetEditionModal = () => {
+  const handleNewAsset = () => {
+    setSelectedAsset(null);
     setIsAddModalOpen(true);
   };
 
-  const handleSaveAsset = async (formData, saveAndAdd) => {
+  const handleEditAsset = (asset) => {
+    setSelectedAsset(asset);
+    setIsAddModalOpen(true);
+  };
+
+  const handleSaveAsset = async (formData) => {
     console.log('Saving investment:', formData);
     
     // Refresh data after saving
-    if (!saveAndAdd) {
-      const investments = await getInvestments();
-      setInvestmentData(investments);
-    }
+    const investments = await getInvestments();
+    setInvestmentData(investments);
   };
 
   const handleDeleteAsset = async (assetId) => {
@@ -107,7 +112,7 @@ export default function Dashboard() {
               <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
               <button 
                 className="btn btn-primary flex items-center gap-2 btn-sm md:btn-md md:hidden"
-                onClick={handleAssetEditionModal}
+                onClick={handleNewAsset}
                 title="Add Asset"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
@@ -152,12 +157,12 @@ export default function Dashboard() {
         </main>
 
         {/* Desktop sidebar */}
-        <RightSidebar onAddInvestment={handleAssetEditionModal}>
+        <RightSidebar onAddInvestment={handleNewAsset}>
           <AssetsList 
             loading={loading} 
             error={error} 
             investmentData={investmentData} 
-            onEditAsset={handleAssetEditionModal} 
+            onEditAsset={handleEditAsset} 
             onDeleteAsset={handleDeleteAsset}
           />
         </RightSidebar>
@@ -168,7 +173,7 @@ export default function Dashboard() {
             loading={loading} 
             error={error} 
             investmentData={investmentData} 
-            onEditAsset={handleAssetEditionModal}  
+            onEditAsset={handleEditAsset}  
             onDeleteAsset={handleDeleteAsset}
           />
         </MobileSidebar>
@@ -176,6 +181,7 @@ export default function Dashboard() {
         {/* Add Investment Modal */}
         <AssetEditionModal
           isOpen={isAddModalOpen}
+          asset={selectedAsset}
           onClose={() => setIsAddModalOpen(false)}
           onSave={handleSaveAsset}
         />

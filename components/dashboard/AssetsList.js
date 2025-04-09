@@ -5,10 +5,7 @@ import DeleteAssetModal from './DeleteAssetModal';
 
 export default function AssetsList({ loading, error, investmentData, onEditAsset, onDeleteAsset }) {
 
-  const [deleteModal, setDeleteModal] = useState({
-    isOpen: false,
-    assetId: null
-  });
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, assetId: null });
 
   const renderChangeIndicator = (changePercent = '3.5%') => {
     const cleanPercentage = changePercent.replace(/^[+-]/, '');
@@ -98,7 +95,7 @@ export default function AssetsList({ loading, error, investmentData, onEditAsset
                         </label>
                         <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52">
                           <li>
-                            <a onClick={onEditAsset}>
+                            <a onClick={() => onEditAsset(asset)}>
                               Edit Investment
                             </a>
                           </li>

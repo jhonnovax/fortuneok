@@ -35,7 +35,7 @@ const CATEGORIES = [
   { value: 'etf_funds', label: '📈 ETF / Funds' },
   { value: 'option', label: '📈 Option' },
   { value: 'futures', label: '📈 Futures' },
-  { value: 'other_custom_assets', label: '🔷 Other custom assets' }
+  { value: 'other', label: '🔷 Other custom assets' }
 ];
 
 const TRADEABLE_CATEGORIES = [
@@ -45,10 +45,10 @@ const TRADEABLE_CATEGORIES = [
 const INITIAL_FORM_STATE = {
   category: '',
   description: '',
-  date: '',
   symbol: '',
-  shares: '',
+  date: '',
   currency: '',
+  shares: '',
   price: '',
   annualInterestRate: '',
   notes: ''
@@ -63,38 +63,11 @@ const TRADING_CATEGORIES = [
   'futures'
 ];
 
-export default function AssetEditionModal({ isOpen, onClose, onSave }) {
+export default function AssetEditionModal({ isOpen, asset, onClose, onSave }) {
   const [form, setForm] = useState(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
-
-  // Reset form when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      setForm(INITIAL_FORM_STATE);
-      setErrors({});
-      setSubmitError(null);
-      setIsSubmitting(false);
-    }
-  }, [isOpen]);
-
-  // Add escape key handler
-  useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      window.addEventListener('keydown', handleEscape);
-    }
-
-    return () => {
-      window.removeEventListener('keydown', handleEscape);
-    };
-  }, [isOpen, onClose]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -142,7 +115,7 @@ export default function AssetEditionModal({ isOpen, onClose, onSave }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (saveAndAdd = false) => {
+  const handleSubmit = async () => {
     if (!validateForm()) return;
     
     setIsSubmitting(true);
@@ -181,22 +154,12 @@ export default function AssetEditionModal({ isOpen, onClose, onSave }) {
         onSave({
           ...investmentData,
           transaction: transactionData
-        }, saveAndAdd);
+        });
       }
       
       // Close the modal if not saving and adding another
-      if (!saveAndAdd) {
-        onClose();
-      } else {
-        // Reset form for adding another transaction
-        setForm({
-          ...INITIAL_FORM_STATE,
-          category: form.category, // Keep the same category
-          description: form.description, // Keep the same description
-          symbol: form.symbol, // Keep the same symbol
-          annualInterestRate: form.annualInterestRate // Keep the same interest rate
-        });
-      }
+      onClose();
+         
     } catch (error) {
       console.error('Error saving investment:', error);
       setSubmitError('Failed to save investment. Please try again.');
@@ -209,6 +172,53 @@ export default function AssetEditionModal({ isOpen, onClose, onSave }) {
   const showSymbol = TRADING_CATEGORIES.includes(form.category);
   const showDescription = !TRADING_CATEGORIES.includes(form.category);
   const hideInterestRate = TRADING_CATEGORIES.includes(form.category);
+
+
+  // Reset form when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setForm(INITIAL_FORM_STATE);
+      setErrors({});
+      setSubmitError(null);
+      setIsSubmitting(false);
+    }
+  }, [isOpen]);
+
+  // Add escape key handler
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      window.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleEscape);
+    };
+  }, [isOpen, onClose]);
+
+  // Set form values when asset is provided
+  useEffect(() => {
+    if (asset) {
+      console.log('asset', asset);
+      setForm(prevForm => ({
+        ...prevForm,
+        category: asset.category,
+        description: asset.description,
+        symbol: asset.symbol,
+        /* date: asset.date, */
+        currency: asset.currency,
+        shares: asset.shares,
+        price: asset.price,
+        annualInterestRate: asset.annualInterestRate,
+        notes: asset.notes
+      }));
+    }
+  }, [asset]);
 
   // Helper function to render label with required asterisk
   const renderLabel = (text, required = true) => (
@@ -408,7 +418,7 @@ export default function AssetEditionModal({ isOpen, onClose, onSave }) {
             <button 
               type="button" 
               className="btn btn-primary"
-              onClick={() => handleSubmit(false)}
+              onClick={handleSubmit}
               disabled={isSubmitting}
             >
               {isSubmitting ? (
