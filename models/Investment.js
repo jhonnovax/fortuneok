@@ -1,41 +1,6 @@
 import mongoose from "mongoose";
 import toJSON from "./plugins/toJSON";
 
-// Transaction Schema (Sub-document)
-const transactionSchema = mongoose.Schema(
-  {
-    date: {
-      type: Date,
-      required: true,
-    },
-    operation: {
-      type: String,
-      required: true,
-      enum: ["buy", "sell", "dividend", "interest", "deposit", "withdrawal", "improvement"],
-    },
-    currency: {
-      type: String,
-      required: true,
-      default: "USD",
-    },
-    shares: {
-      type: Number,
-      default: null,
-    },
-    pricePerUnit: {
-      type: Number,
-      required: true,
-    },
-    note: {
-      type: String,
-      trim: true,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
-
 // INVESTMENT SCHEMA
 const investmentSchema = mongoose.Schema(
   {
@@ -73,13 +38,33 @@ const investmentSchema = mongoose.Schema(
       type: Number,
       default: null,
     },
-    pricePerUnit: {
-      type: Number,
-      required: true,
+    purchasePrice: {
+      type: {
+        currency: {
+          type: String,
+          required: true,
+          default: "USD"
+        },
+        price: {
+          type: Number,
+          required: true
+        }
+      },
+      required: true
     },
     currentPrice: {
-      type: Number,
-      default: null,
+      type: {
+        currency: {
+          type: String,
+          required: true,
+          default: "USD"
+        },
+        price: {
+          type: Number,
+          required: true
+        }
+      },
+      required: true
     },
     annualInterestRate: {
       type: Number,
