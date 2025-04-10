@@ -15,6 +15,7 @@ import PortfolioSummaryCard from "@/components/dashboard/PortfolioSummaryCard";
 import { calculatePortfolioSummary } from "@/services/ChartService";
 import config from '@/config';
 import Footer from '@/components/Footer';
+import { createInvestment, updateInvestment } from '@/services/investmentService';
 export const dynamic = "force-dynamic";
 
 // This is a private page: It's protected by the layout.js component which ensures the user is authenticated.
@@ -22,8 +23,10 @@ export const dynamic = "force-dynamic";
 // See https://shipfa.st/docs/tutorials/private-page
 export default function Dashboard() {
   const { appName, appDescription } = config;
-  // Default to 1 month timeframe
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSavingAsset, setIsSavingAsset] = useState(false);
+  const [submitAssetError, setSubmitAssetError] = useState(null);
   const [timeframe, setTimeframe] = useState('all');
   const [activeTab, setActiveTab] = useState('performance');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -74,12 +77,32 @@ export default function Dashboard() {
     setIsAddModalOpen(true);
   };
 
-  const handleSaveAsset = async (formData) => {
-    console.log('Saving investment:', formData);
-    
-    // Refresh data after saving
-    const investments = await getInvestments();
-    setInvestmentData(investments);
+  const handleSaveAsset = async (asset) => {
+    try {
+      const { id, ...assetData } = asset;
+      let updatedInvestment;
+      setIsSavingAsset(true);
+      setSubmitAssetError(null);
+      if (id) {
+        // Update existing investment
+        updatedInvestment = await updateInvestment(id, assetData);
+      } else {
+        // Create new investment
+        updatedInvestment = await createInvestment(assetData);
+      }
+      
+      // Refresh data after saving
+      const updatedInvestments = investmentData.map(investment => 
+        investment.id === updatedInvestment.id ? updatedInvestment : investment
+      );
+
+      setInvestmentData(updatedInvestments);
+    } catch (err) {
+      console.error('Failed to save asset:', err);
+      setSubmitAssetError(err.message);
+    } finally {
+      setIsSavingAsset(false);
+    }
   };
 
   const handleDeleteAsset = async (assetId) => {
@@ -181,6 +204,8 @@ export default function Dashboard() {
         {/* Add Investment Modal */}
         <AssetEditionModal
           isOpen={isAddModalOpen}
+          isSavingAsset={isSavingAsset}
+          submitError={submitAssetError}
           asset={selectedAsset}
           onClose={() => setIsAddModalOpen(false)}
           onSave={handleSaveAsset}

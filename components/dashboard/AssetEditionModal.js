@@ -1,26 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createInvestment, addTransaction } from '../../services/investmentService';
 import CurrencyInput from 'react-currency-input-field';
 import SymbolCombobox from './SymbolCombobox';
 import CurrencyCombobox from './CurrencyCombobox';
-
-// Map UI categories to API categories
-const CATEGORY_MAPPING = {
-  'stocks': 'Stock',
-  'bonds': 'Bond',
-  'cryptocurrencies': 'Crypto',
-  'etf_funds': 'ETF',
-  'real_estate': 'Real Estate',
-  'cash': 'Cash',
-  'savings_account': 'Cash',
-  'precious_metals': 'Other',
-  'p2p_loans': 'Other',
-  'option': 'Other',
-  'futures': 'Other',
-  'other_custom_assets': 'Other'
-};
 
 const CATEGORIES = [
   { value: 'real_estate', label: '🏠 Real Estate' },
@@ -49,7 +32,8 @@ const INITIAL_FORM_STATE = {
   date: '',
   currency: '',
   shares: '',
-  price: '',
+  pricePerUnit: '',
+  currentPrice: '',
   annualInterestRate: '',
   notes: ''
 };
@@ -63,11 +47,9 @@ const TRADING_CATEGORIES = [
   'futures'
 ];
 
-export default function AssetEditionModal({ isOpen, asset, onClose, onSave }) {
+export default function AssetEditionModal({ isOpen, isSubmitting, submitError, asset, onClose, onSave }) {
   const [form, setForm] = useState(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState(null);
 
   const validateForm = () => {
     const newErrors = {};
@@ -76,7 +58,7 @@ export default function AssetEditionModal({ isOpen, asset, onClose, onSave }) {
     if (!form.category) newErrors.category = 'Category is required';
     if (!form.date) newErrors.date = 'Date is required';
     if (!form.currency) newErrors.currency = 'Currency is required';
-    if (!form.price) newErrors.price = 'Price is required';
+    if (!form.pricePerUnit) newErrors.pricePerUnit = 'Price is required';
     
     // Conditional required fields
     if (showDescription && !form.description) {
@@ -95,9 +77,11 @@ export default function AssetEditionModal({ isOpen, asset, onClose, onSave }) {
     if (form.shares && isNaN(Number(form.shares))) {
       newErrors.shares = 'Must be a valid number';
     }
-    if (form.price && isNaN(Number(form.price))) {
-      newErrors.price = 'Must be a valid number';
+    
+    if (form.pricePerUnit && isNaN(Number(form.pricePerUnit))) {
+      newErrors.pricePerUnit = 'Must be a valid number';
     }
+    
     if (form.annualInterestRate) {
       if (isNaN(Number(form.annualInterestRate))) {
         newErrors.annualInterestRate = 'Must be a valid number';
@@ -118,54 +102,7 @@ export default function AssetEditionModal({ isOpen, asset, onClose, onSave }) {
   const handleSubmit = async () => {
     if (!validateForm()) return;
     
-    setIsSubmitting(true);
-    setSubmitError(null);
-    
-    try {
-      // Map UI category to API category
-      const apiCategory = CATEGORY_MAPPING[form.category] || 'Other';
-      
-      // Prepare investment data
-      const investmentData = {
-        category: apiCategory,
-        description: form.description || form.symbol,
-        symbol: form.symbol || null,
-        status: 'active',
-        annualInterestRate: form.annualInterestRate ? Number(form.annualInterestRate) : 0
-      };
-      
-      // Create the investment
-      const newInvestment = await createInvestment(investmentData);
-      
-      // Prepare transaction data
-      const transactionData = {
-        date: new Date(form.date).toISOString(),
-        currency: form.currency,
-        shares: showShares ? Number(form.shares) : null,
-        pricePerUnit: Number(form.price),
-        note: form.notes || ''
-      };
-      
-      // Add the transaction to the investment
-      await addTransaction(newInvestment.id, transactionData);
-      
-      // Call the onSave callback with the form data
-      if (onSave) {
-        onSave({
-          ...investmentData,
-          transaction: transactionData
-        });
-      }
-      
-      // Close the modal if not saving and adding another
-      onClose();
-         
-    } catch (error) {
-      console.error('Error saving investment:', error);
-      setSubmitError('Failed to save investment. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    onSave(form);
   };
 
   const showShares = TRADEABLE_CATEGORIES.includes(form.category);
@@ -179,8 +116,6 @@ export default function AssetEditionModal({ isOpen, asset, onClose, onSave }) {
     if (isOpen) {
       setForm(INITIAL_FORM_STATE);
       setErrors({});
-      setSubmitError(null);
-      setIsSubmitting(false);
     }
   }, [isOpen]);
 
@@ -213,7 +148,8 @@ export default function AssetEditionModal({ isOpen, asset, onClose, onSave }) {
         /* date: asset.date, */
         currency: asset.currency,
         shares: asset.shares,
-        price: asset.price,
+        pricePerUnit: asset.pricePerUnit,
+        currentPrice: asset.currentPrice,
         annualInterestRate: asset.annualInterestRate,
         notes: asset.notes
       }));
@@ -337,6 +273,7 @@ export default function AssetEditionModal({ isOpen, asset, onClose, onSave }) {
                 disabled={isSubmitting}
                 allowNegativeValue={false}
                 decimalSeparator="."
+                prefix="$"
               />
               {errors.price && <span className="text-error text-sm mt-1">{errors.price}</span>}
             </div>
@@ -386,6 +323,7 @@ export default function AssetEditionModal({ isOpen, asset, onClose, onSave }) {
                   allowNegativeValue={true}
                   disableGroupSeparators={true}
                   decimalSeparator="."
+                  suffix="%"
                 />
                 {errors.annualInterestRate && <span className="text-error text-sm mt-1">{errors.annualInterestRate}</span>}
               </div>

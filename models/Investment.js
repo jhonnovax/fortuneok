@@ -60,17 +60,35 @@ const investmentSchema = mongoose.Schema(
       uppercase: true,
       default: null,
     },
-    status: {
+    date: {
+      type: Date,
+      required: true,
+    },
+    currency: {
       type: String,
       required: true,
-      enum: ["active", "sold", "pending"],
-      default: "active",
+      default: "USD",
+    },
+    shares: {
+      type: Number,
+      default: null,
+    },
+    pricePerUnit: {
+      type: Number,
+      required: true,
+    },
+    currentPrice: {
+      type: Number,
+      default: null,
     },
     annualInterestRate: {
       type: Number,
       default: 0,
     },
-    transactions: [transactionSchema],
+    notes: {
+      type: String,
+      trim: true,
+    }
   },
   {
     timestamps: true,
