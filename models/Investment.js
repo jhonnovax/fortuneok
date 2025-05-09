@@ -9,10 +9,14 @@ const investmentSchema = mongoose.Schema(
       ref: "User",
       required: true,
     },
+    date: {
+      type: Date,
+      required: true,
+    },
     category: {
       type: String,
       required: true,
-      enum: ["Stock", "ETF", "Bond", "Real Estate", "Crypto", "Cash", "Other"],
+      enum: ["real_estate", "certificates_of_deposit", "savings_account", "precious_metals", "cash", "p2p_loans", "stocks", "bonds", "cryptocurrencies", "etf_funds", "option", "futures", "other"],
     },
     description: {
       type: String,
@@ -24,16 +28,7 @@ const investmentSchema = mongoose.Schema(
       trim: true,
       uppercase: true,
       default: null,
-    },
-    date: {
-      type: Date,
-      required: true,
-    },
-    currency: {
-      type: String,
-      required: true,
-      default: "USD",
-    },
+    }, 
     shares: {
       type: Number,
       default: null,
@@ -46,20 +41,6 @@ const investmentSchema = mongoose.Schema(
           default: "USD"
         },
         purchasePrice: {
-          type: Number,
-          required: true
-        }
-      },
-      required: true
-    },
-    currentValuation: {
-      type: {
-        currency: {
-          type: String,
-          required: true,
-          default: "USD"
-        },
-        currentPrice: {
           type: Number,
           required: true
         }
