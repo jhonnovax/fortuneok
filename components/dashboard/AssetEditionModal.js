@@ -268,7 +268,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
               <CurrencyInput
                 id="price-input"
                 name="price"
-                placeholder="$75,530"
+                placeholder="$15.550"
                 className={`input input-bordered w-full ${errors.purchasePrice ? 'input-error' : ''}`}
                 value={form.purchaseInformation.price}
                 decimalsLimit={2}
@@ -305,7 +305,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                 <CurrencyInput
                   id="price-input"
                   name="price"
-                  placeholder="$75,530"
+                  placeholder="$22,650"
                   className={`input input-bordered w-full ${errors.currentPrice ? 'input-error' : ''}`}
                   value={form.currentValuation.price}
                   decimalsLimit={2}
