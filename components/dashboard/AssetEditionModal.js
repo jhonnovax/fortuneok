@@ -26,15 +26,19 @@ const TRADEABLE_CATEGORIES = [
 ];
 
 const INITIAL_FORM_STATE = {
+  date: '',
   category: '',
   description: '',
   symbol: '',
-  date: '',
-  currency: '',
+  purchaseInformation: {
+    currency: '',
+    price: ''
+  },
+  currentValuation: {
+    currency: '',
+    price: ''
+  },
   shares: '',
-  pricePerUnit: '',
-  currentPrice: '',
-  annualInterestRate: '',
   notes: ''
 };
 
@@ -47,6 +51,15 @@ const TRADING_CATEGORIES = [
   'futures'
 ];
 
+const VALUABLE_CATEGORIES = [
+  'real_estate',
+  'certificates_of_deposit',
+  'savings_account',
+  'precious_metals',
+  'cash',
+  'other'
+];
+
 export default function AssetEditionModal({ isOpen, isSubmitting, submitError, asset, onClose, onSave }) {
   const [form, setForm] = useState(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState({});
@@ -57,8 +70,8 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
     // Required field validation
     if (!form.category) newErrors.category = 'Category is required';
     if (!form.date) newErrors.date = 'Date is required';
-    if (!form.currency) newErrors.currency = 'Currency is required';
-    if (!form.pricePerUnit) newErrors.pricePerUnit = 'Price is required';
+    if (!form.purchaseInformation.currency) newErrors.purchasePriceCurrency = 'Currency is required';
+    if (!form.purchaseInformation.price) newErrors.purchasePrice = 'Price is required';
     
     // Conditional required fields
     if (showDescription && !form.description) {
@@ -78,23 +91,10 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
       newErrors.shares = 'Must be a valid number';
     }
     
-    if (form.pricePerUnit && isNaN(Number(form.pricePerUnit))) {
-      newErrors.pricePerUnit = 'Must be a valid number';
+    if (form.purchasePrice && isNaN(Number(form.purchasePrice))) {
+      newErrors.purchasePrice = 'Must be a valid number';
     }
     
-    if (form.annualInterestRate) {
-      if (isNaN(Number(form.annualInterestRate))) {
-        newErrors.annualInterestRate = 'Must be a valid number';
-      } else {
-        const interestRate = Number(form.annualInterestRate);
-        if (interestRate > 100) {
-          newErrors.annualInterestRate = 'Cannot exceed 100%';
-        } else if (interestRate < -50) {
-          newErrors.annualInterestRate = 'Cannot be less than -50%';
-        }
-      }
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -108,7 +108,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
   const showShares = TRADEABLE_CATEGORIES.includes(form.category);
   const showSymbol = TRADING_CATEGORIES.includes(form.category);
   const showDescription = !TRADING_CATEGORIES.includes(form.category);
-  const hideInterestRate = TRADING_CATEGORIES.includes(form.category);
+  const showCurrentValuation = VALUABLE_CATEGORIES.includes(form.category);
 
 
   // Reset form when modal opens
@@ -150,15 +150,14 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
         shares: asset.shares,
         pricePerUnit: asset.pricePerUnit,
         currentPrice: asset.currentPrice,
-        annualInterestRate: asset.annualInterestRate,
         notes: asset.notes
       }));
     }
   }, [asset]);
 
   // Helper function to render label with required asterisk
-  const renderLabel = (text, required = true) => (
-    <label className="label">
+  const renderLabel = (text, required = true, srOnly = false) => (
+    <label className={`label ${srOnly ? 'sr-only' : ''}`}>
       <span className="label-text">
         {text} {required && <span className="text-error">*</span>}
       </span>
@@ -190,6 +189,19 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
         
         <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Date */}
+            <div className="form-control md:col-span-2">
+              {renderLabel('Date')}
+              <input 
+                type="date"
+                className={`input input-bordered w-full ${errors.date ? 'input-error' : ''}`}
+                value={form.date}
+                onChange={(e) => setForm({ ...form, date: e.target.value })}
+                disabled={isSubmitting}
+              />
+              {errors.date && <span className="text-error text-sm mt-1">{errors.date}</span>}
+            </div>
+
             {/* Category */}
             <div className="form-control">
               {renderLabel('Category')}
@@ -235,103 +247,113 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
               </div>
             )}
 
-            {/* Date - Moved before Operation */}
-            <div className="form-control">
-              {renderLabel('Date')}
-              <input 
-                type="date"
-                className={`input input-bordered w-full ${errors.date ? 'input-error' : ''}`}
-                value={form.date}
-                onChange={(e) => setForm({ ...form, date: e.target.value })}
-                disabled={isSubmitting}
-              />
-              {errors.date && <span className="text-error text-sm mt-1">{errors.date}</span>}
+            <div className='divider md:col-span-2'>
+              Purchase Information
             </div>
 
-            {/* Currency */}
+            {/* Purchase Price Currency */}
             <div className="form-control">
               {renderLabel('Currency')}
               <CurrencyCombobox
-                value={form.currency}
-                onChange={(value) => setForm({ ...form, currency: value })}
-                error={errors.currency}
+                value={form.purchaseInformation.currency}
+                onChange={(value) => setForm({ ...form, purchaseInformation: { ...form.purchaseInformation, currency: value } })}
+                error={errors.purchasePriceCurrency}
                 disabled={isSubmitting}
               />
             </div>
 
-            {/* Price */}
+            {/* Purchase Price */}
             <div className="form-control">
-              {renderLabel('Price')}
+              {renderLabel('Purchase Price')}
               <CurrencyInput
                 id="price-input"
                 name="price"
                 placeholder="$75,530"
-                className={`input input-bordered w-full ${errors.price ? 'input-error' : ''}`}
-                value={form.price}
+                className={`input input-bordered w-full ${errors.purchasePrice ? 'input-error' : ''}`}
+                value={form.purchaseInformation.price}
                 decimalsLimit={2}
-                onValueChange={(value) => setForm({ ...form, price: value })}
+                onValueChange={(value) => setForm({ ...form, purchaseInformation: { ...form.purchaseInformation, price: value } })}
                 disabled={isSubmitting}
                 allowNegativeValue={false}
                 decimalSeparator="."
                 prefix="$"
               />
-              {errors.price && <span className="text-error text-sm mt-1">{errors.price}</span>}
+              {errors.purchasePrice && <span className="text-error text-sm mt-1">{errors.purchasePrice}</span>}
             </div>
+
+            {showCurrentValuation && (
+              <>
+                <div className='divider md:col-span-2'>
+                  Current Valuation
+                </div>
+
+              {/* Current Price Currency */}
+              <div className="form-control">
+                {renderLabel('Currency')}
+                <CurrencyCombobox
+                  value={form.currentValuation.currency}
+                  onChange={(currency) => setForm({ ...form, currentValuation: { ...form.currentValuation, currency } })}
+                  error={errors.currentPriceCurrency}
+                  disabled={isSubmitting}
+                />
+                {errors.currentPriceCurrency && <span className="text-error text-sm mt-1">{errors.currentPriceCurrency}</span>}
+              </div>
+
+              {/* Current Price */}
+              <div className="form-control">
+                {renderLabel('Current Price')}
+                <CurrencyInput
+                  id="price-input"
+                  name="price"
+                  placeholder="$75,530"
+                  className={`input input-bordered w-full ${errors.currentPrice ? 'input-error' : ''}`}
+                  value={form.currentValuation.price}
+                  decimalsLimit={2}
+                  onValueChange={(value) => setForm({ ...form, currentValuation: { ...form.currentValuation, price: value } })}
+                  disabled={isSubmitting}
+                  allowNegativeValue={false}
+                  decimalSeparator="."
+                  prefix="$"
+                />
+                  {errors.currentPrice && <span className="text-error text-sm mt-1">{errors.currentPrice}</span>}
+                </div>
+              </>
+            )}
 
             {/* Shares */}
             {showShares && (
-              <div className="form-control">
-                {renderLabel('Shares')}
-                <CurrencyInput
-                  id="shares-input"
-                  name="shares"
-                  placeholder="62.7345"
-                  className={`input input-bordered w-full ${errors.shares ? 'input-error' : ''}`}
-                  value={form.shares}
-                  decimalsLimit={6}
-                  onValueChange={(value) => setForm({ ...form, shares: value })}
-                  disabled={isSubmitting}
-                  allowNegativeValue={false}
-                  disableGroupSeparators={true}
-                  decimalSeparator="."
-                />
-                {errors.shares && <span className="text-error text-sm mt-1">{errors.shares}</span>}
-              </div>
+                <>
+                  <div className='divider md:col-span-2'>
+                    Shares
+                  </div>
+                  <div className="form-control md:col-span-2">
+                    {renderLabel('Shares', true, true)}
+                    <CurrencyInput
+                      id="shares-input"
+                      name="shares"
+                      placeholder="62.7345"
+                      className={`input input-bordered w-full ${errors.shares ? 'input-error' : ''}`}
+                      value={form.shares}
+                      decimalsLimit={6}
+                      onValueChange={(value) => setForm({ ...form, shares: value })}
+                      disabled={isSubmitting}
+                      allowNegativeValue={false}
+                      disableGroupSeparators={true}
+                      decimalSeparator="."
+                    />
+                    {errors.shares && <span className="text-error text-sm mt-1">{errors.shares}</span>}
+                  </div>
+                </>
             )}
 
-            {/* Annual Interest Rate */}
-            {!hideInterestRate && (
-              <div className="form-control">
-                {renderLabel('Annual Interest Rate (%)', false)}
-                <CurrencyInput
-                  id="interest-rate-input"
-                  name="annualInterestRate"
-                  placeholder="7%"
-                  className={`input input-bordered w-full ${errors.annualInterestRate ? 'input-error' : ''}`}
-                  value={form.annualInterestRate}
-                  decimalsLimit={2}
-                  onValueChange={(value) => {
-                    // Validate min/max here to prevent invalid input
-                    if (value) {
-                      const numValue = Number(value);
-                      if (numValue > 100) value = "100";
-                      if (numValue < -50) value = "-50";
-                    }
-                    setForm({ ...form, annualInterestRate: value });
-                  }}
-                  disabled={isSubmitting}
-                  allowNegativeValue={true}
-                  disableGroupSeparators={true}
-                  decimalSeparator="."
-                  suffix="%"
-                />
-                {errors.annualInterestRate && <span className="text-error text-sm mt-1">{errors.annualInterestRate}</span>}
-              </div>
-            )}
+            <div className='divider md:col-span-2'>
+              Notes
+            </div>
+
 
             {/* Notes */}
             <div className="form-control md:col-span-2">
-              {renderLabel('Notes', false)}
+              {renderLabel('Notes', false, true)}
               <textarea 
                 className="textarea textarea-bordered w-full"
                 value={form.notes}

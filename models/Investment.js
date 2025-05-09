@@ -38,37 +38,33 @@ const investmentSchema = mongoose.Schema(
       type: Number,
       default: null,
     },
-    purchasePrice: {
+    purchaseInformation: {
       type: {
         currency: {
           type: String,
           required: true,
           default: "USD"
         },
-        price: {
+        purchasePrice: {
           type: Number,
           required: true
         }
       },
       required: true
     },
-    currentPrice: {
+    currentValuation: {
       type: {
         currency: {
           type: String,
           required: true,
           default: "USD"
         },
-        price: {
+        currentPrice: {
           type: Number,
           required: true
         }
       },
       required: true
-    },
-    annualInterestRate: {
-      type: Number,
-      default: 0,
     },
     notes: {
       type: String,
