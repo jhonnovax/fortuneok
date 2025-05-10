@@ -286,7 +286,7 @@ export default function AllocationChart({ loading, data, error }) {
           
           {/* Asset Type Allocation */}
           <div className="flex-1">
-            <h3 className="text-lg font-semibold mb-4 text-center">Asset Allocation</h3>
+            <h3 className="text-lg font-semibold mb-4 text-center">Assets Allocation</h3>
             <div className="h-[300px]">
               {assetData.length === 0 ? (
                 <div className="h-full flex items-center justify-center">

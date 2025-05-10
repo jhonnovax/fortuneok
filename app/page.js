@@ -115,8 +115,8 @@ export default function Dashboard() {
 
       {/* Main content */}
       <div className="flex pt-16 min-h-screen">
-        <main className="flex-1 lg:mr-[420px] p-3 md:p-6">
-          <div className="space-y-6 md:space-y-8">
+        <main className="flex-1 lg:mr-[420px] p-4 md:p-6">
+          <div className="space-y-4 md:space-y-6">
             <div className="flex flex-col items-center sr-only">
               <h1>{appName} | FortuneOK</h1>
               <p>{appDescription}</p>
@@ -125,13 +125,13 @@ export default function Dashboard() {
             {/* Tabs and Add Transaction button in same row */}
             <div className="flex justify-between items-center !mt-0">
               <button 
-                className="btn btn-primary flex items-center gap-2 btn-sm md:btn-md md:hidden"
+                className="btn btn-primary flex items-center gap-2 btn-sm md:btn-md md:hidden ml-auto"
                 onClick={handleNewAsset}
-                title="Add Asset"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
+                <span>Add Asset</span>
               </button>
             </div>
 
