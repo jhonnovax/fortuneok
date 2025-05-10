@@ -2,13 +2,16 @@
 
 import { useState } from 'react';
 import { formatFullCurrency, maskValue } from '../../services/formatService';
+import ErrorLoadingData from './ErrorLoadingData';
 
 export default function PortfolioSummaryCard({ 
-  portfolioSummary = { total: 0, profit: 0, profitPercentage: 0, period: 'all' },
+  investmentData = [],
   loading = false,
   error = null
 }) {
+  
   const [isValueVisible, setIsValueVisible] = useState(true);
+  const totalValue = investmentData.reduce((total, investment) => total + investment.amount, 0);
 
   if (loading) {
     return (
@@ -29,14 +32,7 @@ export default function PortfolioSummaryCard({
     return (
       <div className="card bg-base-100 shadow-xl">
         <div className="card-body">
-          <div className="w-full flex items-center justify-center">
-            <div className="text-error text-center">
-              <p>{error}</p>
-              <button className="btn btn-sm btn-outline mt-2" onClick={() => window.location.reload()}>
-                Retry
-              </button>
-            </div>
-          </div>
+          <ErrorLoadingData error={error} />
         </div>
       </div>
     );
@@ -51,7 +47,7 @@ export default function PortfolioSummaryCard({
             <div className="flex items-center gap-3">
               <span className="text-4xl font-bold">
                 {isValueVisible 
-                  ? formatFullCurrency(portfolioSummary.total)
+                  ? formatFullCurrency(totalValue)
                   : maskValue()
                 }
               </span>
@@ -76,4 +72,5 @@ export default function PortfolioSummaryCard({
       </div>
     </div>
   );
+
 } 

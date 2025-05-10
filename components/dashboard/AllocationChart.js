@@ -10,6 +10,7 @@ import {
 } from 'recharts';
 import { useState, useEffect } from 'react';
 import { formatCurrency } from '../../services/formatService';
+import ErrorLoadingData from './ErrorLoadingData';
 
 const COLORS = [
   '#006e00', // Primary green
@@ -198,16 +199,7 @@ export default function AllocationChart({ loading, data, error }) {
   }
 
   if (error) {
-    return (
-      <div className="w-full h-[400px] flex items-center justify-center">
-        <div className="text-error text-center">
-          <p>{error}</p>
-          <button className="btn btn-sm btn-outline mt-2" onClick={() => window.location.reload()}>
-            Retry
-          </button>
-        </div>
-      </div>
-    );
+    return <ErrorLoadingData error={error} />;
   }
 
   if (categoryDataWithPercentage.length === 0) {

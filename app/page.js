@@ -7,12 +7,11 @@ import MobileSidebar from "@/components/dashboard/MobileSidebar";
 import AssetsList from "@/components/dashboard/AssetsList";
 import AllocationChart from "@/components/dashboard/AllocationChart";
 import AssetEditionModal from "@/components/dashboard/AssetEditionModal";
-import { getInvestments } from "@/services/investmentService";
 import PortfolioSummaryCard from "@/components/dashboard/PortfolioSummaryCard";
-import { calculatePortfolioSummary } from "@/services/ChartService";
+import { useInvestmentStore } from '@/store/investmentStore';
+import { useCurrencyRatesStore } from '@/store/currencyRatesStore';
 import config from '@/config';
 import Footer from '@/components/Footer';
-import { createInvestment, updateInvestment, deleteInvestment } from '@/services/investmentService';
 export const dynamic = "force-dynamic";
 
 // This is a private page: It's protected by the layout.js component which ensures the user is authenticated.
@@ -27,37 +26,19 @@ export default function Dashboard() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [investmentData, setInvestmentData] = useState([]);
   const [selectedAsset, setSelectedAsset] = useState(null);
-  const [portfolioSummary, setPortfolioSummary] = useState({
-    total: 0,
-    profit: 0,
-    profitPercentage: 0,
-    period: 'all'
-  });
 
-  // Fetch data when timeframe changes or after adding a new investment
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const investments = await getInvestments();
-        setInvestmentData(investments)
-
-        // Calculate portfolio summary
-        const summary = calculatePortfolioSummary(investments);
-        setPortfolioSummary(summary);
-      } catch (err) {
-        console.error('Failed to fetch data:', err);
-        setError('Failed to load data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+  const getCurrencyRates = useCurrencyRatesStore((state) => state.getCurrencyRates);
+  const getInvestments = useInvestmentStore((state) => state.getInvestments);
+  const getFilteredAndSortedInvestments = useInvestmentStore((state) => state.getFilteredAndSortedInvestments);
+  const filterByTimeFrame = useInvestmentStore((state) => state.filterByTimeFrame);
+  const sortInvestments = useInvestmentStore((state) => state.sortInvestments);
+  const selectedInvestmentIds = useInvestmentStore((state) => state.selectedInvestmentIds);
+  const toggleInvestment = useInvestmentStore((state) => state.toggleInvestment);
+  const addInvestment = useInvestmentStore((state) => state.addInvestment);
+  const updateInvestment = useInvestmentStore((state) => state.updateInvestment);
+  const deleteInvestment = useInvestmentStore((state) => state.deleteInvestment);
+  const investmentData = useInvestmentStore((state) => state.filteredAndSortedInvestments);
   const handleNewAsset = () => {
     setSelectedAsset(null);
     setIsAddModalOpen(true);
@@ -71,23 +52,17 @@ export default function Dashboard() {
   const handleSaveAsset = async (asset) => {
     try {
       const { id, ...assetData } = asset;
-      let updatedInvestment;
+
       setIsSavingAsset(true);
       setSubmitAssetError(null);
+
       if (id) {
         // Update existing investment
-        updatedInvestment = await updateInvestment(id, assetData);
+        await updateInvestment(id, assetData);
       } else {
         // Create new investment
-        updatedInvestment = await createInvestment(assetData);
+        await addInvestment(assetData);
       }
-      
-      // Refresh data after saving
-      const updatedInvestments = investmentData.map(investment => 
-        investment.id === updatedInvestment.id ? updatedInvestment : investment
-      );
-
-      setInvestmentData(updatedInvestments);
     } catch (err) {
       console.error('Failed to save asset:', err);
       setSubmitAssetError(err.message);
@@ -106,6 +81,18 @@ export default function Dashboard() {
       // You might want to show an error message to the user here
     }
   };
+
+  useEffect(() => {
+    setLoading(true);
+    getInvestments()
+      .catch((err) => {
+        console.error('Failed to fetch investments:', err);
+        setError('Failed to load data');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [getInvestments]);
 
   return (
     <div className="min-h-screen flex flex-col bg-base-200">
@@ -137,7 +124,7 @@ export default function Dashboard() {
 
             {/* Portfolio Summary Card */}
             <PortfolioSummaryCard 
-              portfolioSummary={portfolioSummary}
+              investmentData={investmentData}
               loading={loading}
               error={error}
             />
