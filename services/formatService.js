@@ -80,5 +80,5 @@ export function formatFullCurrency(value, currency = 'USD') {
  * @returns {string} Masked value
  */
 export function maskValue() {
-  return '$ • • • • • • ';
+  return '$ • • • •  ';
 } 

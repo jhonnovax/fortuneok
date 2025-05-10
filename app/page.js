@@ -45,7 +45,7 @@ export default function Dashboard() {
         setInvestmentData(investments)
 
         // Calculate portfolio summary
-        const summary = calculatePortfolioSummary(investments, 'all');
+        const summary = calculatePortfolioSummary(investments);
         setPortfolioSummary(summary);
       } catch (err) {
         console.error('Failed to fetch data:', err);

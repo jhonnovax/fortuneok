@@ -64,8 +64,8 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
     if (showDescription && !form.description) newErrors.description = 'Description is required';
     if (showSymbol && !form.symbol) newErrors.symbol = 'Symbol is required';
     if (showShares && !form.shares) newErrors.shares = 'Shares is required';
-    if (showPurchaseInformation && !form.purchaseInformation.currency) newErrors.purchasePriceCurrency = 'Currency is required';
-    if (showPurchaseInformation && !form.purchaseInformation.price) newErrors.purchasePrice = 'Price is required';
+    if (showPurchaseInformation && !form.purchaseInformation?.currency) newErrors.purchasePriceCurrency = 'Currency is required';
+    if (showPurchaseInformation && !form.purchaseInformation?.purchasePrice) newErrors.purchasePrice = 'Price is required';
     
     if (showShares && isNaN(Number(form.shares))) {
       newErrors.shares = 'Enter a valid number';
@@ -236,7 +236,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                 <div className="form-control">
                   {renderLabel('Currency')}
                   <CurrencyCombobox
-                    value={form.purchaseInformation.currency}
+                    value={form.purchaseInformation?.currency}
                     onChange={(value) => setForm({ ...form, purchaseInformation: { ...form.purchaseInformation, currency: value } })}
                     error={errors.purchasePriceCurrency}
                     disabled={isSubmitting}
@@ -251,9 +251,9 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                     name="price"
                     placeholder="$15.550"
                     className={`input input-bordered w-full ${errors.purchasePrice ? 'input-error' : ''}`}
-                    value={form.purchaseInformation.price}
+                    value={form.purchaseInformation?.purchasePrice}
                     decimalsLimit={2}
-                    onValueChange={(value) => setForm({ ...form, purchaseInformation: { ...form.purchaseInformation, price: value } })}
+                    onValueChange={(value) => setForm({ ...form, purchaseInformation: { ...form.purchaseInformation, purchasePrice: value } })}
                     disabled={isSubmitting}
                     allowNegativeValue={false}
                     decimalSeparator="."

@@ -115,17 +115,7 @@ export default function AllocationChart({ loading, data, error }) {
       }
 
       // Calculate total value from transactions
-      let investmentValue = 0;
-      
-      investment.transactions.forEach(transaction => {
-        if (['buy', 'deposit'].includes(transaction.operation)) {
-          investmentValue += transaction.pricePerUnit * (transaction.shares || 1);
-        } else if (['sell', 'withdrawal'].includes(transaction.operation)) {
-          investmentValue -= transaction.pricePerUnit * (transaction.shares || 1);
-        } else if (['dividend', 'interest'].includes(transaction.operation)) {
-          investmentValue += transaction.pricePerUnit;
-        }
-      });
+      const investmentValue = investment.purchaseInformation?.purchasePrice || 0;
 
       categoryMap[category].value += investmentValue;
     });
@@ -159,17 +149,7 @@ export default function AllocationChart({ loading, data, error }) {
       }
 
       // Calculate total value from transactions
-      let investmentValue = 0;
-      
-      investment.transactions.forEach(transaction => {
-        if (['buy', 'deposit'].includes(transaction.operation)) {
-          investmentValue += transaction.pricePerUnit * (transaction.shares || 1);
-        } else if (['sell', 'withdrawal'].includes(transaction.operation)) {
-          investmentValue -= transaction.pricePerUnit * (transaction.shares || 1);
-        } else if (['dividend', 'interest'].includes(transaction.operation)) {
-          investmentValue += transaction.pricePerUnit;
-        }
-      });
+      const investmentValue = investment.purchaseInformation?.purchasePrice || 0;
 
       assetMap[assetKey].value += investmentValue;
     });
