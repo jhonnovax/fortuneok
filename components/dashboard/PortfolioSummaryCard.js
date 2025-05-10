@@ -71,22 +71,6 @@ export default function PortfolioSummaryCard({
                 )}
               </button>
             </div>
-            
-            <div className="flex items-center gap-2 text-lg">
-              <span className={`font-medium ${portfolioSummary.profit >= 0 ? 'text-success' : 'text-error'}`}>
-                {isValueVisible ? (
-                  `${portfolioSummary.profit >= 0 ? '+' : ''}${formatFullCurrency(Math.abs(portfolioSummary.profit))}`
-                ) : '$ • • •'}
-              </span>
-              {isValueVisible &&
-                <>
-                  <span className={`font-medium ${portfolioSummary.profit >= 0 ? 'text-success' : 'text-error'}`}>
-                    ({portfolioSummary.profit >= 0 ? '+' : ''}{portfolioSummary.profitPercentage}%)
-                  </span>
-                  <span className="text-base-content">{portfolioSummary.period}</span>
-                </>
-              }
-            </div>
           </div>
         </div>
       </div>

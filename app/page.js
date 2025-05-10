@@ -5,11 +5,8 @@ import TopNavbar from "@/components/dashboard/TopNavbar";
 import RightSidebar from "@/components/dashboard/RightSidebar";
 import MobileSidebar from "@/components/dashboard/MobileSidebar";
 import AssetsList from "@/components/dashboard/AssetsList";
-import TimeframeToggle from "@/components/dashboard/TimeframeToggle";
-import PerformanceChart from "@/components/dashboard/PerformanceChart";
 import AllocationChart from "@/components/dashboard/AllocationChart";
 import AssetEditionModal from "@/components/dashboard/AssetEditionModal";
-import TabNavigation from "@/components/dashboard/TabNavigation";
 import { getInvestments } from "@/services/investmentService";
 import PortfolioSummaryCard from "@/components/dashboard/PortfolioSummaryCard";
 import { calculatePortfolioSummary } from "@/services/ChartService";
@@ -27,8 +24,6 @@ export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSavingAsset, setIsSavingAsset] = useState(false);
   const [submitAssetError, setSubmitAssetError] = useState(null);
-  const [timeframe, setTimeframe] = useState('all');
-  const [activeTab, setActiveTab] = useState('performance');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -50,7 +45,7 @@ export default function Dashboard() {
         setInvestmentData(investments)
 
         // Calculate portfolio summary
-        const summary = calculatePortfolioSummary(investments, timeframe);
+        const summary = calculatePortfolioSummary(investments, 'all');
         setPortfolioSummary(summary);
       } catch (err) {
         console.error('Failed to fetch data:', err);
@@ -61,11 +56,7 @@ export default function Dashboard() {
     };
 
     fetchData();
-  }, [timeframe]);
-
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-  };
+  }, []);
 
   const handleNewAsset = () => {
     setSelectedAsset(null);
@@ -132,7 +123,6 @@ export default function Dashboard() {
 
             {/* Tabs and Add Transaction button in same row */}
             <div className="flex justify-between items-center !mt-0">
-              <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
               <button 
                 className="btn btn-primary flex items-center gap-2 btn-sm md:btn-md md:hidden"
                 onClick={handleNewAsset}
@@ -144,11 +134,6 @@ export default function Dashboard() {
               </button>
             </div>
 
-            {/* Timeframe Toggle */}
-            <div className="flex justify-start">
-              <TimeframeToggle selected={timeframe} onSelect={setTimeframe} />
-            </div>
-
             {/* Portfolio Summary Card */}
             <PortfolioSummaryCard 
               portfolioSummary={portfolioSummary}
@@ -157,22 +142,11 @@ export default function Dashboard() {
             />
 
             {/* Render the appropriate component based on the active tab */}
-            {activeTab === 'performance' && (
-              <PerformanceChart 
-                timeframe={timeframe} 
-                data={investmentData} 
-                portfolioSummary={portfolioSummary}
-                loading={loading}
-                error={error}
-              />
-            )}
-            {activeTab === 'allocation' && (
-              <AllocationChart 
-                data={investmentData} 
-                loading={loading}
-                error={error}
-              />
-            )}
+            <AllocationChart 
+              data={investmentData} 
+              loading={loading}
+              error={error}
+            />
 
             {/* Footer */}  
             <Footer />
