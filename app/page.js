@@ -12,7 +12,7 @@ import PortfolioSummaryCard from "@/components/dashboard/PortfolioSummaryCard";
 import { calculatePortfolioSummary } from "@/services/ChartService";
 import config from '@/config';
 import Footer from '@/components/Footer';
-import { createInvestment, updateInvestment } from '@/services/investmentService';
+import { createInvestment, updateInvestment, deleteInvestment } from '@/services/investmentService';
 export const dynamic = "force-dynamic";
 
 // This is a private page: It's protected by the layout.js component which ensures the user is authenticated.
@@ -99,7 +99,8 @@ export default function Dashboard() {
   const handleDeleteAsset = async (assetId) => {
     try {
       // TODO: Implement delete investment
-      console.log('Deleting asset:', assetId);
+      const response = await deleteInvestment(assetId);
+      console.log('Deleted investment:', response);
     } catch (err) {
       console.error('Failed to delete investment:', err);
       // You might want to show an error message to the user here
