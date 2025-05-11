@@ -1,38 +1,33 @@
-# ShipFast — Javascript
+# FortuneOK
 
-Hey maker 👋 it's Marc from [ShipFast](https://shipfa.st/docs). Let's get your startup off the ground, FAST ⚡️
+**FortuneOK** is a powerful investment management tool that helps you track all your assets in one place — no more spreadsheets or scattered records. Stay organized, make informed decisions, and grow your wealth with ease.
 
-<sub>**Watch/Star the repo to be notified when updates are pushed**</sub>
+## 🛠 Installation
 
-## Get Started
+Clone the repository and install dependencies:
 
-1. Follow the [Get Started Tutorial](https://shipfa.st/docs) to clone the repo and run your local server 💻
+```bash
+npm install
+```
 
-<sub>**Looking for the /pages router version?** Use this [documentation](https://shipfa.st/docs-old) instead</sub>
+## 💻 Development
 
-2. Follow the [Ship In 5 Minutes Tutorial](https://shipfa.st/docs/tutorials/ship-in-5-minutes) to learn the foundation and ship your app quickly ⚡️
+Start the project in development mode:
 
-## Links
+```bash
+npm run dev
+```
 
--   [📚 Documentation](https://shipfa.st/docs)
--   [📣 Updates](https://shipfast.beehiiv.com/)
--   [🧑‍💻 Discord](https://shipfa.st/dashboard)
--   [🥇 Leaderboard](https://shipfa.st/leaderboard)
+## 📦 Production
 
-## Support
+Build the project for production:
 
-Reach out at hello@shipfa.st
+```bash
+npm run build
+```
 
-Let's ship it, FAST ⚡️
+Start the production server:
 
-\_
-
-**📈 Grow your startup with [DataFast](https://datafa.st?ref=shipfast_readme)**
-
--   Analyze your traffic
--   Get insights on your customers
--   Make data-driven decisions
-
-ShipFast members get 30% OFF on all plans! 🎁
-
-![datafast](https://github.com/user-attachments/assets/085453a6-8a66-45be-b7ea-a7a08e856ed8)
+```bash
+npm run start
+```
