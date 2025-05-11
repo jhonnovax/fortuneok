@@ -23,10 +23,6 @@ const INITIAL_FORM_STATE = {
     currency: '',
     price: ''
   },
-  currentValuation: {
-    currency: '',
-    price: ''
-  },
   shares: '',
   notes: ''
 };
@@ -114,7 +110,6 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
         category: asset.category,
         description: asset.description,
         symbol: asset.symbol,
-        currency: asset.currency,
         shares: asset.shares,
         purchaseInformation: asset.purchaseInformation,
         notes: asset.notes
