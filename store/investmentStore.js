@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { parseDataFromAPI } from '@/services/investmentService';
-import { filterInvestments, addProfitAndTotal, sortInvestmentList } from '@/services/investmentService';
+import { filterInvestments, sortInvestmentList } from '@/services/investmentService';
 import { useCurrencyRatesStore } from './currencyRatesStore';
 
 export const useInvestmentStore = create((set, get) => ({
@@ -11,13 +11,11 @@ export const useInvestmentStore = create((set, get) => ({
 
   getFilteredAndSortedInvestments: () => {
     const { investments, selectedInvestmentIds, filters, sortBy } = get();
-    const { cutoffTimeFrame } = filters;
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const currencyRates = useCurrencyRatesStore(state => state.currencyRates);
     let filteredAndSortedInvestments = investments.map((investment) => parseDataFromAPI(investment, selectedInvestmentIds, currencyRates));
 
     filteredAndSortedInvestments = filterInvestments(filteredAndSortedInvestments, filters);
-    filteredAndSortedInvestments = addProfitAndTotal(filteredAndSortedInvestments, cutoffTimeFrame);
     filteredAndSortedInvestments = sortInvestmentList(filteredAndSortedInvestments, sortBy);
 
     return filteredAndSortedInvestments;

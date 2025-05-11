@@ -52,7 +52,7 @@ export function parseDataFromAPI(investment, selectedIds, conversionRates) {
   if (investment.shares) {
     amount = convertFromBaseCurrency('usd', investment.amount, conversionRates);
   } else {
-    amount = convertFromBaseCurrency(investment.currency, investment.purchaseInformation.purchasePrice, conversionRates);
+    amount = convertFromBaseCurrency(investment.currency, investment.purchaseInformation?.purchasePrice, conversionRates);
   }
 
   return {

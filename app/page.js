@@ -38,7 +38,8 @@ export default function Dashboard() {
   const addInvestment = useInvestmentStore((state) => state.addInvestment);
   const updateInvestment = useInvestmentStore((state) => state.updateInvestment);
   const deleteInvestment = useInvestmentStore((state) => state.deleteInvestment);
-  const investmentData = useInvestmentStore((state) => state.filteredAndSortedInvestments);
+  const investmentData = getFilteredAndSortedInvestments();
+
   const handleNewAsset = () => {
     setSelectedAsset(null);
     setIsAddModalOpen(true);
