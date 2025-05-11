@@ -167,7 +167,7 @@ export default function Dashboard() {
         {/* Add Investment Modal */}
         <AssetEditionModal
           isOpen={isAddModalOpen}
-          isSavingAsset={isSavingAsset}
+          isSubmitting={isSavingAsset}
           submitError={submitAssetError}
           asset={selectedAsset}
           onClose={() => setIsAddModalOpen(false)}

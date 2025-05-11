@@ -4,22 +4,7 @@ import { useState, useEffect } from 'react';
 import CurrencyInput from 'react-currency-input-field';
 import SymbolCombobox from './SymbolCombobox';
 import CurrencyCombobox from './CurrencyCombobox';
-
-const CATEGORIES = [
-  { value: 'real_estate', label: '🏠 Real Estate' },
-  { value: 'certificates_of_deposit', label: '🏦 Certificates of deposit' },
-  { value: 'savings_account', label: '🏦 Savings account' },
-  { value: 'precious_metals', label: '👑 Precious metals' },
-  { value: 'cash', label: '💵 Cash' },
-  { value: 'p2p_loans', label: '🤝 P2P loans' },
-  { value: 'stocks', label: '📈 Stocks' },
-  { value: 'bonds', label: '📈 Bonds' },
-  { value: 'cryptocurrencies', label: '📈 Cryptocurrencies' },
-  { value: 'etf_funds', label: '📈 ETF / Funds' },
-  { value: 'option', label: '📈 Option' },
-  { value: 'futures', label: '📈 Futures' },
-  { value: 'other', label: '🔷 Other custom assets' }
-];
+import { INVESTMENT_CATEGORIES } from '@/services/investmentService';
 
 const TRADEABLE_CATEGORIES = [
   'stocks', 'bonds', 'cryptocurrencies', 'etf_funds', 'option', 'futures'
@@ -194,7 +179,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                 disabled={isSubmitting}
               >
                 <option value="">Select category...</option>
-                {CATEGORIES.map(cat => (
+                {INVESTMENT_CATEGORIES.map(cat => (
                   <option key={cat.value} value={cat.value}>{cat.label}</option>
                 ))}
               </select>
@@ -270,7 +255,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
             {/* Shares */}
             {showShares && (
                 <>
-                  <div className={`divider md:col-span-2 ${errors.shares ? 'divider-error' : ''}`}>
+                  <div className={`divider md:col-span-2 ${errors.shares ? 'divider-error text-error' : ''}`}>
                     Shares
                   </div>
                   <div className="form-control md:col-span-2">

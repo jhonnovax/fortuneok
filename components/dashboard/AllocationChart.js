@@ -12,6 +12,7 @@ import { useState, useEffect } from 'react';
 import { formatCurrency } from '../../services/formatService';
 import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
+import { INVESTMENT_CATEGORIES } from '@/services/investmentService';
 
 const COLORS = [
   '#006e00', // Primary green
@@ -167,17 +168,12 @@ export default function AllocationChart({ loading, data, error }) {
 
   // Helper function to get display name for category
   const getCategoryDisplayName = (category) => {
-    const displayNames = {
-      'Stock': 'Stocks',
-      'ETF': 'ETFs',
-      'Bond': 'Bonds',
-      'Real Estate': 'Real Estate',
-      'Crypto': 'Crypto',
-      'Cash': 'Cash',
-      'Other': 'Other'
-    };
+    const categoryInfo = INVESTMENT_CATEGORIES.find(cat => cat.value === category);
+    const categoryDisplayName = categoryInfo  
+      ? categoryInfo.label.slice(2, categoryInfo.label.length) // Remove the first two characteres (emoticons)
+      : category;
     
-    return displayNames[category] || category;
+    return categoryDisplayName || category;
   };
 
   // Add fill property to data for tooltip color

@@ -12,6 +12,22 @@ export function filterInvestments(data) {
   return filteredData;
 }
 
+export const INVESTMENT_CATEGORIES = [
+  { value: 'real_estate', label: '🏠 Real Estate' },
+  { value: 'cash', label: '💵 Cash' },
+  { value: 'certificates_of_deposit', label: '🏦 Certificates of deposit' },
+  { value: 'savings_account', label: '🏦 Savings account' },
+  { value: 'p2p_loans', label: '🤝 P2P loans' },
+  { value: 'precious_metals', label: '👑 Precious metals' },
+  { value: 'etf_funds', label: '📈 ETF / Funds' },
+  { value: 'stocks', label: '📈 Stocks' },
+  { value: 'bonds', label: '📈 Bonds' },
+  { value: 'cryptocurrencies', label: '📈 Cryptocurrencies' },
+  { value: 'option', label: '📈 Option' },
+  { value: 'futures', label: '📈 Futures' },
+  { value: 'other', label: '🔷 Other custom assets' }
+];
+
 export function sortInvestmentList(data, sortBy) {
   const sortedData = data.toSorted((a, b) => {
     if (sortBy.type === 'asc') {
