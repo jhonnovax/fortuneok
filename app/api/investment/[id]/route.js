@@ -109,7 +109,7 @@ export async function DELETE(req, { params }) {
       return NextResponse.json({ error: "Investment not found" }, { status: 404 });
     }
     
-    return NextResponse.json({ success: true });
+    return NextResponse.json(investment);
   } catch (error) {
     console.error("Error deleting investment:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
