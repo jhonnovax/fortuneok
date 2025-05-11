@@ -119,7 +119,6 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
   // Set form values when asset is provided
   useEffect(() => {
     if (asset) {
-      console.log('asset', asset);
       setForm(prevForm => ({
         ...prevForm,
         date: asset.date,
@@ -174,7 +173,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
               <input 
                 type="date"
                 className={`input input-bordered w-full ${errors.date ? 'input-error' : ''}`}
-                value={form.date}
+                value={form.date?.toISOString?.()?.split('T')?.[0] || ''}
                 onChange={(e) => setForm({ ...form, date: e.target.value })}
                 disabled={isSubmitting}
               />
