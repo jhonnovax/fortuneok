@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { formatFullCurrency, maskValue } from '../../services/formatService';
 import ErrorLoadingData from './ErrorLoadingData';
-
+import LoadingSpinner from './LoadingSpinner';
 export default function PortfolioSummaryCard({ 
   investmentData = [],
   loading = false,
@@ -17,12 +17,7 @@ export default function PortfolioSummaryCard({
     return (
       <div className="card bg-base-100 shadow-xl">
         <div className="card-body">
-          <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <span className="loading loading-spinner loading-md"></span>
-              <span className="text-gray-500">Loading portfolio data...</span>
-            </div>
-          </div>
+          <LoadingSpinner loadingText="Loading portfolio data..." />
         </div>
       </div>
     );

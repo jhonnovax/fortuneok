@@ -11,6 +11,7 @@ import {
 import { useState, useEffect } from 'react';
 import { formatCurrency } from '../../services/formatService';
 import ErrorLoadingData from './ErrorLoadingData';
+import LoadingSpinner from './LoadingSpinner';
 
 const COLORS = [
   '#006e00', // Primary green
@@ -191,11 +192,7 @@ export default function AllocationChart({ loading, data, error }) {
   }));
   
   if (loading) {
-    return (
-      <div className="w-full h-[400px] flex items-center justify-center">
-        <span className="loading loading-spinner loading-lg text-primary"></span>
-      </div>
-    );
+    return <LoadingSpinner loadingText="Loading allocation data..." />;
   }
 
   if (error) {

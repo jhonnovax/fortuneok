@@ -4,16 +4,14 @@ import { useState } from 'react';
 import DeleteAssetModal from './DeleteAssetModal';
 import { formatCurrency } from '@/services/formatService';
 import ErrorLoadingData from './ErrorLoadingData';
+import LoadingSpinner from './LoadingSpinner';
+
 export default function AssetsList({ loading, error, investmentData, onEditAsset, onDeleteAsset }) {
 
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, assetId: null });
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center py-12">
-        <div className="loading loading-spinner loading-lg text-primary"></div>
-      </div>
-    );
+    return <LoadingSpinner loadingText="Loading assets..." />;
   }
 
   if (error) {
