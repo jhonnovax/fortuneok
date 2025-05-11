@@ -25,6 +25,10 @@ const TRADEABLE_CATEGORIES = [
   'stocks', 'bonds', 'cryptocurrencies', 'etf_funds', 'option', 'futures'
 ];
 
+const DEPOSIT_CATEGORIES = [
+  'certificates_of_deposit', 'savings_account', 'cash'
+];
+
 const INITIAL_FORM_STATE = {
   date: '',
   category: '',
@@ -121,7 +125,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
     if (asset) {
       setForm(prevForm => ({
         ...prevForm,
-        date: asset.date,
+        date: asset.date?.toISOString?.()?.split('T')?.[0] || '',
         category: asset.category,
         description: asset.description,
         symbol: asset.symbol,
@@ -173,7 +177,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
               <input 
                 type="date"
                 className={`input input-bordered w-full ${errors.date ? 'input-error' : ''}`}
-                value={form.date?.toISOString?.()?.split('T')?.[0] || ''}
+                value={form.date}
                 onChange={(e) => setForm({ ...form, date: e.target.value })}
                 disabled={isSubmitting}
               />
@@ -227,8 +231,8 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
 
             {showPurchaseInformation && (
               <>
-                <div className={`divider md:col-span-2 ${(errors.purchasePriceCurrency || errors.purchasePrice) ? 'divider-error' : ''}`}>
-                  Purchase Information
+                <div className={`divider md:col-span-2 ${(errors.purchasePriceCurrency || errors.purchasePrice) ? 'divider-error text-error' : ''}`}>
+                  {DEPOSIT_CATEGORIES.includes(form.category) ? 'Deposit Information' : 'Purchase Information'}
                 </div>
 
                 {/* Purchase Price Currency */}
@@ -244,7 +248,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
 
                 {/* Purchase Price */}
                 <div className="form-control">
-                  {renderLabel('Purchase Price')}
+                  {renderLabel(DEPOSIT_CATEGORIES.includes(form.category) ? 'Deposit Amount' : 'Purchase Price')}
                   <CurrencyInput
                     id="price-input"
                     name="price"

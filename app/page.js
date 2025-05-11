@@ -68,6 +68,7 @@ export default function Dashboard() {
       setSubmitAssetError(err.message);
     } finally {
       setIsSavingAsset(false);
+      setIsAddModalOpen(false);
     }
   };
 
