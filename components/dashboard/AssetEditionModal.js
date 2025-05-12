@@ -40,6 +40,11 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
   const [form, setForm] = useState(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState({});
 
+  const showShares = TRADEABLE_CATEGORIES.includes(form.category);
+  const showSymbol = TRADING_CATEGORIES.includes(form.category);
+  const showDescription = !TRADING_CATEGORIES.includes(form.category);
+  const showPurchaseInformation = !TRADING_CATEGORIES.includes(form.category);
+
   const validateForm = () => {
     const newErrors = {};
     
@@ -69,11 +74,6 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
     
     onSave(form);
   };
-
-  const showShares = TRADEABLE_CATEGORIES.includes(form.category);
-  const showSymbol = TRADING_CATEGORIES.includes(form.category);
-  const showDescription = !TRADING_CATEGORIES.includes(form.category);
-  const showPurchaseInformation = !TRADING_CATEGORIES.includes(form.category);
 
 
   // Reset form when modal opens
