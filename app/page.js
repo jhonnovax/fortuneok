@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import TopNavbar from "@/components/dashboard/TopNavbar";
 import RightSidebar from "@/components/dashboard/RightSidebar";
-import MobileSidebar from "@/components/dashboard/MobileSidebar";
 import AssetsList from "@/components/dashboard/AssetsList";
 import AllocationChart from "@/components/dashboard/AllocationChart";
 import AssetEditionModal from "@/components/dashboard/AssetEditionModal";
@@ -19,7 +18,6 @@ export const dynamic = "force-dynamic";
 export default function Dashboard() {
   const { appName, appDescription } = config;
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSavingAsset, setIsSavingAsset] = useState(false);
   const [submitAssetError, setSubmitAssetError] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -99,7 +97,7 @@ export default function Dashboard() {
     <div className="min-h-screen flex flex-col bg-base-200">
       
       {/* Navbar */}
-      <TopNavbar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+      <TopNavbar />
 
       {/* Main content */}
       <div className="flex pt-16 min-h-screen">
@@ -137,6 +135,21 @@ export default function Dashboard() {
               error={error}
             />
 
+            {/* Mobile Assets List */}
+            <div className="card bg-base-100 shadow-xl lg:hidden">
+              <div className="card-body">
+                <div className="space-y-6"> 
+                  <AssetsList 
+                    loading={loading} 
+                    error={error} 
+                    investmentData={investmentData} 
+                    onEditAsset={handleEditAsset}  
+                    onDeleteAsset={handleDeleteAsset}
+                  />
+                </div>
+              </div>
+            </div>
+
             {/* Footer */}  
             <Footer />
           </div>
@@ -152,17 +165,6 @@ export default function Dashboard() {
             onDeleteAsset={handleDeleteAsset}
           />
         </RightSidebar>
-
-        {/* Mobile sidebar */}
-        <MobileSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen}>
-          <AssetsList 
-            loading={loading} 
-            error={error} 
-            investmentData={investmentData} 
-            onEditAsset={handleEditAsset}  
-            onDeleteAsset={handleDeleteAsset}
-          />
-        </MobileSidebar>
 
         {/* Add Investment Modal */}
         <AssetEditionModal
