@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import Image from 'next/image';
 
 // Base64 encoded small placeholder image to avoid external requests
 const FALLBACK_IMAGE = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=';
@@ -11,7 +12,6 @@ const FALLBACK_IMAGE = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy
 export default function SymbolCombobox({ 
   value, 
   onChange, 
-  onDescriptionChange,
   type = 'all',
   placeholder = 'Search for a symbol...',
   className = '',
@@ -30,65 +30,6 @@ export default function SymbolCombobox({
   const inputRef = useRef(null);
   const timeoutRef = useRef(null);
   const preventSearchRef = useRef(false);
-  
-  // Initialize with value
-  useEffect(() => {
-    if (value && value !== inputValue) {
-      setInputValue(value);
-    }
-  }, [value]);
-  
-  // Handle outside clicks
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (comboboxRef.current && !comboboxRef.current.contains(event.target)) {
-        // Cancel any pending API calls
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
-          timeoutRef.current = null;
-        }
-        
-        // Prevent search from running after clicking outside
-        preventSearchRef.current = true;
-        
-        // Close dropdown and stop loading state
-        setShowDropdown(false);
-        setIsLoading(false);
-        
-        // If there's text in the input but it doesn't match a valid selection
-        // (i.e., the user typed something but didn't select from dropdown)
-        if (inputValue && inputValue !== value) {
-          // Check if the input matches any result exactly
-          const exactMatch = results.find(item => item.symbol === inputValue);
-          
-          if (exactMatch) {
-            // If there's an exact match, use it
-            handleSelect(exactMatch);
-          } else {
-            // Otherwise clear the input
-            setInputValue('');
-            onChange('');
-            setResults([]);
-            
-            // Clear description field if callback provided
-            if (onDescriptionChange) {
-              onDescriptionChange('');
-            }
-          }
-        }
-      }
-    }
-    
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [inputValue, value, results, onChange, onDescriptionChange]);
-  
-  // Cleanup timeouts on unmount
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
   
   // Search function
   function search(query) {
@@ -140,7 +81,7 @@ export default function SymbolCombobox({
     setInputValue(newValue);
     
     if (!newValue.trim()) {
-      onChange('');
+      onChange({ symbol: '', description: '' });
       setResults([]);
       setShowDropdown(false);
     } else {
@@ -149,7 +90,7 @@ export default function SymbolCombobox({
   }
   
   // Handle selection
-  function handleSelect(item) {
+  const handleSelect = useCallback((item) => {
     // Prevent search from running after selection
     preventSearchRef.current = true;
     
@@ -159,28 +100,18 @@ export default function SymbolCombobox({
     setResults([]);
     
     // Notify parent
-    onChange(item.symbol);
-    
-    // Update description field if callback provided
-    if (onDescriptionChange && item.name) {
-      onDescriptionChange(item.name || item.description || '');
-    }
+    onChange({ symbol: item.symbol, description: item.name || item.description || '' });
     
     // Clear any pending search
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-  }
+  }, [onChange]);
   
   // Handle clear button
   function handleClear() {
     setInputValue('');
     setResults([]);
     setShowDropdown(false);
-    onChange('');
-    
-    // Clear description field if callback provided
-    if (onDescriptionChange) {
-      onDescriptionChange('');
-    }
+    onChange({ symbol: '', description: '' });
     
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     inputRef.current?.focus();
@@ -194,6 +125,60 @@ export default function SymbolCombobox({
     }));
   }
   
+  // Initialize with value
+  useEffect(() => {
+    if (value && value !== inputValue) {
+      setInputValue(value);
+    }
+  }, [value, inputValue]);
+  
+  // Handle outside clicks
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (comboboxRef.current && !comboboxRef.current.contains(event.target)) {
+        // Cancel any pending API calls
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+          timeoutRef.current = null;
+        }
+        
+        // Prevent search from running after clicking outside
+        preventSearchRef.current = true;
+        
+        // Close dropdown and stop loading state
+        setShowDropdown(false);
+        setIsLoading(false);
+        
+        // If there's text in the input but it doesn't match a valid selection
+        // (i.e., the user typed something but didn't select from dropdown)
+        if (inputValue && inputValue !== value) {
+          // Check if the input matches any result exactly
+          const exactMatch = results.find(item => item.symbol === inputValue);
+          
+          if (exactMatch) {
+            // If there's an exact match, use it
+            handleSelect(exactMatch);
+          } else {
+            // Otherwise clear the input
+            setInputValue('');
+            onChange({ symbol: '', description: '' });
+            setResults([]);
+          }
+        }
+      }
+    }
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [inputValue, value, results, onChange, handleSelect]);
+  
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
   return (
     <div className="form-control w-full relative" ref={comboboxRef}>
       <div className="w-full">
@@ -251,12 +236,14 @@ export default function SymbolCombobox({
                     className="w-full flex items-center gap-2 p-2 hover:bg-base-200 text-left"
                   >
                     <div className="w-6 h-6 flex-shrink-0 flex items-center justify-center">
-                      <img 
+                      <Image 
                         src={failedImages[item.symbol] ? FALLBACK_IMAGE : item.image} 
                         alt={item.symbol} 
                         className="w-6 h-6 object-contain flex-shrink-0"
                         onError={() => handleImageError(item.symbol)}
                         loading="lazy"
+                        width={24}
+                        height={24}
                       />
                     </div>
                     <div className="flex flex-col min-w-0 flex-1">
@@ -279,6 +266,8 @@ export default function SymbolCombobox({
           </div>
         </div>
       )}
+
     </div>
+
   );
 } 

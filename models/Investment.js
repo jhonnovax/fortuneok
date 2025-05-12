@@ -37,15 +37,12 @@ const investmentSchema = mongoose.Schema(
       type: {
         currency: {
           type: String,
-          required: true,
           default: "USD"
         },
         purchasePrice: {
           type: Number,
-          required: true
         }
       },
-      required: true
     },
     notes: {
       type: String,

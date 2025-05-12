@@ -51,7 +51,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
     // Required field validation
     if (!form.date) newErrors.date = 'Date is required';
     if (!form.category) newErrors.category = 'Category is required';
-    if (showDescription && !form.description) newErrors.description = 'Description is required';
+    if (!form.description) newErrors.description = 'Description is required';
     if (showSymbol && !form.symbol) newErrors.symbol = 'Symbol is required';
     if (showShares && !form.shares) newErrors.shares = 'Shares is required';
     if (showPurchaseInformation && !form.purchaseInformation?.currency) newErrors.purchasePriceCurrency = 'Currency is required';
@@ -201,7 +201,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                 {renderLabel('Symbol')}
                 <SymbolCombobox
                   value={form.symbol}
-                  onChange={(value) => setForm({ ...form, symbol: value })}
+                  onChange={(selection) => setForm({ ...form, symbol: selection.symbol, description: selection.description })}
                   type={form.category}
                   placeholder="Search for a symbol..."
                   error={errors.symbol}
