@@ -56,7 +56,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
       newErrors.shares = 'Enter a valid number';
     }
     
-    if (showPurchaseInformation && isNaN(Number(form.purchaseInformation.price))) {
+    if (showPurchaseInformation && isNaN(Number(form.purchaseInformation.purchasePrice))) {
       newErrors.purchasePrice = 'Enter a valid number';
     }
     
@@ -106,6 +106,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
     if (asset) {
       setForm(prevForm => ({
         ...prevForm,
+        id: asset.id,
         date: asset.date?.toISOString?.()?.split('T')?.[0] || '',
         category: asset.category,
         description: asset.description,

@@ -43,8 +43,8 @@ export async function GET(req, { params }) {
   }
 }
 
-// PUT - Update a specific investment
-export async function PUT(req, { params }) {
+// PATCH - Update a specific investment
+export async function PATCH(req, { params }) {
   try {
     const session = await getServerSession(authOptions);
     

@@ -44,8 +44,8 @@ export const useInvestmentStore = create((set, get) => ({
     });
   },
 
-  updateInvestment: async (investment) => {
-    const response = await fetch(`/api/investment`, {
+  updateInvestment: async (investmentId, investment) => {
+    const response = await fetch(`/api/investment/${investmentId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(investment),
