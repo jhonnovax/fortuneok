@@ -77,3 +77,7 @@ export function parseDataFromAPI(investment, selectedIds, conversionRates) {
     amount
   };
 }
+
+export function getAssetCategoryDescription(assetCategory) {
+  return INVESTMENT_CATEGORIES.find(category => category.value === assetCategory)?.label || assetCategory;
+}
