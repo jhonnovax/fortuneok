@@ -14,6 +14,7 @@ export function filterInvestments(data) {
 
 export const INVESTMENT_CATEGORIES = [
   { value: 'real_estate', label: '🏠 Real Estate' },
+  { value: 'cars', label: '🚗 Cars' },
   { value: 'cash', label: '💵 Cash' },
   { value: 'certificates_of_deposit', label: '🏦 Certificates of deposit' },
   { value: 'savings_account', label: '🏦 Savings account' },

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import DeleteAssetModal from './DeleteAssetModal';
-import { formatDateToString, formatFullCurrency } from '@/services/intlService';
+import { formatDateToString, formatFullCurrency, formatNumber } from '@/services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
 import TabAssetGroups from './TabAssetGroups';
@@ -15,7 +15,7 @@ export default function AssetsList({ loading, error, investmentData, onEditAsset
 
   useEffect(() => {
     if (activeTab === 'positions') {
-      const sortedAssets = investmentData.sort((a, b) => new Date(b.date) - new Date(a.date));
+      const sortedAssets = investmentData.sort((a, b) => new Date(b.currentValuation?.amount) - new Date(a.currentValuation?.amount));
       setAssetList(sortedAssets);
     } else {
       const sortedCategories = investmentData.reduce((categories, asset) => {
@@ -25,12 +25,12 @@ export default function AssetsList({ loading, error, investmentData, onEditAsset
           categories = categories.concat({
             category: asset.category,
             description: getAssetCategoryDescription(asset.category),
-            amount: asset.purchaseInformation?.purchasePrice || 0,
+            amount: asset.currentValuation?.amount || 0,
           });
         } else {
           categories = categories.map(category => {
             if (category.category === asset.category) {
-              return { ...category, amount: category.amount + (asset.purchaseInformation?.purchasePrice || 0) };
+              return { ...category, amount: category.amount + (asset.currentValuation?.amount || 0) };
             }
 
             return category;
@@ -82,8 +82,8 @@ export default function AssetsList({ loading, error, investmentData, onEditAsset
                           {formatDateToString(asset.date)}
                         </div>
                       )}
-                      <p className="text-sm opacity-85">{formatFullCurrency(asset.purchaseInformation?.purchasePrice || 0)}</p>
-                      {asset.shares && <p className="text-sm opacity-70 badge badge-ghost">{asset.shares} shares</p>}
+                      <p className="text-sm opacity-85">{formatFullCurrency(asset.currentValuation?.amount || 0)}</p>
+                      {asset.shares && <p className="text-sm opacity-70 badge badge-ghost">x{formatNumber(asset.shares, 4)} shares</p>}
                     </div>
                     <div className="flex items-center gap-4">
                       {/* Popover */}
@@ -91,6 +91,7 @@ export default function AssetsList({ loading, error, investmentData, onEditAsset
                         <label 
                           tabIndex={0} 
                           className="btn btn-ghost btn-sm btn-circle"
+                          title="More actions"
                         >
                           <svg 
                             xmlns="http://www.w3.org/2000/svg" 
