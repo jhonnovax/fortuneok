@@ -5,6 +5,8 @@ import CurrencyInput from 'react-currency-input-field';
 import SymbolCombobox from './SymbolCombobox';
 import CurrencyCombobox from './CurrencyCombobox';
 import { INVESTMENT_CATEGORIES } from '@/services/investmentService';
+import { useSession } from 'next-auth/react';
+import ButtonSignin from '@/components/ButtonSignin';
 
 const TRADEABLE_CATEGORIES = [
   'stocks', 'bonds', 'cryptocurrencies', 'etf_funds', 'option', 'futures'
@@ -44,6 +46,8 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
   const showSymbol = TRADING_CATEGORIES.includes(form.category);
   const showDescription = !TRADING_CATEGORIES.includes(form.category);
   const showPurchaseInformation = !TRADING_CATEGORIES.includes(form.category);
+
+  const { data: session } = useSession();
 
   const validateForm = () => {
     const newErrors = {};
@@ -303,19 +307,23 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
             >
               Cancel
             </button>
-            <button 
-              type="button" 
-              className="btn btn-primary"
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <span className="loading loading-spinner loading-xs"></span>
-                  Saving...
-                </>
-              ) : 'Save'}
-            </button>
+
+          {session 
+            ? <button 
+                type="button" 
+                className="btn btn-primary"
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <span className="loading loading-spinner loading-xs"></span>
+                    Saving...
+                  </>
+                ) : 'Save'}
+              </button>
+            : <ButtonSignin extraStyle="btn-primary" />
+          }
           </div>
         </form>
       </div>
