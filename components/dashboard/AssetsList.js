@@ -62,7 +62,7 @@ export default function AssetsList({ loading, error, investmentData, onEditAsset
 
   return (
     <div className="">
-      <TabAssetGroups className="mt-2 mb-4 sticky top-0 bg-base-100 z-10" activeTab={activeTab} onTabChange={setActiveTab} />
+      <TabAssetGroups className="pt-4 mb-4 sticky top-0 bg-base-100 z-10" activeTab={activeTab} onTabChange={setActiveTab} />
 
       {/* Assets List */}
       <div className="divide-y divide-base-content/10">
