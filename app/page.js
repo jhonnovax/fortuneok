@@ -1,24 +1,7 @@
-import config from '@/config';
 import Portfolio from '@/components/dashboard/Portfolio';
+import { getSEOTags } from "@/libs/seo";
 
-const title = config.appName;
-const description = config.description;
-
-export const metadata = {
-  title,
-  description,
-  keywords: 'portfolio, investments, management, tracking, allocation, performance, stocks, shares, dashboard, analysis, savings, retirement, financial planning, wealth management',
-  openGraph: {
-    title,
-    description,
-    type: "website"
-  },
-  twitter: {
-    title,
-    description,
-    card: "summary",
-  },
-};
+export const metadata = getSEOTags();
 
 export default function Dashboard() {
   
