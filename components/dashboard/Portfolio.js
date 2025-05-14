@@ -109,7 +109,7 @@ export default function Portfolio() {
             {/* Tabs and Add Transaction button in same row */}
             <div className="flex justify-between items-center !mt-0">
               <button 
-                className="btn btn-primary flex items-center gap-2 btn-sm lg:hidden ml-auto"
+                className="btn btn-primary flex items-center gap-2 lg:hidden ml-auto"
                 onClick={handleNewAsset}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">

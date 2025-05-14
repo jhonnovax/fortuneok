@@ -1,8 +1,13 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import ButtonSignin from '@/components/ButtonSignin';
 
 export default function DeleteAssetModal({ isOpen, onClose, onConfirm, assetSymbol }) {
+
+  const { data: session } = useSession();
+
   // Handle Escape key press
   useEffect(() => {
     const handleEscape = (e) => {
@@ -34,15 +39,18 @@ export default function DeleteAssetModal({ isOpen, onClose, onConfirm, assetSymb
           <button className="btn btn-ghost" onClick={onClose}>
             Cancel
           </button>
-          <button 
-            className="btn btn-error" 
-            onClick={() => {
-              onConfirm();
-              onClose();
-            }}
-          >
-            Remove Asset
-          </button>
+          {session && (
+            <button 
+              className="btn btn-error" 
+              onClick={() => {
+                onConfirm();
+                onClose();
+              }}
+            >
+              Remove Asset
+            </button>
+          )}
+          {!session && <ButtonSignin extraStyle="btn-primary" />}
         </div>
       </div>
       <form method="dialog" className="modal-backdrop" onClick={onClose}>
