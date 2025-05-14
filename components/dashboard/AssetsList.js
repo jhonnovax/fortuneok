@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import DeleteAssetModal from './DeleteAssetModal';
-import { formatFullCurrency } from '@/services/formatService';
-import { formatDateToString } from '@/services/intlService';
+import { formatDateToString, formatFullCurrency } from '@/services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
 import TabAssetGroups from './TabAssetGroups';

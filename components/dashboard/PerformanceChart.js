@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { useEffect, useState } from 'react';
-import { formatCurrency } from '../../services/formatService';
+import { formatCurrency } from '../../services/intlService';
 import { processInvestmentsForPerformance } from '../../services/ChartService';
 
 export default function PerformanceChart({ 

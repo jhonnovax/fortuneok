@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from 'recharts';
 import { useState, useEffect } from 'react';
-import { formatCurrency } from '../../services/formatService';
+import { formatCurrency } from '../../services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
 import { INVESTMENT_CATEGORIES } from '@/services/investmentService';
