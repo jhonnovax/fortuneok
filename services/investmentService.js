@@ -82,3 +82,39 @@ export function parseDataFromAPI(investment, selectedIds, conversionRates) {
 export function getAssetCategoryDescription(assetCategory) {
   return INVESTMENT_CATEGORIES.find(category => category.value === assetCategory)?.label || assetCategory;
 }
+
+export function getAssetCategoryGroup(assetCategory) {
+
+  switch (assetCategory) {
+
+    case 'bonds':
+      return '📈 Bonds';
+
+    case 'cars':
+      return '🚗 Cars';
+
+    case 'certificates_of_deposit':
+    case 'checking_account':
+    case 'savings_account':
+    case 'p2p_loans':
+      return '💵 Cash';
+
+    case 'cryptocurrencies':
+      return '📈 Cryptos';
+
+    case 'etf_funds':
+      return '📈 ETFs';
+
+    case 'real_estate':
+      return '🏠 Real Estate';
+
+    case 'stocks':
+    case 'option':
+    case 'futures':
+      return '📈 Stocks';
+
+    default:
+      return '🔷 Others';
+  }
+
+}

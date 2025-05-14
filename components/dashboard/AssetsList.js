@@ -6,7 +6,7 @@ import { formatDateToString, formatFullCurrency, formatNumber } from '@/services
 import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
 import TabAssetGroups from './TabAssetGroups';
-import { getAssetCategoryDescription } from '@/services/investmentService';
+import { getAssetCategoryDescription, getAssetCategoryGroup } from '@/services/investmentService';
 export default function AssetsList({ loading, error, investmentData, onEditAsset, onDeleteAsset }) {
 
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, assetId: null });
@@ -18,19 +18,20 @@ export default function AssetsList({ loading, error, investmentData, onEditAsset
       const sortedAssets = investmentData.sort((a, b) => new Date(b.currentValuation?.amount) - new Date(a.currentValuation?.amount));
       setAssetList(sortedAssets);
     } else {
-      const sortedCategories = investmentData.reduce((categories, asset) => {
-        const category = categories.find(category => category.category === asset.category);
+      const assetCategories = investmentData.reduce((categories, asset) => {
+        const assetCategoryGroup = getAssetCategoryGroup(asset.category);
+        const category = categories.find(category => category.category === assetCategoryGroup);
 
         if (!category) {
           categories = categories.concat({
-            category: asset.category,
-            description: getAssetCategoryDescription(asset.category),
-            amount: asset.currentValuation?.amount || 0,
+            category: assetCategoryGroup,
+            description: getAssetCategoryDescription(assetCategoryGroup),
+            currentValuation: { currency: asset.currentValuation?.currency || 'USD', amount: asset.currentValuation?.amount || 0 },
           });
         } else {
           categories = categories.map(category => {
-            if (category.category === asset.category) {
-              return { ...category, amount: category.amount + (asset.currentValuation?.amount || 0) };
+            if (category.category === assetCategoryGroup) {
+              return { ...category, currentValuation: { currency: category.currentValuation?.currency || 'USD', amount: category.currentValuation?.amount + (asset.currentValuation?.amount || 0) } };
             }
 
             return category;
@@ -40,7 +41,9 @@ export default function AssetsList({ loading, error, investmentData, onEditAsset
         return categories;
       }, []);
 
-      setAssetList(sortedCategories);
+      const sortedAssetCategories = assetCategories.sort((a, b) => new Date(b.currentValuation?.amount) - new Date(a.currentValuation?.amount));
+
+      setAssetList(sortedAssetCategories);
     }
   }, [activeTab, investmentData]);
 

@@ -12,7 +12,7 @@ import { useState, useEffect } from 'react';
 import { formatCurrency } from '../../services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
-import { INVESTMENT_CATEGORIES } from '@/services/investmentService';
+import { INVESTMENT_CATEGORIES, getAssetCategoryGroup } from '@/services/investmentService';
 
 const COLORS = [
   '#006e00', // Primary green
@@ -108,11 +108,11 @@ export default function AllocationChart({ loading, data, error }) {
 
     // Process each investment
     data.forEach(investment => {
-      const category = investment.category;
+      const assetCategoryGroup = getAssetCategoryGroup(investment.category);
       
-      if (!categoryMap[category]) {
-        categoryMap[category] = {
-          name: getCategoryDisplayName(category),
+      if (!categoryMap[assetCategoryGroup]) {
+        categoryMap[assetCategoryGroup] = {
+          name: assetCategoryGroup,
           value: 0
         };
       }
@@ -120,7 +120,7 @@ export default function AllocationChart({ loading, data, error }) {
       // Calculate total value from transactions
       const investmentValue = investment.currentValuation?.amount || 0;
 
-      categoryMap[category].value += investmentValue;
+      categoryMap[assetCategoryGroup].value += investmentValue;
     });
 
     // Convert to array and filter out categories with zero or negative value
