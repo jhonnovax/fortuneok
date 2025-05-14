@@ -21,7 +21,7 @@ const config = {
         priceId:
           process.env.NODE_ENV === "development"
             ? "price_1Qv2q4DvX2TSHq7dc07XH0oM"
-            : "",
+            : "price_1ROk6ODvX2TSHq7da3LKJBYq",
         //  REQUIRED - Name of the plan, displayed on the pricing page
         name: "Starter",
         // A friendly description of the plan, displayed on the pricing page. Tip: explain why this plan and not others
@@ -35,8 +35,7 @@ const config = {
           { name: 'Multi-Currency Support' },
           { name: "Stocks, ETFs, Funds, Crypto and more" },
           { name: "Cash, Real Estate, Savings Accounts and more" },
-          { name: 'Performance and allocation charts'},
-          { name: 'Top gainers, losers & high-volume assets'}
+          { name: "Charts for Category and Position Allocation" }
           
         ],
       }
