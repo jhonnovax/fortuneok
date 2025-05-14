@@ -86,7 +86,14 @@ export default function AssetsList({ loading, error, investmentData, onEditAsset
                         </div>
                       )}
                       <p className="text-sm opacity-85">{formatFullCurrency(asset.currentValuation?.amount || 0)}</p>
-                      {asset.shares && <p className="text-sm opacity-70 badge badge-ghost">x{formatNumber(asset.shares, 4)} shares</p>}
+                      {asset.shares && (
+                        <p className="text-sm text-gray-500">
+                          <span className="mr-1">{asset.symbol}</span>
+                          <span className="badge-sm badge-ghost text-gray-600">
+                            <span className='text-xs font-bold'>x</span>{formatNumber(asset.shares, 4)}
+                          </span>
+                        </p>
+                      )}
                     </div>
                     <div className="flex items-center gap-4">
                       {/* Popover */}

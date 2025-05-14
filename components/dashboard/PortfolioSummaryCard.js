@@ -48,6 +48,7 @@ export default function PortfolioSummaryCard({
               </span>
               <button 
                 className="btn btn-circle btn-ghost btn-sm text-success"
+                title={isValueVisible ? 'Hide portfolio value' : 'Show portfolio value'}
                 onClick={() => setIsValueVisible(!isValueVisible)}
               >
                 {isValueVisible ? (
