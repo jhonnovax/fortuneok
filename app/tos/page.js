@@ -12,15 +12,15 @@ import config from "@/config";
 // You are an excellent lawyer.
 
 // I need your help to write a simple Terms & Services for my website. Here is some context:
-// - Website: https://shipfa.st
-// - Name: ShipFast
-// - Contact information: marc@shipfa.st
+// - Website: https://fortuneok.com
+// - Name: FortuneOK
+// - Contact information: support@fortuneok.com
 // - Description: A JavaScript code boilerplate to help entrepreneurs launch their startups faster
 // - Ownership: when buying a package, users can download code to create apps. They own the code but they do not have the right to resell it. They can ask for a full refund within 7 day after the purchase.
 // - User data collected: name, email and payment information
 // - Non-personal data collection: web cookies
-// - Link to privacy-policy: https://shipfa.st/privacy-policy
-// - Governing Law: France
+// - Link to privacy-policy: https://fortuneok.com/privacy-policy
+// - Governing Law: United States
 // - Updates to the Terms: users will be updated by email
 
 // Please write a simple Terms & Services for my site. Add the current date. Do not add or explain your reasoning. Answer:
@@ -32,7 +32,7 @@ export const metadata = getSEOTags({
 
 const TOS = () => {
   return (
-    <main className="max-w-xl mx-auto">
+    <main className="mx-auto">
       <div className="p-5">
         <Link href="/" className="btn btn-ghost">
           <svg

@@ -32,7 +32,7 @@ export const metadata = getSEOTags({
 
 const PrivacyPolicy = () => {
   return (
-    <main className="max-w-xl mx-auto">
+    <main className="mx-auto">
       <div className="p-5">
         <Link href="/" className="btn btn-ghost">
           <svg

@@ -5,7 +5,6 @@ import config from "@/config";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css";
-
 const font = Inter({ subsets: ["latin"] });
 
 export const viewport = {
@@ -26,11 +25,18 @@ export default function RootLayout({ children }) {
 			data-theme={config.colors.theme}
 			className={font.className}
 		>
-			<Analytics />
-			<SpeedInsights />
 			<body>
 				{/* ClientLayout contains all the client wrappers (Crisp chat support, toast messages, tooltips, etc.) */}
-				<ClientLayout>{children}</ClientLayout>
+				<ClientLayout>
+					{children}
+				</ClientLayout>
+
+				{process.env.NODE_ENV === 'production' && (
+					<>
+						<Analytics />
+						<SpeedInsights />
+					</>
+				)}
 			</body>
 		</html>
 	);

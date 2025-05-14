@@ -1,41 +1,6 @@
 import mongoose from "mongoose";
 import toJSON from "./plugins/toJSON";
 
-// Transaction Schema (Sub-document)
-const transactionSchema = mongoose.Schema(
-  {
-    date: {
-      type: Date,
-      required: true,
-    },
-    operation: {
-      type: String,
-      required: true,
-      enum: ["buy", "sell", "dividend", "interest", "deposit", "withdrawal", "improvement"],
-    },
-    currency: {
-      type: String,
-      required: true,
-      default: "USD",
-    },
-    shares: {
-      type: Number,
-      default: null,
-    },
-    pricePerUnit: {
-      type: Number,
-      required: true,
-    },
-    note: {
-      type: String,
-      trim: true,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
-
 // INVESTMENT SCHEMA
 const investmentSchema = mongoose.Schema(
   {
@@ -44,10 +9,14 @@ const investmentSchema = mongoose.Schema(
       ref: "User",
       required: true,
     },
+    date: {
+      type: Date,
+      required: true,
+    },
     category: {
       type: String,
       required: true,
-      enum: ["Stock", "ETF", "Bond", "Real Estate", "Crypto", "Cash", "Other"],
+      enum: ["real_estate", "certificates_of_deposit", "savings_account", "precious_metals", "cash", "p2p_loans", "stocks", "bonds", "cryptocurrencies", "etf_funds", "option", "futures", "other"],
     },
     description: {
       type: String,
@@ -59,18 +28,26 @@ const investmentSchema = mongoose.Schema(
       trim: true,
       uppercase: true,
       default: null,
-    },
-    status: {
-      type: String,
-      required: true,
-      enum: ["active", "sold", "pending"],
-      default: "active",
-    },
-    annualInterestRate: {
+    }, 
+    shares: {
       type: Number,
-      default: 0,
+      default: null,
     },
-    transactions: [transactionSchema],
+    purchaseInformation: {
+      type: {
+        currency: {
+          type: String,
+          default: "USD"
+        },
+        purchasePrice: {
+          type: Number,
+        }
+      },
+    },
+    notes: {
+      type: String,
+      trim: true,
+    }
   },
   {
     timestamps: true,

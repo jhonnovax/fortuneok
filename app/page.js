@@ -1,34 +1,12 @@
-import { Suspense } from 'react'
-import Header from "@/components/Header";
-import Hero from "@/components/Hero";
-import Problem from "@/components/Problem";
-import FeaturesAccordion from "@/components/FeaturesAccordion";
-import Pricing from "@/components/Pricing";
-import FAQ from "@/components/FAQ";
-import CTA from "@/components/CTA";
-import Footer from "@/components/Footer";
+import Portfolio from '@/components/dashboard/Portfolio';
 import { getSEOTags } from "@/libs/seo";
 
-export const metadata = getSEOTags({
-  title: "FortuneOK | Grow and Simplify your Investments",
-  canonicalUrlRelative: "/tos",
-});
+export const metadata = getSEOTags();
 
-export default function Home() {
+export default function Dashboard() {
+  
   return (
-    <>
-      <Suspense>
-        <Header />
-      </Suspense>
-      <main>
-        <Hero />
-        <Problem />
-        {/* <FeaturesAccordion /> */}
-        <Pricing />
-        <FAQ />
-        {/* <CTA /> */}
-      </main>
-      <Footer />
-    </>
+    <Portfolio />
   );
+
 }
