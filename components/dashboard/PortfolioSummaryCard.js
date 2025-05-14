@@ -11,7 +11,7 @@ export default function PortfolioSummaryCard({
 }) {
   
   const [isValueVisible, setIsValueVisible] = useState(true);
-  const totalValue = investmentData.reduce((total, investment) => total + investment.currentValuation.amount, 0);
+  const totalValue = investmentData.reduce((total, investment) => total + (investment.currentValuation?.amount || 0), 0);
 
   if (loading) {
     return (
