@@ -58,7 +58,7 @@ const ButtonAccount = () => {
             )}
 
             <span className="lowercase">
-              <span className="md:hidden">{session?.user?.name || "Account"}</span>
+              <span className="md:hidden capitalize">{session?.user?.name || "Account"}</span>
               <span className="hidden md:inline">{session?.user?.email || "Account"}</span>
             </span>
 

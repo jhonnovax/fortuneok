@@ -16,8 +16,8 @@ export async function GET() {
     
     if (session?.user) {
       await connectMongo();
-      investments = await Investment.find({ userId: session.user.id });
-      investments = investments.map(investment => investment.toObject()); // Convert to plain objects since mongoose objects are not serializable
+      investments = await Investment.find({ userId: session.user.id }).lean(); // lean() Convert to plain objects since mongoose objects are not serializable
+      investments = investments.map(investment => ({ ...investment, id: investment._id.toString() })); // Add id to each investment since mongoose returns _id instead of id
     }
 
     const stockSymbols = investments.filter((investment) => investment.symbol).map(investment => investment.symbol);

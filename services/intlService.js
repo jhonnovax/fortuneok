@@ -1,5 +1,5 @@
-export function maskValue() {
-  return '$ • • • •  ';
+export function maskValue(length) {
+  return '$●●●●●●●';
 }
 
 export function formatCurrency(value, decimals = 0, currency = 'USD') {

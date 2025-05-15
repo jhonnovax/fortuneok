@@ -39,15 +39,15 @@ export default function PortfolioSummaryCard({
         <div className="space-y-6">
           {/* Portfolio Summary */}
           <div className="space-y-2">
-            <div className="flex items-center gap-3">
-              <span className="text-4xl font-bold">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl md:text-3xl font-bold">
                 {isValueVisible 
                   ? formatFullCurrency(totalValue)
-                  : maskValue()
+                  : maskValue(totalValue.toString().length)
                 }
               </span>
               <button 
-                className="btn btn-circle btn-ghost btn-sm text-success"
+                className="btn btn-circle btn-default btn-sm"
                 title={isValueVisible ? 'Hide portfolio value' : 'Show portfolio value'}
                 onClick={() => setIsValueVisible(!isValueVisible)}
               >
