@@ -61,10 +61,6 @@ export const dummyData = [
     "description": "Vanguard S&P 500 ETF",
     "symbol": "VOO",
     "shares": 687.17652,
-    "currentValuation": {
-      "currency": "USD",
-      "amount": 320000
-    },
     "notes": "Held in Roth IRA"
   },
   {
@@ -74,10 +70,6 @@ export const dummyData = [
     "description": "Microsoft Corporation",
     "symbol": "MSFT",
     "shares": 192.156,
-    "currentValuation": {
-      "currency": "USD",
-      "amount": 89500
-    },
     "notes": "Core long-term holding"
   },
   {
@@ -87,10 +79,6 @@ export const dummyData = [
     "description": "Apple Inc.",
     "symbol": "AAPL",
     "shares": 200.321,
-    "currentValuation": {
-      "currency": "USD",
-      "amount": 35800
-    },
     "notes": "Held since 2010"
   },
   {
@@ -100,10 +88,6 @@ export const dummyData = [
     "description": "NVIDIA Corporation",
     "symbol": "NVDA",
     "shares": 52.68,
-    "currentValuation": {
-      "currency": "USD",
-      "amount": 47500
-    },
     "notes": "Tech sector growth stock"
   },
   {
@@ -113,10 +97,6 @@ export const dummyData = [
     "description": "Bitcoin",
     "symbol": "BTC",
     "shares": 0.85,
-    "currentValuation": {
-      "currency": "USD",
-      "amount": 51000
-    },
     "notes": "Held in cold storage"
   },
   {
@@ -126,10 +106,6 @@ export const dummyData = [
     "description": "Ethereum",
     "symbol": "ETH",
     "shares": 13.64,
-    "currentValuation": {
-      "currency": "USD",
-      "amount": 34000
-    },
     "notes": "Long-term crypto investment"
   },
   {
@@ -139,10 +115,6 @@ export const dummyData = [
     "description": "iShares U.S. Treasury Bond ETF",
     "symbol": "GOVT",
     "shares": 6570.8276,
-    "currentValuation": {
-      "currency": "USD",
-      "amount": 160000
-    },
     "notes": "Low-risk allocation"
   },
   {
@@ -185,10 +157,6 @@ export const dummyData = [
     "description": "iShares MSCI EAFE ETF",
     "symbol": "EFA",
     "shares": 120.68,
-    "currentValuation": {
-      "currency": "USD",
-      "amount": 8800
-    },
     "notes": "International diversification"
   }
 ]

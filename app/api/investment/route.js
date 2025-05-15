@@ -5,7 +5,7 @@ import Investment from "@/models/Investment";
 import { authOptions } from "@/libs/next-auth";
 import { dummyData } from "./dummy-data";
 import { getStockPrices } from "@/services/stockService";
-import { parseUserInvestments } from "@/services/investmentService";
+import { parseCurrentValuationOfInvestment } from "@/services/investmentService";
 
 // GET - Retrieve all investments for the current user
 export async function GET() {
@@ -17,11 +17,12 @@ export async function GET() {
     if (session?.user) {
       await connectMongo();
       investments = await Investment.find({ userId: session.user.id });
+      investments = investments.map(investment => investment.toObject()); // Convert to plain objects since mongoose objects are not serializable
     }
 
     const stockSymbols = investments.filter((investment) => investment.symbol).map(investment => investment.symbol);
     const stocksData = await getStockPrices(stockSymbols);
-    const formattedInvestments = investments.map((investment) => parseUserInvestments(investment, stocksData));
+    const formattedInvestments = investments.map((investment) => parseCurrentValuationOfInvestment(investment, stocksData));
 
     return NextResponse.json(formattedInvestments);
 
@@ -34,6 +35,7 @@ export async function GET() {
 
 // POST - Create a new investment
 export async function POST(req) {
+
   try {
     const session = await getServerSession(authOptions);
     
@@ -60,8 +62,10 @@ export async function POST(req) {
     });
     
     return NextResponse.json(investment, { status: 201 });
+
   } catch (error) {
     console.error("Error creating investment:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
+
 } 

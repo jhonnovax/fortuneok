@@ -41,7 +41,7 @@ export function sortInvestmentList(data, sortBy) {
   return sortedData;
 }
 
-export const parseUserInvestments = (investment, stocksData) => {
+export const parseCurrentValuationOfInvestment = (investment, stocksData) => {
   const currentValuation = { ...investment.currentValuation };
   let symbolDetails = {};
 
