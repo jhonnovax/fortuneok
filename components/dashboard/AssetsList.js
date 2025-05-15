@@ -48,7 +48,7 @@ export default function AssetsList({ loading, error, investmentData, onEditAsset
   }, [activeTab, investmentData]);
 
   if (loading) {
-    return <LoadingSpinner loadingText="Loading assets..." />;
+    return <LoadingSpinner className="py-8" loadingText="Loading assets..." />;
   }
 
   if (error) {

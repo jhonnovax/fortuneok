@@ -188,11 +188,27 @@ export default function AllocationChart({ loading, data, error }) {
   }));
   
   if (loading) {
-    return <LoadingSpinner loadingText="Loading allocation data..." />;
+    return (
+      <div className="card bg-base-100 shadow-xl">
+        <div className="card-body">
+          <div className="space-y-6"> 
+            <LoadingSpinner loadingText="Loading allocation data..." />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <ErrorLoadingData error={error} />;
+    return (
+      <div className="card bg-base-100 shadow-xl">
+        <div className="card-body">
+          <div className="space-y-6"> 
+            <ErrorLoadingData error={error} />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (categoryDataWithPercentage.length === 0) {
