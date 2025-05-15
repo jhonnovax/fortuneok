@@ -4,25 +4,32 @@ import connectMongo from "@/libs/mongoose";
 import Investment from "@/models/Investment";
 import { authOptions } from "@/libs/next-auth";
 import { dummyData } from "./dummy-data";
+import { getStockPrices } from "@/services/stockService";
+import { parseUserInvestments } from "@/services/investmentService";
 
 // GET - Retrieve all investments for the current user
-export async function GET(req) {
+export async function GET() {
+  
   try {
     const session = await getServerSession(authOptions);
+    let investments = dummyData;
     
-    if (!session?.user) {
-      return NextResponse.json(dummyData);
+    if (session?.user) {
+      await connectMongo();
+      investments = await Investment.find({ userId: session.user.id });
     }
-    
-    await connectMongo();
-    
-    const investments = await Investment.find({ userId: session.user.id });
-    
-    return NextResponse.json(investments);
+
+    const stockSymbols = investments.filter((investment) => investment.symbol).map(investment => investment.symbol);
+    const stocksData = await getStockPrices(stockSymbols);
+    const formattedInvestments = investments.map((investment) => parseUserInvestments(investment, stocksData));
+
+    return NextResponse.json(formattedInvestments);
+
   } catch (error) {
     console.error("Error fetching investments:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
+
 }
 
 // POST - Create a new investment

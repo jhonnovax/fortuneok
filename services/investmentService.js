@@ -42,23 +42,18 @@ export function sortInvestmentList(data, sortBy) {
 }
 
 export const parseUserInvestments = (investment, stocksData) => {
-  let amount = 0;
-  let annualInterestRate = 0;
-  let stockData = {};
+  const currentValuation = { ...investment.currentValuation };
+  let symbolDetails = {};
 
-  if (investment.shares) {
-    stockData = stocksData[investment.code] || {};
-    annualInterestRate = stockData.avgAnnualReturn || 0;
-    amount = investment.shares * (stockData.currentPrice || 1);
-  } else {
-    annualInterestRate = investment.annualInterestRate || 0;
-    amount = investment.amount;
+  if (investment.symbol) {
+    symbolDetails = stocksData[investment.symbol] || {};
+    currentValuation.currency = symbolDetails.currency || 'USD';
+    currentValuation.amount = (investment.shares || 0) * (symbolDetails.price || 1);
   }
 
   return {
     ...investment,
-    amount,
-    annualInterestRate
+    currentValuation
   }
 }
 
