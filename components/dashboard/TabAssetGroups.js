@@ -5,12 +5,13 @@ import React from 'react';
 export default function TabNavigation({ className, activeTab, onTabChange }) {
   
   return (
-    <div className={`flex gap-4 md:gap-8 text-xs sm:text-sm md:text-base ${className}`}>
+    <div role="tablist" className={`tabs tabs-lifted tabs-lg ${className}`}>
 
       <button 
-        className={`pb-4 px-1 relative flex items-center gap-2 ${
+        role="tab"
+        className={`tab gap-2 ${
           activeTab === 'categories' 
-            ? 'text-success font-medium' 
+            ? 'text-success font-medium tab-active' 
             : 'text-base-content hover:text-base-content/80'
         }`}
         onClick={() => onTabChange('categories')}
@@ -20,15 +21,13 @@ export default function TabNavigation({ className, activeTab, onTabChange }) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
         </svg>
         Categories
-        {activeTab === 'categories' && (
-          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-success"></div>
-        )}
       </button>
 
       <button 
-        className={`pb-4 px-1 relative flex items-center gap-2 ${
+        role="tab"
+        className={`tab p-6 gap-2 ${
           activeTab === 'positions' 
-            ? 'text-success font-medium' 
+            ? 'text-success font-medium tab-active' 
             : 'text-base-content hover:text-base-content/80'
         }`}
         onClick={() => onTabChange('positions')}
@@ -37,9 +36,6 @@ export default function TabNavigation({ className, activeTab, onTabChange }) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
         </svg>
         Positions
-        {activeTab === 'positions' && (
-          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-success"></div>
-        )}
       </button>
 
     </div>

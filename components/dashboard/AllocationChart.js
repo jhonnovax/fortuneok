@@ -12,7 +12,7 @@ import { useState, useEffect } from 'react';
 import { formatCurrency } from '../../services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
-import { INVESTMENT_CATEGORIES, getAssetCategoryGroup } from '@/services/investmentService';
+import { getAssetCategoryGroup } from '@/services/investmentService';
 
 const COLORS = [
   '#006e00', // Primary green
@@ -71,7 +71,7 @@ const CustomTooltip = ({ active, payload }) => {
   return null;
 };
 
-export default function AllocationChart({ loading, data, error }) {
+export default function AllocationChart({ isLoading, activeTab, data, error }) {
   const [categoryData, setCategoryData] = useState([]);
   const [categoryDataWithPercentage, setCategoryDataWithPercentage] = useState([]);
   const [assetData, setAssetData] = useState([]);
@@ -166,16 +166,6 @@ export default function AllocationChart({ loading, data, error }) {
     return result.slice(0, 10);
   };
 
-  // Helper function to get display name for category
-  const getCategoryDisplayName = (category) => {
-    const categoryInfo = INVESTMENT_CATEGORIES.find(cat => cat.value === category);
-    const categoryDisplayName = categoryInfo  
-      ? categoryInfo.label.slice(2, categoryInfo.label.length) // Remove the first two characteres (emoticons)
-      : category;
-    
-    return categoryDisplayName || category;
-  };
-
   // Add fill property to data for tooltip color
   const categoryDataWithFill = categoryData.map((item, index) => ({
     ...item,
@@ -187,7 +177,7 @@ export default function AllocationChart({ loading, data, error }) {
     fill: COLORS[index % COLORS.length]
   }));
   
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="card bg-base-100 shadow-xl">
         <div className="card-body">
@@ -231,8 +221,9 @@ export default function AllocationChart({ loading, data, error }) {
     <div className="card bg-base-100 shadow-xl">
       <div className="card-body">
         <div className="flex flex-col 2xl:flex-row gap-8">
+
           {/* Category Allocation */}
-          <div className="flex-1">
+          <div className={`flex-1 ${['all', 'categories'].includes(activeTab) ? '' : 'hidden'}`}>
             <h3 className="text-lg font-semibold text-center flex items-center justify-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
@@ -270,9 +261,9 @@ export default function AllocationChart({ loading, data, error }) {
               )}
             </div>
           </div>
-          
-          {/* Asset Type Allocation */}
-          <div className="flex-1">
+
+          {/* Asset Allocation */}
+          <div className={`flex-1 ${['all', 'positions'].includes(activeTab) ? '' : 'hidden'}`}>
             <h3 className="text-lg font-semibold text-center flex items-center justify-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
@@ -309,6 +300,7 @@ export default function AllocationChart({ loading, data, error }) {
               )}
             </div>
           </div>
+
         </div>
       </div>
     </div>

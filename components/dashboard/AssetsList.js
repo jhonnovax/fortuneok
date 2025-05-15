@@ -5,12 +5,10 @@ import DeleteAssetModal from './DeleteAssetModal';
 import { formatDateToString, formatFullCurrency, formatNumber } from '@/services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
-import TabAssetGroups from './TabAssetGroups';
 import { getAssetCategoryDescription, getAssetCategoryGroup } from '@/services/investmentService';
-export default function AssetsList({ loading, error, investmentData, onEditAsset, onDeleteAsset }) {
+export default function AssetsList({ isLoading, error, activeTab, investmentData, onEditAsset, onDeleteAsset }) {
 
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, assetId: null });
-  const [activeTab, setActiveTab] = useState('positions');
   const [assetList, setAssetList] = useState([]);
 
   useEffect(() => {
@@ -47,7 +45,7 @@ export default function AssetsList({ loading, error, investmentData, onEditAsset
     }
   }, [activeTab, investmentData]);
 
-  if (loading) {
+  if (isLoading) {
     return <LoadingSpinner className="py-8" loadingText="Loading assets..." />;
   }
 
@@ -65,8 +63,6 @@ export default function AssetsList({ loading, error, investmentData, onEditAsset
 
   return (
     <div className="">
-      <TabAssetGroups className="pt-4 mb-4 sticky top-0 bg-base-100 z-10" activeTab={activeTab} onTabChange={setActiveTab} />
-
       {/* Assets List */}
       <div className="divide-y divide-base-content/10">
         {assetList.map((asset) => (
