@@ -148,7 +148,7 @@ export default function AllocationChart({ isLoading, activeTab, data, error }) {
       <div className="card bg-base-100 shadow-xl">
         <div className="card-body">
           <div className="space-y-6"> 
-            <LoadingSpinner loadingText="Loading allocation data..." />
+            <LoadingSpinner loadingText="Loading charts..." />
           </div>
         </div>
       </div>
@@ -185,7 +185,7 @@ export default function AllocationChart({ isLoading, activeTab, data, error }) {
 
   return (
     <div className="card bg-base-100 shadow-xl">
-      <div className="card-body">
+      <div className="card-body p-4">
         <div className="flex flex-col 2xl:flex-row gap-8">
 
           {/* Category Allocation */}

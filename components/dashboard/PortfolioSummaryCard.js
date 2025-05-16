@@ -17,7 +17,7 @@ export default function PortfolioSummaryCard({
     return (
       <div className="card bg-base-100 shadow-xl">
         <div className="card-body">
-          <LoadingSpinner loadingText="Loading portfolio data..." />
+          <LoadingSpinner loadingText="Loading values..." />
         </div>
       </div>
     );
