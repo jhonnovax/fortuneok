@@ -5,7 +5,6 @@ import {
   Pie,
   Cell,
   ResponsiveContainer,
-  Legend,
   Tooltip,
 } from 'recharts';
 import { useState, useEffect } from 'react';
@@ -27,29 +26,8 @@ const COLORS = [
   '#ca8a04', // Yellow
 ];
 
-const RADIAN = Math.PI / 180;
-
-// Render the percentage inside the slice
-const renderPercentageLabel = ({ cx, cy, midAngle, outerRadius, percent }) => {
-  const radius = 0.5 * outerRadius;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-  
-  if (percent < 0.05) return null;
-  
-  return (
-    <text
-      x={x}
-      y={y}
-      fill="white"
-      textAnchor="middle"
-      dominantBaseline="central"
-      fontSize={12}
-      fontWeight="bold"
-    >
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
+const renderPieCustomLabel = ({ percent }) => {
+  return `${(percent * 100).toFixed(2)}%`;
 };
 
 // Custom tooltip component
@@ -243,8 +221,8 @@ export default function AllocationChart({ isLoading, activeTab, data, error }) {
                       data={categoryDataWithFill}
                       cx="50%"
                       cy="50%"
-                      labelLine={false}
-                      label={renderPercentageLabel}
+                      labelLine={true}
+                      label={renderPieCustomLabel}
                       outerRadius={100}
                       fill="#8884d8"
                       nameKey="name"
@@ -254,7 +232,6 @@ export default function AllocationChart({ isLoading, activeTab, data, error }) {
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Legend layout="horizontal" verticalAlign="bottom" align="center" />
                     <Tooltip content={<CustomTooltip />} />
                   </PieChart>
                 </ResponsiveContainer>
@@ -282,8 +259,8 @@ export default function AllocationChart({ isLoading, activeTab, data, error }) {
                       data={assetDataWithFill}
                       cx="50%"
                       cy="50%"
-                      labelLine={false}
-                      label={renderPercentageLabel}
+                      labelLine={true}
+                      label={renderPieCustomLabel}
                       outerRadius={100}
                       fill="#8884d8"
                       nameKey="name"
@@ -293,7 +270,6 @@ export default function AllocationChart({ isLoading, activeTab, data, error }) {
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Legend layout="horizontal" verticalAlign="bottom" align="center" />
                     <Tooltip content={<CustomTooltip />} />
                   </PieChart>
                 </ResponsiveContainer>
