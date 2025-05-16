@@ -6,6 +6,21 @@ function convertFromBaseCurrency(baseCurrency = 'USD', amount = 0, rates = {}) {
 
   return amountInBaseCurrency;
 }
+
+export const getTotalAssetsValue = (assets) => {
+  const totalValue = assets.reduce((total, asset) => {
+    const assetValue = asset.currentValuation?.amount || 0;
+    return total + assetValue;
+  }, 0);
+
+  return totalValue;
+};
+
+export const getAssetPercentage = (asset, totalAssetsValue) => {
+  const assetValue = asset.currentValuation?.amount || 0;
+  return (assetValue / totalAssetsValue) * 100;
+};
+
 export function filterInvestments(data) {
   let filteredData = [...data];
 

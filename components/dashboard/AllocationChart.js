@@ -8,26 +8,14 @@ import {
   Tooltip,
 } from 'recharts';
 import { useState, useEffect } from 'react';
-import { formatCurrency } from '../../services/intlService';
+import { formatCurrency, formatPercentage } from '../../services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
 import { getAssetCategoryGroup } from '@/services/investmentService';
-
-const COLORS = [
-  '#006e00', // Primary green
-  '#4338ca', // Indigo
-  '#0891b2', // Cyan
-  '#c026d3', // Fuchsia
-  '#ea580c', // Orange
-  '#0369a1', // Blue
-  '#15803d', // Green
-  '#b91c1c', // Red
-  '#7e22ce', // Purple
-  '#ca8a04', // Yellow
-];
+import { COLORS } from '@/services/ChartService';
 
 const renderPieCustomLabel = ({ percent }) => {
-  return `${(percent * 100).toFixed(2)}%`;
+  return `${formatPercentage(percent * 100, 2)}`;
 };
 
 // Custom tooltip component
