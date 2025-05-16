@@ -5,15 +5,15 @@ import { formatFullCurrency, maskValue } from '../../services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
 export default function PortfolioSummaryCard({ 
+  isLoading = false,
   investmentData = [],
-  loading = false,
   error = null
 }) {
   
   const [isValueVisible, setIsValueVisible] = useState(true);
   const totalValue = investmentData.reduce((total, investment) => total + (investment.currentValuation?.amount || 0), 0);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="card bg-base-100 shadow-xl">
         <div className="card-body">

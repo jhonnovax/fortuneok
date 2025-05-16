@@ -25,7 +25,7 @@ export const dummyData = [
     "id": 3,
     "date": "2010-03-10T00:00:00.000Z",
     "category": "certificates_of_deposit",
-    "description": "CD Ladder - 3 to 5 year maturity range",
+    "description": "3-year CD with Citibank",
     "currentValuation": {
       "currency": "USD",
       "amount": 25000
@@ -36,7 +36,7 @@ export const dummyData = [
     "id": 4,
     "date": "2022-05-15T00:00:00.000Z",
     "category": "savings_account",
-    "description": "High-yield savings at Capital One",
+    "description": "Savings Account at Charles Schwab",
     "currentValuation": {
       "currency": "USD",
       "amount": 20000
@@ -50,7 +50,7 @@ export const dummyData = [
     "description": "Gold and silver bullion",
     "currentValuation": {
       "currency": "USD",
-      "amount": 60500
+      "amount": 35570
     },
     "notes": "Held in secure vault"
   },
@@ -60,7 +60,7 @@ export const dummyData = [
     "category": "etf_funds",
     "description": "Vanguard S&P 500 ETF",
     "symbol": "VOO",
-    "shares": 687.17652,
+    "shares": 687.1765,
     "notes": "Held in Roth IRA"
   },
   {
@@ -69,7 +69,7 @@ export const dummyData = [
     "category": "stocks",
     "description": "Microsoft Corporation",
     "symbol": "MSFT",
-    "shares": 192.156,
+    "shares": 192.1568,
     "notes": "Core long-term holding"
   },
   {
@@ -78,7 +78,7 @@ export const dummyData = [
     "category": "stocks",
     "description": "Apple Inc.",
     "symbol": "AAPL",
-    "shares": 200.321,
+    "shares": 200.3215,
     "notes": "Held since 2010"
   },
   {
@@ -87,29 +87,11 @@ export const dummyData = [
     "category": "stocks",
     "description": "NVIDIA Corporation",
     "symbol": "NVDA",
-    "shares": 52.68,
+    "shares": 125.6875,
     "notes": "Tech sector growth stock"
   },
   {
     "id": 10,
-    "date": "2018-09-01T00:00:00.000Z",
-    "category": "cryptocurrencies",
-    "description": "Bitcoin",
-    "symbol": "BTC",
-    "shares": 0.85,
-    "notes": "Held in cold storage"
-  },
-  {
-    "id": 11,
-    "date": "2021-03-01T00:00:00.000Z",
-    "category": "cryptocurrencies",
-    "description": "Ethereum",
-    "symbol": "ETH",
-    "shares": 13.64,
-    "notes": "Long-term crypto investment"
-  },
-  {
-    "id": 12,
     "date": "2017-01-01T00:00:00.000Z",
     "category": "bonds",
     "description": "iShares U.S. Treasury Bond ETF",
@@ -118,7 +100,7 @@ export const dummyData = [
     "notes": "Low-risk allocation"
   },
   {
-    "id": 13,
+    "id": 11,
     "date": "2018-02-15T00:00:00.000Z",
     "category": "other",
     "description": "Private equity in green energy startup",
@@ -129,18 +111,18 @@ export const dummyData = [
     "notes": "Equity stake in Series A round"
   },
   {
-    "id": 14,
+    "id": 12,
     "date": "2008-07-01T00:00:00.000Z",
     "category": "cars",
     "description": "2008 Toyota Camry LE",
     "currentValuation": {
       "currency": "USD",
-      "amount": 2500
+      "amount": 8800
     },
     "notes": "Minimal resale value"
   },
   {
-    "id": 15,
+    "id": 13,
     "date": "2021-09-01T00:00:00.000Z",
     "category": "cars",
     "description": "2021 Tesla Model Y",
@@ -151,13 +133,22 @@ export const dummyData = [
     "notes": "Primary vehicle"
   },
   {
-    "id": 16,
-    "date": "2020-11-01T00:00:00.000Z",
-    "category": "etf_funds",
-    "description": "iShares MSCI EAFE ETF",
-    "symbol": "EFA",
-    "shares": 120.68,
-    "notes": "International diversification"
-  }
+    "id": 14,
+    "date": "2021-03-01T00:00:00.000Z",
+    "category": "cryptocurrencies",
+    "description": "Ethereum",
+    "symbol": "ETH",
+    "shares": 8.6424,
+    "notes": "Long-term crypto investment"
+  },
+  {
+    "id": 15,
+    "date": "2018-09-01T00:00:00.000Z",
+    "category": "cryptocurrencies",
+    "description": "Bitcoin",
+    "symbol": "BTC",
+    "shares": 2.8521,
+    "notes": "Held in cold storage"
+  },
 ]
 

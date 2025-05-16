@@ -25,6 +25,7 @@ export default function AssetsList({ isLoading, error, activeTab, investmentData
 
         if (!category) {
           categories = categories.concat({
+            id: Date.now().toString() + Math.floor(Math.random() * 1000000).toString(),
             category: assetCategoryGroup,
             description: getAssetCategoryDescription(assetCategoryGroup),
             currentValuation: { currency: asset.currentValuation?.currency || 'USD', amount: asset.currentValuation?.amount || 0 },
@@ -95,7 +96,9 @@ export default function AssetsList({ isLoading, error, activeTab, investmentData
                   </div>
                   <div className="flex items-center gap-1">
                     {/* Asset Percentage */}
-                    <span className="text-sm opacity-85 font-bold">{formatPercentage(getAssetPercentage(asset, totalAssetsValue), 2)}</span>
+                    <span className="text-xs opacity-85 font-bold">
+                      {formatPercentage(getAssetPercentage(asset, totalAssetsValue), 2)}
+                    </span>
 
                     {/* Popover */}
                     <div className="dropdown dropdown-end">

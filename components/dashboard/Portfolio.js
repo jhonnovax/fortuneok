@@ -123,8 +123,8 @@ export default function Portfolio() {
 
             {/* Portfolio Summary Card */}
             <PortfolioSummaryCard 
-              investmentData={investmentData}
               isLoading={isLoading}
+              investmentData={investmentData}
               error={error}
             />
 
@@ -145,8 +145,9 @@ export default function Portfolio() {
 
             {/* Mobile Assets List */}
             <div className="card bg-base-100 shadow-xl lg:hidden">
-              <div className="card-body">
-                <div className="space-y-6"> 
+              <div className="card-body p-4">
+
+                {!isLoading && (
                   <div className="flex justify-between items-center !mt-0">
                     <button 
                       className="btn btn-primary flex items-center gap-2 lg:hidden ml-auto"
@@ -158,16 +159,17 @@ export default function Portfolio() {
                       <span>Add Asset</span>
                     </button>
                   </div>
+                )}
 
-                  <AssetsList 
-                    isLoading={isLoading} 
-                    activeTab={activeTab}
-                    error={error} 
-                    investmentData={investmentData} 
-                    onEditAsset={handleEditAsset}  
-                    onDeleteAsset={handleDeleteAsset}
-                  />
-                </div>
+                <AssetsList 
+                  isLoading={isLoading} 
+                  activeTab={activeTab}
+                  error={error} 
+                  investmentData={investmentData} 
+                  onEditAsset={handleEditAsset}  
+                  onDeleteAsset={handleDeleteAsset}
+                />
+
               </div>
             </div>
 
