@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import mongoose from "mongoose";
 import connectMongo from "@/libs/mongoose";
-import Investment from "@/models/Investment";
+import Asset from "@/models/Asset";
 import { authOptions } from "@/libs/next-auth";
 
 // Helper function to validate MongoDB ObjectId
@@ -10,7 +10,7 @@ const isValidObjectId = (id) => {
   return mongoose.Types.ObjectId.isValid(id);
 };
 
-// GET - Retrieve a specific investment
+// GET - Retrieve a specific asset
 export async function GET(req, { params }) {
   try {
     const session = await getServerSession(authOptions);
@@ -22,28 +22,28 @@ export async function GET(req, { params }) {
     const { id } = params;
     
     if (!isValidObjectId(id)) {
-      return NextResponse.json({ error: "Invalid investment ID" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid asset ID" }, { status: 400 });
     }
     
     await connectMongo();
     
-    const investment = await Investment.findOne({
+    const asset = await Asset.findOne({
       _id: id,
       userId: session.user.id,
     });
     
-    if (!investment) {
-      return NextResponse.json({ error: "Investment not found" }, { status: 404 });
+    if (!asset) {
+      return NextResponse.json({ error: "Asset not found" }, { status: 404 });
     }
     
-    return NextResponse.json(investment);
+    return NextResponse.json(asset);
   } catch (error) {
-    console.error("Error fetching investment:", error);
+    console.error("Error fetching asset:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
-// PATCH - Update a specific investment
+// PATCH - Update a specific asset
 export async function PATCH(req, { params }) {
   try {
     const session = await getServerSession(authOptions);
@@ -55,7 +55,7 @@ export async function PATCH(req, { params }) {
     const { id } = params;
     
     if (!isValidObjectId(id)) {
-      return NextResponse.json({ error: "Invalid investment ID" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid asset ID" }, { status: 400 });
     }
     
     await connectMongo();
@@ -65,25 +65,25 @@ export async function PATCH(req, { params }) {
     // Prevent updating userId
     delete body.userId;
     
-    // Find and update the investment
-    const investment = await Investment.findOneAndUpdate(
+    // Find and update the asset
+    const asset = await Asset.findOneAndUpdate(
       { _id: id, userId: session.user.id },
       { $set: body },
       { new: true, runValidators: true }
     );
     
-    if (!investment) {
-      return NextResponse.json({ error: "Investment not found" }, { status: 404 });
+    if (!asset) {
+      return NextResponse.json({ error: "Asset not found" }, { status: 404 });
     }
     
-    return NextResponse.json(investment);
+    return NextResponse.json(asset);
   } catch (error) {
-    console.error("Error updating investment:", error);
+    console.error("Error updating asset:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
-// DELETE - Remove a specific investment
+// DELETE - Remove a specific asset
 export async function DELETE(req, { params }) {
   try {
     const session = await getServerSession(authOptions);
@@ -95,23 +95,23 @@ export async function DELETE(req, { params }) {
     const { id } = params;
     
     if (!isValidObjectId(id)) {
-      return NextResponse.json({ error: "Invalid investment ID" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid asset ID" }, { status: 400 });
     }
     
     await connectMongo();
     
-    const investment = await Investment.findOneAndDelete({
+    const asset = await Asset.findOneAndDelete({
       _id: id,
       userId: session.user.id,
     });
     
-    if (!investment) {
-      return NextResponse.json({ error: "Investment not found" }, { status: 404 });
+    if (!asset) {
+      return NextResponse.json({ error: "Asset not found" }, { status: 404 });
     }
     
-    return NextResponse.json(investment);
+    return NextResponse.json(asset);
   } catch (error) {
-    console.error("Error deleting investment:", error);
+    console.error("Error deleting asset:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 } 

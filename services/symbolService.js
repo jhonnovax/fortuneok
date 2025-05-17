@@ -1,6 +1,6 @@
 /**
  * Symbol Service
- * Handles API calls related to investment symbols
+ * Handles API calls related to asset symbols
  */
 
 // Debounce function to limit API calls
@@ -17,7 +17,7 @@ const debounce = (func, wait) => {
 };
 
 /**
- * Search for investment symbols
+ * Search for asset symbols
  * @param {string} query - The search query
  * @param {string} type - The type of symbol to search for (stocks, bonds, cryptocurrencies, etfs, funds, options, futures, or all)
  * @param {function} callback - Callback function to handle results

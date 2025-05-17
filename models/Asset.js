@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import toJSON from "./plugins/toJSON";
 
-// INVESTMENT SCHEMA
-const investmentSchema = mongoose.Schema(
+// ASSET SCHEMA
+const assetSchema = mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -56,6 +56,6 @@ const investmentSchema = mongoose.Schema(
 );
 
 // add plugin that converts mongoose to json
-investmentSchema.plugin(toJSON);
+assetSchema.plugin(toJSON);
 
-export default mongoose.models.Investment || mongoose.model("Investment", investmentSchema); 
+export default mongoose.models.Asset || mongoose.model("Asset", assetSchema); 

@@ -11,7 +11,7 @@ import { useState, useEffect } from 'react';
 import { formatCurrency, formatPercentage } from '../services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
-import { getAssetCategoryGroup } from '../services/investmentService';
+import { getAssetCategoryGroup } from '../services/assetService';
 import { COLORS } from '../services/ChartService';
 
 const renderPieCustomLabel = ({ percent }) => {
@@ -43,8 +43,8 @@ export default function AllocationChart({ isLoading, activeTab, data, error }) {
   const [assetData, setAssetData] = useState([]);
 
   useEffect(() => {
-    // Process investments to create category allocation data
-    const categoryAllocationData = processInvestmentsForCategoryAllocation(data);
+    // Process assets to create category allocation data
+    const categoryAllocationData = processAssetsForCategoryAllocation(data);
     setCategoryData(categoryAllocationData);
     
     // Calculate total for percentages
@@ -58,23 +58,23 @@ export default function AllocationChart({ isLoading, activeTab, data, error }) {
     
     setCategoryDataWithPercentage(categoryWithPercentage);
 
-    // Process investments to create asset allocation data
-    const assetAllocationData = processInvestmentsForAssetAllocation(data);
+    // Process assets to create asset allocation data
+    const assetAllocationData = processAssetsForAssetAllocation(data);
     setAssetData(assetAllocationData);
   }, [data]);
 
-  // Process investments to create category allocation data
-  const processInvestmentsForCategoryAllocation = (investments) => {
-    if (!investments || investments.length === 0) {
+  // Process assets to create category allocation data
+  const processAssetsForCategoryAllocation = (assets) => {
+    if (!assets || assets.length === 0) {
       return [];
     }
 
     // Create a map to store values by category
     const categoryMap = {};
 
-    // Process each investment
-    data.forEach(investment => {
-      const assetCategoryGroup = getAssetCategoryGroup(investment.category);
+    // Process each asset
+    data.forEach(asset => {
+      const assetCategoryGroup = getAssetCategoryGroup(asset.category);
       
       if (!categoryMap[assetCategoryGroup]) {
         categoryMap[assetCategoryGroup] = {
@@ -84,9 +84,9 @@ export default function AllocationChart({ isLoading, activeTab, data, error }) {
       }
 
       // Calculate total value from transactions
-      const investmentValue = investment.currentValuation?.amount || 0;
+      const assetValue = asset.currentValuation?.amount || 0;
 
-      categoryMap[assetCategoryGroup].value += investmentValue;
+      categoryMap[assetCategoryGroup].value += assetValue;
     });
 
     // Convert to array and filter out categories with zero or negative value
@@ -95,32 +95,32 @@ export default function AllocationChart({ isLoading, activeTab, data, error }) {
       .sort((a, b) => b.value - a.value);
   };
 
-  // Process investments to create asset allocation data
-  const processInvestmentsForAssetAllocation = (investments) => {
-    if (!investments || investments.length === 0) {
+  // Process assets to create asset allocation data
+  const processAssetsForAssetAllocation = (assets) => {
+    if (!assets || assets.length === 0) {
       return [];
     }
 
     // Create a map to store values by asset
     const assetMap = {};
 
-    // Process each investment
-    investments.forEach(investment => {
-      const assetName = investment.symbol || investment.description;
-      const assetKey = `${investment.id}`;
+    // Process each asset
+    assets.forEach(asset => {
+      const assetName = asset.symbol || asset.description;
+      const assetKey = `${asset.id}`;
       
       if (!assetMap[assetKey]) {
         assetMap[assetKey] = {
           name: assetName,
           value: 0,
-          category: investment.category
+          category: asset.category
         };
       }
 
       // Calculate total value from transactions
-      const investmentValue = investment.currentValuation?.amount || 0;
+      const assetValue = asset.currentValuation?.amount || 0;
 
-      assetMap[assetKey].value += investmentValue;
+      assetMap[assetKey].value += assetValue;
     });
 
     // Convert to array and filter out assets with zero or negative value
@@ -174,7 +174,7 @@ export default function AllocationChart({ isLoading, activeTab, data, error }) {
           <div className="space-y-6"> 
             <div className="w-full h-[300px] flex items-center justify-center">
               <p className="text-center text-base-content/60">
-                No allocation data available. Add investments to see your portfolio allocation.
+                No allocation data available. Add assets to see your portfolio allocation.
               </p>
             </div>
           </div>

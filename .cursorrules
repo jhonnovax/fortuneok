@@ -41,7 +41,7 @@
       ]
     },
     {
-      "description": "Ensure a clean and user-friendly UI with a focus on investment insights.",
+      "description": "Ensure a clean and user-friendly UI with a focus on asset insights.",
       "pattern": "app/**/*.jsx",
       "enforce": [
         "Keep UI elements minimal and well-structured",

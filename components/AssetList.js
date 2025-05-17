@@ -5,21 +5,21 @@ import DeleteAssetModal from './DeleteAssetModal';
 import { formatDateToString, formatFullCurrency, formatNumber, formatPercentage } from '@/services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
-import { getAssetCategoryDescription, getAssetCategoryGroup, getTotalAssetsValue, getAssetPercentage } from '@/services/investmentService';
+import { getAssetCategoryDescription, getAssetCategoryGroup, getTotalAssetsValue, getAssetPercentage } from '@/services/assetService';
 import { COLORS } from '@/services/ChartService';
 
-export default function AssetsList({ isLoading, error, activeTab, investmentData, onEditAsset, onDeleteAsset }) {
+export default function AssetsList({ isLoading, error, activeTab, assetData, onEditAsset, onDeleteAsset }) {
 
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, assetId: null });
   const [assetList, setAssetList] = useState([]);
-  const totalAssetsValue = getTotalAssetsValue(investmentData);
+  const totalAssetsValue = getTotalAssetsValue(assetData);
 
   useEffect(() => {
     if (activeTab === 'positions') {
-      const sortedAssets = investmentData.sort((a, b) => new Date(b.currentValuation?.amount) - new Date(a.currentValuation?.amount));
+      const sortedAssets = assetData.sort((a, b) => new Date(b.currentValuation?.amount) - new Date(a.currentValuation?.amount));
       setAssetList(sortedAssets);
     } else {
-      const assetCategories = investmentData.reduce((categories, asset) => {
+      const assetCategories = assetData.reduce((categories, asset) => {
         const assetCategoryGroup = getAssetCategoryGroup(asset.category);
         const category = categories.find(category => category.category === assetCategoryGroup);
 
@@ -47,7 +47,7 @@ export default function AssetsList({ isLoading, error, activeTab, investmentData
 
       setAssetList(sortedAssetCategories);
     }
-  }, [activeTab, investmentData]);
+  }, [activeTab, assetData]);
 
   if (isLoading) {
     return <LoadingSpinner className="py-8" loadingText="Loading assets..." />;
@@ -57,10 +57,10 @@ export default function AssetsList({ isLoading, error, activeTab, investmentData
     return <ErrorLoadingData error={error} />;
   }
 
-  if (investmentData.length === 0) {
+  if (assetData.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-lg text-gray-500">No investments found. Add your first investment to get started.</p>
+        <p className="text-lg text-gray-500">No assets found. Add your first asset to get started.</p>
       </div>
     );
   }
@@ -119,7 +119,7 @@ export default function AssetsList({ isLoading, error, activeTab, investmentData
                       <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52">
                         <li>
                           <a onClick={() => onEditAsset(asset)}>
-                            Edit Investment
+                            Edit Asset
                           </a>
                         </li>
                         <li>
@@ -154,7 +154,7 @@ export default function AssetsList({ isLoading, error, activeTab, investmentData
         isOpen={deleteModal.isOpen}
         onClose={() => setDeleteModal({ isOpen: false, assetId: null })}
         onConfirm={() => onDeleteAsset(deleteModal.assetId)}
-        assetSymbol={investmentData.find(a => a.id === deleteModal.assetId)?.symbol}
+        assetSymbol={assetData.find(a => a.id === deleteModal.assetId)?.symbol}
       />
   
     </div>

@@ -21,13 +21,13 @@ export const getAssetPercentage = (asset, totalAssetsValue) => {
   return (assetValue / totalAssetsValue) * 100;
 };
 
-export function filterInvestments(data) {
+export function filterAssets(data) {
   let filteredData = [...data];
 
   return filteredData;
 }
 
-export const INVESTMENT_CATEGORIES = [
+export const ASSET_CATEGORIES = [
   { value: 'real_estate', label: '🏠 Real Estate' },
   { value: 'cars', label: '🚗 Cars' },
   { value: 'cash', label: '💵 Cash' },
@@ -44,7 +44,7 @@ export const INVESTMENT_CATEGORIES = [
   { value: 'other', label: '🔷 Other custom assets' }
 ];
 
-export function sortInvestmentList(data, sortBy) {
+export function sortAssetList(data, sortBy) {
   const sortedData = data.toSorted((a, b) => {
     if (sortBy.type === 'asc') {
       return a[sortBy.field] > b[sortBy.field] ? 1 : -1;
@@ -56,41 +56,41 @@ export function sortInvestmentList(data, sortBy) {
   return sortedData;
 }
 
-export const parseCurrentValuationOfInvestment = (investment, stocksData) => {
-  const currentValuation = { ...investment.currentValuation };
+export const parseCurrentValuationOfAsset = (asset, stocksData) => {
+  const currentValuation = { ...asset.currentValuation };
   let symbolDetails = {};
 
-  if (investment.symbol) {
-    symbolDetails = stocksData[investment.symbol] || {};
+  if (asset.symbol) {
+    symbolDetails = stocksData[asset.symbol] || {};
     currentValuation.currency = symbolDetails.currency || 'USD';
-    currentValuation.amount = (investment.shares || 0) * (symbolDetails.price || 1);
+    currentValuation.amount = (asset.shares || 0) * (symbolDetails.price || 1);
   }
 
   return {
-    ...investment,
+    ...asset,
     currentValuation
   }
 }
 
-export function parseDataFromAPI(investment, selectedIds, conversionRates) {
-  const date = getLocalDateFromUTCString(investment.date);
+export function parseDataFromAPI(asset, selectedIds, conversionRates) {
+  const date = getLocalDateFromUTCString(asset.date);
   let amount = 0;
 
-  if (investment.shares) {
-    amount = convertFromBaseCurrency('usd', investment.amount, conversionRates);
+  if (asset.shares) {
+    amount = convertFromBaseCurrency('usd', asset.amount, conversionRates);
   } else {
-    amount = convertFromBaseCurrency(investment.currency, investment.purchaseInformation?.purchasePrice, conversionRates);
+    amount = convertFromBaseCurrency(asset.currency, asset.purchaseInformation?.purchasePrice, conversionRates);
   }
 
   return {
-    ...investment,
+    ...asset,
     date,
     amount
   };
 }
 
 export function getAssetCategoryDescription(assetCategory) {
-  return INVESTMENT_CATEGORIES.find(category => category.value === assetCategory)?.label || assetCategory;
+  return ASSET_CATEGORIES.find(category => category.value === assetCategory)?.label || assetCategory;
 }
 
 export function getAssetCategoryGroup(assetCategory) {

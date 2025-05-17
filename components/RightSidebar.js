@@ -1,6 +1,6 @@
 'use client';
 
-export default function RightSidebar({ children, onAddInvestment }) {
+export default function RightSidebar({ children, onAddAsset }) {
   return (
     <aside className="hidden lg:block fixed right-0 top-16 w-[420px] h-[calc(100vh-4rem)] bg-base-100 border-l border-base-content/10">
       <div className="flex flex-col h-full">
@@ -11,7 +11,7 @@ export default function RightSidebar({ children, onAddInvestment }) {
             </svg>
             My Assets
 
-            <button className="btn btn-primary ml-auto" onClick={onAddInvestment}>
+            <button className="btn btn-primary ml-auto" onClick={onAddAsset}>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
               </svg>

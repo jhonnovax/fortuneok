@@ -1,4 +1,4 @@
-export function maskValue(length) {
+export function maskValue() {
   return '$●●●●●●●';
 }
 

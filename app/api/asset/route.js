@@ -1,39 +1,39 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import connectMongo from "@/libs/mongoose";
-import Investment from "@/models/Investment";
+import Asset from "@/models/Asset";
 import { authOptions } from "@/libs/next-auth";
 import { dummyData } from "./dummy-data";
 import { getStockPrices } from "@/services/stockService";
-import { parseCurrentValuationOfInvestment } from "@/services/investmentService";
+import { parseCurrentValuationOfAsset } from "@/services/assetService";
 
-// GET - Retrieve all investments for the current user
+// GET - Retrieve all assets for the current user
 export async function GET() {
   
   try {
     const session = await getServerSession(authOptions);
-    let investments = dummyData;
+    let assets = dummyData;
     
     if (session?.user) {
       await connectMongo();
-      investments = await Investment.find({ userId: session.user.id }).lean(); // lean() Convert to plain objects since mongoose objects are not serializable
-      investments = investments.map(investment => ({ ...investment, id: investment._id.toString() })); // Add id to each investment since mongoose returns _id instead of id
+      assets = await Asset.find({ userId: session.user.id }).lean(); // lean() Convert to plain objects since mongoose objects are not serializable
+      assets = assets.map(asset => ({ ...asset, id: asset._id.toString() })); // Add id to each asset since mongoose returns _id instead of id
     }
 
-    const stockSymbols = investments.filter((investment) => investment.symbol).map(investment => investment.symbol);
+    const stockSymbols = assets.filter((asset) => asset.symbol).map(asset => asset.symbol);
     const stocksData = await getStockPrices(stockSymbols);
-    const formattedInvestments = investments.map((investment) => parseCurrentValuationOfInvestment(investment, stocksData));
+    const formattedAssets = assets.map((asset) => parseCurrentValuationOfAsset(asset, stocksData));
 
-    return NextResponse.json(formattedInvestments);
+    return NextResponse.json(formattedAssets);
 
   } catch (error) {
-    console.error("Error fetching investments:", error);
+    console.error("Error fetching assets:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
 }
 
-// POST - Create a new investment
+// POST - Create a new asset
 export async function POST(req) {
 
   try {
@@ -55,16 +55,16 @@ export async function POST(req) {
       );
     }
     
-    // Create new investment with the current user's ID
-    const investment = await Investment.create({
+    // Create new asset
+    const asset = await Asset.create({
       ...body,
       userId: session.user.id,
     });
     
-    return NextResponse.json(investment, { status: 201 });
+    return NextResponse.json(asset, { status: 201 });
 
   } catch (error) {
-    console.error("Error creating investment:", error);
+    console.error("Error creating asset:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 

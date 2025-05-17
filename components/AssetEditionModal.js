@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import CurrencyInput from 'react-currency-input-field';
 import SymbolCombobox from './SymbolCombobox';
 import CurrencyCombobox from './CurrencyCombobox';
-import { INVESTMENT_CATEGORIES } from '@/services/investmentService';
+import { ASSET_CATEGORIES } from '@/services/assetService';
 import { useSession } from 'next-auth/react';
 import ButtonSignin from '@/components/ButtonSignin';
 
@@ -145,7 +145,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
           </svg>
         </button>
 
-        <h3 className="font-bold text-lg mb-6">Add Investment</h3>
+        <h3 className="font-bold text-lg mb-6">Add Asset</h3>
         
         {submitError && (
           <div className="alert alert-error mb-4">
@@ -179,7 +179,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                 disabled={isSubmitting}
               >
                 <option value="">Select category...</option>
-                {INVESTMENT_CATEGORIES.map(cat => (
+                {ASSET_CATEGORIES.map(cat => (
                   <option key={cat.value} value={cat.value}>{cat.label}</option>
                 ))}
               </select>

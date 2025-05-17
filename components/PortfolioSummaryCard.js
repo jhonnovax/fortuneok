@@ -7,12 +7,12 @@ import LoadingSpinner from './LoadingSpinner';
 
 export default function PortfolioSummaryCard({ 
   isLoading = false,
-  investmentData = [],
+  assetData = [],
   error = null
 }) {
   
   const [isValueVisible, setIsValueVisible] = useState(true);
-  const totalValue = investmentData.reduce((total, investment) => total + (investment.currentValuation?.amount || 0), 0);
+  const totalValue = assetData.reduce((total, asset) => total + (asset.currentValuation?.amount || 0), 0);
 
   if (isLoading) {
     return (

@@ -3,11 +3,11 @@
 import { useState, useEffect } from 'react';
 import TopNavbar from "./TopNavbar";
 import RightSidebar from "./RightSidebar";
-import AssetsList from "./AssetsList";
+import AssetList from "./AssetList";
 import AllocationChart from "./AllocationChart";
 import AssetEditionModal from "./AssetEditionModal";
 import PortfolioSummaryCard from "./PortfolioSummaryCard";
-import { useInvestmentStore } from '@/store/investmentStore';
+import { useAssetStore } from '@/store/assetStore';
 import { useCurrencyRatesStore } from '@/store/currencyRatesStore';
 import config from '@/config';
 import Footer from './Footer';
@@ -28,16 +28,12 @@ export default function Portfolio() {
   const [activeTabSidebar, setActiveTabSidebar] = useState('positions');
 
   const getCurrencyRates = useCurrencyRatesStore((state) => state.getCurrencyRates);
-  const getInvestments = useInvestmentStore((state) => state.getInvestments);
-  const getFilteredAndSortedInvestments = useInvestmentStore((state) => state.getFilteredAndSortedInvestments);
-  const filterByTimeFrame = useInvestmentStore((state) => state.filterByTimeFrame);
-  const sortInvestments = useInvestmentStore((state) => state.sortInvestments);
-  const selectedInvestmentIds = useInvestmentStore((state) => state.selectedInvestmentIds);
-  const toggleInvestment = useInvestmentStore((state) => state.toggleInvestment);
-  const addInvestment = useInvestmentStore((state) => state.addInvestment);
-  const updateInvestment = useInvestmentStore((state) => state.updateInvestment);
-  const deleteInvestment = useInvestmentStore((state) => state.deleteInvestment);
-  const investmentData = getFilteredAndSortedInvestments();
+  const getAssets = useAssetStore((state) => state.getAssets);
+  const getFilteredAndSortedAssets = useAssetStore((state) => state.getFilteredAndSortedAssets);
+  const addAsset = useAssetStore((state) => state.addAsset);
+  const updateAsset = useAssetStore((state) => state.updateAsset);
+  const deleteAsset = useAssetStore((state) => state.deleteAsset);
+  const assetData = getFilteredAndSortedAssets();
 
   const { breakpointValue} = useTailwindBreakpoint();
 
@@ -59,11 +55,11 @@ export default function Portfolio() {
       setSubmitAssetError(null);
 
       if (id) {
-        // Update existing investment
-        await updateInvestment(id, assetData);
+        // Update existing asset
+        await updateAsset(id, assetData);
       } else {
-        // Create new investment
-        await addInvestment(assetData);
+        // Create new asset
+        await addAsset(assetData);
       }
     } catch (err) {
       console.error('Failed to save asset:', err);
@@ -76,26 +72,26 @@ export default function Portfolio() {
 
   const handleDeleteAsset = async (assetId) => {
     try {
-      // TODO: Implement delete investment
-      const response = await deleteInvestment(assetId);
-      console.log('Deleted investment:', response);
+      // TODO: Implement delete asset
+      const response = await deleteAsset(assetId);
+      console.log('Deleted asset:', response);
     } catch (err) {
-      console.error('Failed to delete investment:', err);
+      console.error('Failed to delete asset:', err);
       // You might want to show an error message to the user here
     }
   };
 
   useEffect(() => {
     setIsLoading(true);
-    getInvestments()
+    getAssets()
       .catch((err) => {
-        console.error('Failed to fetch investments:', err);
+        console.error('Failed to fetch assets:', err);
         setError('Failed to load data');
       })
       .finally(() => {
         setIsLoading(false);
       });
-  }, [getInvestments]);
+  }, [getAssets]);
 
   useEffect(() => {
     if (breakpointValue >= 1024) {
@@ -124,7 +120,7 @@ export default function Portfolio() {
             {/* Portfolio Summary Card */}
             <PortfolioSummaryCard 
               isLoading={isLoading}
-              investmentData={investmentData}
+              assetData={assetData}
               error={error}
             />
 
@@ -139,7 +135,7 @@ export default function Portfolio() {
             <AllocationChart 
               isLoading={isLoading}
               activeTab={activeTab}
-              data={investmentData} 
+              data={assetData} 
               error={error}
             />
 
@@ -161,11 +157,11 @@ export default function Portfolio() {
                   </div>
                 )}
 
-                <AssetsList 
+                <AssetList 
                   isLoading={isLoading} 
                   activeTab={activeTab}
                   error={error} 
-                  investmentData={investmentData} 
+                  assetData={assetData} 
                   onEditAsset={handleEditAsset}  
                   onDeleteAsset={handleDeleteAsset}
                 />
@@ -179,23 +175,23 @@ export default function Portfolio() {
         </main>
 
         {/* Desktop sidebar */}
-        <RightSidebar onAddInvestment={handleNewAsset}>
+        <RightSidebar onAddAsset={handleNewAsset}>
           <TabAssetGroups 
             className="pt-4 mb-4 sticky top-0 bg-base-100 z-10" 
             activeTab={activeTabSidebar} 
             onTabChange={setActiveTabSidebar} 
           />
-          <AssetsList 
+          <AssetList 
             isLoading={isLoading} 
             error={error} 
             activeTab={activeTabSidebar}
-            investmentData={investmentData} 
+            assetData={assetData} 
             onEditAsset={handleEditAsset} 
             onDeleteAsset={handleDeleteAsset}
           />
         </RightSidebar>
 
-        {/* Add Investment Modal */}
+        {/* Add Asset Modal */}
         <AssetEditionModal
           isOpen={isAddModalOpen}
           isSubmitting={isSavingAsset}
