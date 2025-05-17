@@ -1,16 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import TopNavbar from "@/components/dashboard/TopNavbar";
-import RightSidebar from "@/components/dashboard/RightSidebar";
-import AssetsList from "@/components/dashboard/AssetsList";
-import AllocationChart from "@/components/dashboard/AllocationChart";
-import AssetEditionModal from "@/components/dashboard/AssetEditionModal";
-import PortfolioSummaryCard from "@/components/dashboard/PortfolioSummaryCard";
+import TopNavbar from "./TopNavbar";
+import RightSidebar from "./RightSidebar";
+import AssetsList from "./AssetsList";
+import AllocationChart from "./AllocationChart";
+import AssetEditionModal from "./AssetEditionModal";
+import PortfolioSummaryCard from "./PortfolioSummaryCard";
 import { useInvestmentStore } from '@/store/investmentStore';
 import { useCurrencyRatesStore } from '@/store/currencyRatesStore';
 import config from '@/config';
-import Footer from '@/components/Footer';
+import Footer from './Footer';
 import TabAssetGroups from './TabAssetGroups';
 import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
 

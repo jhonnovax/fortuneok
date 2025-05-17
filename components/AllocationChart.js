@@ -8,11 +8,11 @@ import {
   Tooltip,
 } from 'recharts';
 import { useState, useEffect } from 'react';
-import { formatCurrency, formatPercentage } from '../../services/intlService';
+import { formatCurrency, formatPercentage } from '../services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
-import { getAssetCategoryGroup } from '@/services/investmentService';
-import { COLORS } from '@/services/ChartService';
+import { getAssetCategoryGroup } from '../services/investmentService';
+import { COLORS } from '../services/ChartService';
 
 const renderPieCustomLabel = ({ percent }) => {
   return `${formatPercentage(percent * 100, 2)}`;

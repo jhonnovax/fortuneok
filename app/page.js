@@ -1,4 +1,4 @@
-import Portfolio from '@/components/dashboard/Portfolio';
+import Portfolio from '@/components/Portfolio';
 import { getSEOTags } from "@/libs/seo";
 
 export const metadata = getSEOTags();

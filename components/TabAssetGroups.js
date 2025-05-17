@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-export default function TabNavigation({ className, activeTab, onTabChange }) {
+export default function TabAssetGroups({ className, activeTab, onTabChange }) {
   
   return (
     <div role="tablist" className={`tabs tabs-lifted tabs-lg ${className}`}>

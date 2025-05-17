@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { formatFullCurrency, maskValue } from '../../services/intlService';
+import { formatFullCurrency, maskValue } from '../services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
+
 export default function PortfolioSummaryCard({ 
   isLoading = false,
   investmentData = [],
