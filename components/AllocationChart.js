@@ -12,6 +12,7 @@ import { formatCurrency, formatPercentage } from '../services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
 import { COLORS } from '../services/chartService';
+import { BREAKPOINTS } from '@/services/breakpointService';
 import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
 
 // Custom tooltip component
@@ -59,7 +60,7 @@ export default function AllocationChart({ isLoading, activeTab, assetData, error
   }
 
   function renderPieCustomLabel({ percent, name }) {
-    return `${formatPercentage(percent * 100, 2)} ${breakpointInPixels > 1024 ? name : ''}`;
+    return `${formatPercentage(percent * 100, 2)} ${breakpointInPixels > BREAKPOINTS.LG ? name : ''}`;
   }
 
   if (error) {
