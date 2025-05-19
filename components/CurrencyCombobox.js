@@ -102,7 +102,6 @@ export default function CurrencyCombobox({
   const handleClear = () => {
     setInputValue('');
     onChange('');
-    setShowDropdown(false);
   };
   
   return (
