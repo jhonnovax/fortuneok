@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Header from "./Header";
 import RightSidebar from "./RightSidebar";
 import AssetList from "./AssetList";
@@ -12,8 +12,9 @@ import { useCurrencyRatesStore } from '@/store/currencyRatesStore';
 import config from '@/config';
 import Footer from './Footer';
 import TabAssetGroups from './TabAssetGroups';
-import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
 import { usePreferences } from '@/contexts/PreferencesContext';
+import { parseAssetCategoryFromAssetList } from '@/services/assetService';
+
 export default function Portfolio() {
 
   const { appName, appDescription } = config;
@@ -25,7 +26,7 @@ export default function Portfolio() {
   const [error, setError] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [activeTab, setActiveTab] = useState('positions');
-  const [activeTabSidebar, setActiveTabSidebar] = useState('positions');
+  const { currency: baseCurrency } = usePreferences();
 
   const getCurrencyRates = useCurrencyRatesStore((state) => state.getCurrencyRates);
   const getAssets = useAssetStore((state) => state.getAssets);
@@ -35,20 +36,35 @@ export default function Portfolio() {
   const deleteAsset = useAssetStore((state) => state.deleteAsset);
   const assetData = getFilteredAndSortedAssets();
 
-  const { breakpointValue } = useTailwindBreakpoint();
-  const { currency: baseCurrency } = usePreferences();
+  
+  const filteredAssets = useMemo(() => {
+    let assets = [...assetData];
 
-  const handleNewAsset = () => {
+    if (activeTab === 'categories') {
+      assets = parseAssetCategoryFromAssetList(assetData);
+    }
+    
+    assets = assets.sort((a, b) => b.valuationInPreferredCurrency - a.valuationInPreferredCurrency);
+    return assets;
+  }, [assetData, activeTab]);
+
+  const totalAssetsValue = useMemo(() => {
+    return filteredAssets.reduce((total, asset) => {
+      return total + (asset.valuationInPreferredCurrency || 0);
+    }, 0);
+  }, [filteredAssets]);
+
+  async function handleNewAsset() {
     setSelectedAsset(null);
     setIsAddModalOpen(true);
-  };
+  }
 
-  const handleEditAsset = (asset) => {
+  async function handleEditAsset(asset) {
     setSelectedAsset(asset);
     setIsAddModalOpen(true);
-  };
+  }
 
-  const handleSaveAsset = async (asset) => {
+  async function handleSaveAsset(asset) {
     try {
       const { id, ...assetData } = asset;
 
@@ -69,19 +85,19 @@ export default function Portfolio() {
       setIsSavingAsset(false);
       setIsAddModalOpen(false);
     }
-  };
+  }
 
-  const handleDeleteAsset = async (assetId) => {
+  async function handleDeleteAsset(assetId) {
     try {
       // TODO: Implement delete asset
       const response = await deleteAsset(assetId);
       console.log('Deleted asset:', response);
     } catch (err) {
       console.error('Failed to delete asset:', err);
-      // You might want to show an error message to the user here
     }
-  };
+  }
 
+  // Fetch assets
   useEffect(() => {
     setIsLoading(true);
     getAssets()
@@ -94,17 +110,10 @@ export default function Portfolio() {
       });
   }, [getAssets]);
 
+  // Fetch currency rates
   useEffect(() => {
     getCurrencyRates(baseCurrency);
   }, [getCurrencyRates, baseCurrency]);
-
-  useEffect(() => {
-    if (breakpointValue >= 1024) {
-      setActiveTab('all');
-    } else {
-      setActiveTab('positions');
-    }
-  }, [breakpointValue]);
   
   return (
     <div className="min-h-screen flex flex-col bg-base-200">
@@ -125,8 +134,8 @@ export default function Portfolio() {
             {/* Portfolio Summary Card */}
             <PortfolioSummaryCard 
               isLoading={isLoading}
-              assetData={assetData}
               error={error}
+              totalAssetsValue={totalAssetsValue}
             />
 
             {/* Tabs Asset Groups */}
@@ -136,11 +145,11 @@ export default function Portfolio() {
               onTabChange={setActiveTab} 
             />
 
-            {/* Render the appropriate component based on the active tab */}
+            {/* Render Allocation Chart */}
             <AllocationChart 
               isLoading={isLoading}
               activeTab={activeTab}
-              data={assetData} 
+              assetData={filteredAssets} 
               error={error}
             />
 
@@ -166,7 +175,8 @@ export default function Portfolio() {
                   isLoading={isLoading} 
                   activeTab={activeTab}
                   error={error} 
-                  assetData={assetData} 
+                  assetData={filteredAssets} 
+                  totalAssetsValue={totalAssetsValue}
                   onEditAsset={handleEditAsset}  
                   onDeleteAsset={handleDeleteAsset}
                 />
@@ -183,14 +193,15 @@ export default function Portfolio() {
         <RightSidebar onAddAsset={handleNewAsset}>
           <TabAssetGroups 
             className="pt-4 mb-4 sticky top-0 bg-base-100 z-10" 
-            activeTab={activeTabSidebar} 
-            onTabChange={setActiveTabSidebar} 
+            activeTab={activeTab} 
+            onTabChange={setActiveTab} 
           />
           <AssetList 
             isLoading={isLoading} 
             error={error} 
-            activeTab={activeTabSidebar}
-            assetData={assetData} 
+            activeTab={activeTab}
+            assetData={filteredAssets} 
+            totalAssetsValue={totalAssetsValue}
             onEditAsset={handleEditAsset} 
             onDeleteAsset={handleDeleteAsset}
           />

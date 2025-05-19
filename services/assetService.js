@@ -7,17 +7,8 @@ function convertFromBaseCurrency(baseCurrency = 'USD', amount = 0, rates = {}) {
   return amountInBaseCurrency;
 }
 
-export const getTotalAssetsValue = (assets) => {
-  const totalValue = assets.reduce((total, asset) => {
-    const assetValue = asset.currentValuation?.amount || 0;
-    return total + assetValue;
-  }, 0);
-
-  return totalValue;
-};
-
 export const getAssetPercentage = (asset, totalAssetsValue) => {
-  const assetValue = asset.currentValuation?.amount || 0;
+  const assetValue = asset.valuationInPreferredCurrency || 0;
   return (assetValue / totalAssetsValue) * 100;
 };
 
@@ -76,16 +67,41 @@ export function parseDataFromAPI(asset, selectedIds, conversionRates) {
   const date = getLocalDateFromUTCString(asset.date);
   const assetCurrency = asset.currentValuation?.currency || 'USD';
   const assetAmount = asset.currentValuation?.amount || 0;
-  const amount = convertFromBaseCurrency(assetCurrency, assetAmount, conversionRates);
+  const valuationInPreferredCurrency = convertFromBaseCurrency(assetCurrency, assetAmount, conversionRates);
 
   return {
     ...asset,
     date,
-    currentValuation: {
-      ...asset.currentValuation,
-      amount
-    }
+    valuationInPreferredCurrency
   };
+}
+
+export function parseAssetCategoryFromAssetList(assetData) {
+  const assetCategories = assetData.reduce((categories, asset) => {
+    const assetCategoryGroup = getAssetCategoryGroup(asset.category);
+    const categoryExists = categories.some(category => category.category === assetCategoryGroup);
+
+    if (!categoryExists) {
+      categories = categories.concat({
+        id: Date.now().toString() + Math.floor(Math.random() * 1000000).toString(),
+        category: assetCategoryGroup,
+        description: getAssetCategoryDescription(assetCategoryGroup),
+        valuationInPreferredCurrency: asset.valuationInPreferredCurrency
+      });
+    } else {
+      categories = categories.map(category => {
+        if (category.category === assetCategoryGroup) {
+          return { ...category, valuationInPreferredCurrency: category.valuationInPreferredCurrency + (asset.valuationInPreferredCurrency || 0) };
+        }
+
+        return category;
+      });
+    }
+
+    return categories;
+  }, []);
+
+  return assetCategories;
 }
 
 export function getAssetCategoryDescription(assetCategory) {

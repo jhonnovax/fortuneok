@@ -1,53 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import DeleteAssetModal from './DeleteAssetModal';
 import { formatDateToString, formatFullCurrency, formatNumber, formatPercentage } from '@/services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
-import { getAssetCategoryDescription, getAssetCategoryGroup, getTotalAssetsValue, getAssetPercentage } from '@/services/assetService';
-import { COLORS } from '@/services/ChartService';
+import { getAssetPercentage } from '@/services/assetService';
+import { COLORS } from '@/services/chartService';
 
-export default function AssetsList({ isLoading, error, activeTab, assetData, onEditAsset, onDeleteAsset }) {
+export default function AssetsList({ isLoading, error, assetData, totalAssetsValue, onEditAsset, onDeleteAsset }) {
 
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, assetId: null });
-  const [assetList, setAssetList] = useState([]);
-  const totalAssetsValue = getTotalAssetsValue(assetData);
-
-  useEffect(() => {
-    if (activeTab === 'positions') {
-      const sortedAssets = assetData.sort((a, b) => new Date(b.currentValuation?.amount) - new Date(a.currentValuation?.amount));
-      setAssetList(sortedAssets);
-    } else {
-      const assetCategories = assetData.reduce((categories, asset) => {
-        const assetCategoryGroup = getAssetCategoryGroup(asset.category);
-        const category = categories.find(category => category.category === assetCategoryGroup);
-
-        if (!category) {
-          categories = categories.concat({
-            id: Date.now().toString() + Math.floor(Math.random() * 1000000).toString(),
-            category: assetCategoryGroup,
-            description: getAssetCategoryDescription(assetCategoryGroup),
-            currentValuation: { currency: asset.currentValuation?.currency || 'USD', amount: asset.currentValuation?.amount || 0 },
-          });
-        } else {
-          categories = categories.map(category => {
-            if (category.category === assetCategoryGroup) {
-              return { ...category, currentValuation: { currency: category.currentValuation?.currency || 'USD', amount: category.currentValuation?.amount + (asset.currentValuation?.amount || 0) } };
-            }
-
-            return category;
-          });
-        }
-
-        return categories;
-      }, []);
-
-      const sortedAssetCategories = assetCategories.sort((a, b) => new Date(b.currentValuation?.amount) - new Date(a.currentValuation?.amount));
-
-      setAssetList(sortedAssetCategories);
-    }
-  }, [activeTab, assetData]);
 
   if (isLoading) {
     return <LoadingSpinner className="py-8" loadingText="Loading assets..." />;
@@ -68,7 +31,7 @@ export default function AssetsList({ isLoading, error, activeTab, assetData, onE
   return (
     <div className="">
       {/* Assets List */}
-      {assetList.map((asset, assetIndex) => (
+      {assetData.map((asset, assetIndex) => (
         <div key={asset.id} className="hover:bg-base-200/50 transition-colors">
           <div className="px-2 py-4 pr-1">
             <div className="flex items-center gap-3">
@@ -84,7 +47,7 @@ export default function AssetsList({ isLoading, error, activeTab, assetData, onE
                         {formatDateToString(asset.date)}
                       </div>
                     )}
-                    <p className="text-sm opacity-85">{formatFullCurrency(asset.currentValuation?.amount || 0)}</p>
+                    <p className="text-sm opacity-85">{formatFullCurrency(asset.valuationInPreferredCurrency || 0)}</p>
                     {asset.shares && (
                       <p className="text-sm text-gray-500">
                         <span className="mr-1">{asset.symbol}</span>

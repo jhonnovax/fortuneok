@@ -6,12 +6,10 @@ import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
 import CurrencySelection from './CurrencySelection';
 
-export default function PortfolioSummaryCard({ isLoading = false, assetData = [], error = null }) {
+export default function PortfolioSummaryCard({ isLoading, error, totalAssetsValue }) {
   
   const [isValueVisible, setIsValueVisible] = useState(true);
   const [isEditingCurrency, setIsEditingCurrency] = useState(false);
-
-  const totalValue = assetData.reduce((total, asset) => total + (asset.currentValuation?.amount || 0), 0);
 
   if (isLoading) {
     return (
@@ -43,8 +41,8 @@ export default function PortfolioSummaryCard({ isLoading = false, assetData = []
           {!isEditingCurrency && (
             <span className="text-2xl md:text-3xl font-bold">
               {isValueVisible 
-                ? formatFullCurrency(totalValue)
-                : maskValue(totalValue.toString().length)
+                ? formatFullCurrency(totalAssetsValue)
+                : maskValue(totalAssetsValue.toString().length)
               }
             </span>
           )}

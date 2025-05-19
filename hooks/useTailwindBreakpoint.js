@@ -33,5 +33,5 @@ export function useTailwindBreakpoint() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  return { breakpoint, breakpointValue: breakpoints[breakpoint] };
+  return { breakpoint, breakpointInPixels: breakpoints[breakpoint] };
 }
