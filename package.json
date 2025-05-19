@@ -37,6 +37,7 @@
     "recharts": "^2.15.1",
     "resend": "^4.0.1",
     "stripe": "^13.11.0",
+    "yahoo-finance2": "^2.13.3",
     "zustand": "^5.0.4"
   },
   "devDependencies": {

@@ -1,28 +1,23 @@
 import { getCache, setCache } from '@/libs/redis';
+import yahooFinance from 'yahoo-finance2';
 
 // Cache duration in seconds (24 hours)
 const CACHE_DURATION = 24 * 60 * 60;
 
 const fetchSymbolDataFromAPI = async (symbols) => {
-  const symbolsString = symbols.join(',');
-	const apiResponse = await fetch(`https://financialmodelingprep.com/api/v3/quote/${symbolsString}?apikey=${process.env.FMP_API_KEY}`);
+  const stockPromises = symbols.map((symbol) => yahooFinance.quote(symbol));
+	const apiResponses = await Promise.all(stockPromises);
+	let symbolDetails = {};
 
-  if (!apiResponse.ok) {
-    return {};
-  }
-
-  const symbolData = await apiResponse.json();
-  const symbolDetails = {};
-
-	for (const item of symbolData) {
-    if (item.symbol) {
-      symbolDetails[item.symbol] = {
-        currency: 'USD', // API returns stock prices in USD by default
-        price: item.price,
+	for (const quote of apiResponses) {		
+		if (quote) {
+			symbolDetails[quote.symbol] = {
+        currency: quote.currency || 'USD',
+        price: quote.regularMarketPrice,
         timestamp: new Date().toISOString()
       };
-    }
-  }
+		}
+	}
 
 	return symbolDetails;
 };
