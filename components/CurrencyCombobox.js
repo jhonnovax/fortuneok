@@ -4,11 +4,13 @@ import { useState, useEffect, useRef } from 'react';
 import currencies from '@/public/currencies.json';
 
 export default function CurrencyCombobox({ 
-  value, 
-  onChange, 
+  autoFocus = false,
   className = '',
   error = null,
-  disabled = false
+  showClearButton = true,
+  disabled = false,
+  value,
+  onChange, 
 }) {
   const [inputValue, setInputValue] = useState('');
   const [filteredCurrencies, setFilteredCurrencies] = useState([]);
@@ -104,21 +106,22 @@ export default function CurrencyCombobox({
   };
   
   return (
-    <div className="form-control w-full relative" ref={comboboxRef}>
+    <div className={`form-control w-full relative ${className}`} ref={comboboxRef}>
       <div className="w-full">
         <input
+          autoFocus={autoFocus}
+          autoComplete="off"
           type="text"
-          className={`input input-bordered w-full ${error ? 'input-error' : ''} ${className} ${inputValue ? 'pr-16' : ''}`}
+          className={`input input-bordered w-full ${error ? 'input-error' : ''} ${inputValue ? 'pr-16' : ''}`}
           placeholder="Select currency..."
           value={inputValue}
           onChange={handleInputChange}
           onFocus={handleFocus}
           disabled={disabled}
-          autoComplete="off"
         />
         
         {/* Clear button */}
-        {inputValue && !disabled && (
+        {inputValue && !disabled && showClearButton && (
           <button
             type="button"
             className="absolute inset-y-0 right-0 top-0 flex items-center pr-3"
@@ -144,15 +147,15 @@ export default function CurrencyCombobox({
                   <button 
                     type="button"
                     onClick={() => handleSelect(currency)}
-                    className="w-full flex items-center gap-3 p-3 hover:bg-base-200 text-left"
+                    className="w-full flex items-center gap-1 p-3 hover:bg-base-200 text-left"
                   >
                     {/* Flag with border */}
-                    <div className="w-8 h-6 flex-shrink-0 overflow-hidden rounded border border-base-300 flex items-center justify-center">
+                    <div className="w-8 h-6 flex-shrink-0 overflow-hidden rounded flex items-center justify-center">
                       <span className="text-xl">{currency.flag}</span>
                     </div>
                     
                     {/* Currency code in pill */}
-                    <div className="bg-neutral text-neutral-content text-sm px-2 py-1 rounded">
+                    <div className="text-sm pr-1 py-1 rounded">
                       {currency.code}
                     </div>
                     
@@ -165,6 +168,7 @@ export default function CurrencyCombobox({
           </div>
         </div>
       )}
+      
     </div>
   );
 } 

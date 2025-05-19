@@ -74,18 +74,17 @@ export const parseCurrentValuationOfAsset = (asset, stocksData) => {
 
 export function parseDataFromAPI(asset, selectedIds, conversionRates) {
   const date = getLocalDateFromUTCString(asset.date);
-  let amount = 0;
-
-  if (asset.shares) {
-    amount = convertFromBaseCurrency('usd', asset.amount, conversionRates);
-  } else {
-    amount = convertFromBaseCurrency(asset.currency, asset.purchaseInformation?.purchasePrice, conversionRates);
-  }
+  const assetCurrency = asset.currentValuation?.currency || 'USD';
+  const assetAmount = asset.currentValuation?.amount || 0;
+  const amount = convertFromBaseCurrency(assetCurrency, assetAmount, conversionRates);
 
   return {
     ...asset,
     date,
-    amount
+    currentValuation: {
+      ...asset.currentValuation,
+      amount
+    }
   };
 }
 

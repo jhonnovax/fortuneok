@@ -9,6 +9,8 @@ import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "react-hot-toast";
 import { Tooltip } from "react-tooltip";
 import config from "@/config";
+import { PreferencesProvider } from "@/contexts/PreferencesContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 
 // Crisp customer chat support:
 // This component is separated from ClientLayout because it needs to be wrapped with <SessionProvider> to use useSession() hook
@@ -60,31 +62,35 @@ const ClientLayout = ({ children }) => {
   }, [pathname]);
 
   return (
-    <>
-      <SessionProvider>
-        {/* Show a progress bar at the top when navigating between pages */}
-        <NextTopLoader color={config.colors.main} showSpinner={false} />
+    <SessionProvider>
+      <PreferencesProvider>
+        <ThemeProvider>
 
-        {/* Content inside app/page.js files  */}
-        {children}
+          {/* Show a progress bar at the top when navigating between pages */}
+          <NextTopLoader color={config.colors.main} showSpinner={false} />
 
-        {/* Show Success/Error messages anywhere from the app with toast() */}
-        <Toaster
-          toastOptions={{
-            duration: 3000,
-          }}
-        />
+          {/* Content inside app/page.js files  */}
+          {children}
 
-        {/* Show tooltips if any JSX elements has these 2 attributes: data-tooltip-id="tooltip" data-tooltip-content="" */}
-        <Tooltip
-          id="tooltip"
-          className="z-[60] !opacity-100 max-w-sm shadow-lg"
-        />
+          {/* Show Success/Error messages anywhere from the app with toast() */}
+          <Toaster
+            toastOptions={{
+              duration: 3000,
+            }}
+          />
 
-        {/* Set Crisp customer chat support */}
-        <CrispChat />
-      </SessionProvider>
-    </>
+          {/* Show tooltips if any JSX elements has these 2 attributes: data-tooltip-id="tooltip" data-tooltip-content="" */}
+          <Tooltip
+            id="tooltip"
+            className="z-[60] !opacity-100 max-w-sm shadow-lg"
+          />
+
+          {/* Set Crisp customer chat support */}
+          <CrispChat />
+          
+        </ThemeProvider>
+      </PreferencesProvider>
+    </SessionProvider>
   );
 };
 

@@ -10,14 +10,14 @@ export function formatCurrency(value, decimals = 0, currency = 'USD') {
   }).format(value);
 }
 
-export function formatFullCurrency(value, currency = 'USD') {
+export function formatFullCurrency(value, decimals = 0, currency = 'USD') {
   if (value === null || value === undefined) return '$0.00';
   
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currency,
     minimumFractionDigits: 0,
-    maximumFractionDigits: 2
+    maximumFractionDigits: decimals
   }).format(value);
 }
 

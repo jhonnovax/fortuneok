@@ -13,7 +13,7 @@ import config from '@/config';
 import Footer from './Footer';
 import TabAssetGroups from './TabAssetGroups';
 import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
-
+import { usePreferences } from '@/contexts/PreferencesContext';
 export default function Portfolio() {
 
   const { appName, appDescription } = config;
@@ -35,7 +35,8 @@ export default function Portfolio() {
   const deleteAsset = useAssetStore((state) => state.deleteAsset);
   const assetData = getFilteredAndSortedAssets();
 
-  const { breakpointValue} = useTailwindBreakpoint();
+  const { breakpointValue } = useTailwindBreakpoint();
+  const { currency: baseCurrency } = usePreferences();
 
   const handleNewAsset = () => {
     setSelectedAsset(null);
@@ -94,6 +95,10 @@ export default function Portfolio() {
   }, [getAssets]);
 
   useEffect(() => {
+    getCurrencyRates(baseCurrency);
+  }, [getCurrencyRates, baseCurrency]);
+
+  useEffect(() => {
     if (breakpointValue >= 1024) {
       setActiveTab('all');
     } else {
@@ -126,7 +131,7 @@ export default function Portfolio() {
 
             {/* Tabs Asset Groups */}
             <TabAssetGroups 
-              className="lg:hidden" 
+              className={`lg:hidden ${isLoading ? 'hidden' : ''}`} 
               activeTab={activeTab} 
               onTabChange={setActiveTab} 
             />
