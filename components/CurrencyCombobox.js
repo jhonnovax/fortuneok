@@ -16,7 +16,58 @@ export default function CurrencyCombobox({
   const [filteredCurrencies, setFilteredCurrencies] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const comboboxRef = useRef(null);
+  const inputRef = useRef(null);
   
+  // Filter currencies based on input
+  function filterCurrencies(query) {
+    if (!query.trim()) {
+      return currencies;
+    }
+    
+    const lowercaseQuery = query.toLowerCase();
+    return currencies.filter(currency => 
+      currency.code.toLowerCase().includes(lowercaseQuery) || 
+      currency.label.toLowerCase().includes(lowercaseQuery)
+    );
+  }
+  
+  // Handle input change
+  function handleInputChange(e) {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    
+    const filtered = filterCurrencies(newValue);
+    setFilteredCurrencies(filtered);
+    setShowDropdown(true);
+    
+    // If input is cleared, also clear the selected value
+    if (!newValue.trim()) {
+      onChange('');
+    }
+  }
+  
+  // Handle currency selection
+  function handleSelect(currency) {
+    setInputValue(`${currency.flag} ${currency.code} - ${currency.label}`);
+    onChange(currency.code);
+    setShowDropdown(false);
+  }
+  
+  // Handle input focus
+  function handleFocus() {
+    const filtered = filterCurrencies(inputValue);
+    setFilteredCurrencies(filtered);
+    setShowDropdown(true);
+  }
+  
+  // Handle clear button
+  function handleClear() {
+    setInputValue('');
+    onChange('');
+    setShowDropdown(false);
+    inputRef.current?.focus?.();
+  }
+
   // Initialize with value
   useEffect(() => {
     if (value) {
@@ -56,58 +107,11 @@ export default function CurrencyCombobox({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [inputValue, onChange]);
   
-  // Filter currencies based on input
-  const filterCurrencies = (query) => {
-    if (!query.trim()) {
-      return currencies;
-    }
-    
-    const lowercaseQuery = query.toLowerCase();
-    return currencies.filter(currency => 
-      currency.code.toLowerCase().includes(lowercaseQuery) || 
-      currency.label.toLowerCase().includes(lowercaseQuery)
-    );
-  };
-  
-  // Handle input change
-  const handleInputChange = (e) => {
-    const newValue = e.target.value;
-    setInputValue(newValue);
-    
-    const filtered = filterCurrencies(newValue);
-    setFilteredCurrencies(filtered);
-    setShowDropdown(true);
-    
-    // If input is cleared, also clear the selected value
-    if (!newValue.trim()) {
-      onChange('');
-    }
-  };
-  
-  // Handle currency selection
-  const handleSelect = (currency) => {
-    setInputValue(`${currency.flag} ${currency.code} - ${currency.label}`);
-    onChange(currency.code);
-    setShowDropdown(false);
-  };
-  
-  // Handle input focus
-  const handleFocus = () => {
-    const filtered = filterCurrencies(inputValue);
-    setFilteredCurrencies(filtered);
-    setShowDropdown(true);
-  };
-  
-  // Handle clear button
-  const handleClear = () => {
-    setInputValue('');
-    onChange('');
-  };
-  
   return (
     <div className={`form-control w-full relative ${className}`} ref={comboboxRef}>
       <div className="w-full">
         <input
+          ref={inputRef}
           autoFocus={autoFocus}
           autoComplete="off"
           type="text"
