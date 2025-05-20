@@ -1,22 +1,25 @@
 import { useState, useEffect } from "react";
-import { getBreakpoint, BREAKPOINTS } from "@/services/breakpointService";
+import { getBreakpoint } from "@/services/breakpointService";
 
 export function useTailwindBreakpoint() {
 
-  const [breakpoint, setBreakpoint] = useState(() =>
-    typeof window !== "undefined" ? getBreakpoint(window.innerWidth) : "xs"
-  );
+  const [breakpoint, setBreakpoint] = useState(() => typeof window !== "undefined" ? getBreakpoint(window.innerWidth) : "xs");
+  const [breakpointInPixels, setBreakpointInPixels] = useState(() => typeof window !== "undefined" ? window.innerWidth : 0);
 
   useEffect(() => {
     const handleResize = () => {
       setBreakpoint(getBreakpoint(window.innerWidth));
+      setBreakpointInPixels(window.innerWidth);
     };
 
     window.addEventListener("resize", handleResize);
     handleResize(); // initial check
-    return () => window.removeEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
-  return { breakpoint, breakpointInPixels: BREAKPOINTS[breakpoint.toUpperCase()] };
+  return { breakpoint, breakpointInPixels };
 
 }

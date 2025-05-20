@@ -41,7 +41,7 @@ export default function AllocationChart({ isLoading, activeTab, assetData, error
   const theme = useSystemTheme();
 
   const chartColors = getChartColors(theme);
-  const isDesktopOrUpper = breakpointInPixels > BREAKPOINTS.LG;
+  const isDesktopOrUpper = breakpointInPixels >= BREAKPOINTS.LG;
   
   // Add fill property to data for tooltip color  
   const assetDataWithFill = useMemo(() => {
@@ -74,13 +74,15 @@ export default function AllocationChart({ isLoading, activeTab, assetData, error
     const verticalPadding = percent < 0.03 ? 1 : 0; // Adjust this as needed
     y += verticalPadding * (index % 3 - 1); // alternates -1, 0, 1 for some breathing room
 
-  
+    const totalNumberOfAssets = assetData.length;
+    const fontSize = (isDesktopOrUpper && totalNumberOfAssets > 10) ? 9 : 12;
+
     return (
       <text
         x={x}
         y={y}
         fill={chartColors[index % chartColors.length]}
-        fontSize={isDesktopOrUpper ? 9 : 11} // Smaller font
+        fontSize={fontSize}
         textAnchor={x > cx ? 'start' : 'end'}
         dominantBaseline="central"
         style={{
