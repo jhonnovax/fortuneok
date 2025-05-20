@@ -40,7 +40,7 @@ export default function PortfolioSummaryCard({ isLoading, error, totalAssetsValu
     <div className="card bg-base-100 shadow-xl">
       <div className="card-body">
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 md:gap-4">
 
           {/* Portfolio Total Value */}
           {showTotalValue && (
