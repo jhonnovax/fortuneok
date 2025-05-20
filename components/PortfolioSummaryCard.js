@@ -5,11 +5,16 @@ import { formatFullCurrency, maskValue } from '../services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
 import CurrencySelection from './CurrencySelection';
+import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
+import { BREAKPOINTS } from '@/services/breakpointService';
 
 export default function PortfolioSummaryCard({ isLoading, error, totalAssetsValue }) {
   
   const [isValueVisible, setIsValueVisible] = useState(true);
   const [isEditingCurrency, setIsEditingCurrency] = useState(false);
+  const { breakpointInPixels } = useTailwindBreakpoint();
+  const isDesktopOrUpper = breakpointInPixels >= BREAKPOINTS.LG;
+  const showTotalValue = !isEditingCurrency || isDesktopOrUpper;
 
   if (isLoading) {
     return (
@@ -38,7 +43,7 @@ export default function PortfolioSummaryCard({ isLoading, error, totalAssetsValu
         <div className="flex items-center gap-2">
 
           {/* Portfolio Total Value */}
-          {!isEditingCurrency && (
+          {showTotalValue && (
             <span className="text-2xl md:text-3xl font-bold">
               {isValueVisible 
                 ? formatFullCurrency(totalAssetsValue)
@@ -53,9 +58,9 @@ export default function PortfolioSummaryCard({ isLoading, error, totalAssetsValu
           />
 
           {/* Toggle Portfolio Value Visibility */}
-          {!isEditingCurrency && (
+          {showTotalValue && (
             <button 
-              className="btn btn-circle btn-default btn-sm"
+              className="btn btn-circle btn-default btn-sm border-base-content/20"
               title={isValueVisible ? 'Hide portfolio value' : 'Show portfolio value'}
               onClick={() => setIsValueVisible(!isValueVisible)}
             >
