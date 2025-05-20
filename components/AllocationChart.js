@@ -40,6 +40,7 @@ export default function AllocationChart({ isLoading, activeTab, assetData, error
   const theme = useSystemTheme();
 
   const chartColors = getChartColors(theme);
+  const isDesktopOrUpper = breakpointInPixels > BREAKPOINTS.LG;
   
   // Add fill property to data for tooltip color  
   const assetDataWithFill = useMemo(() => {
@@ -67,7 +68,6 @@ export default function AllocationChart({ isLoading, activeTab, assetData, error
     const radius = outerRadius + 25; // Add padding
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     let y = cy + radius * Math.sin(-midAngle * RADIAN);
-    const isDesktopOrUpper = breakpointInPixels > BREAKPOINTS.LG;
 
     // ADD vertical offset to avoid collision from tight stacking
     const verticalPadding = percent < 0.03 ? 1 : 0; // Adjust this as needed
@@ -147,7 +147,7 @@ export default function AllocationChart({ isLoading, activeTab, assetData, error
                 cy="50%"
                 labelLine={true}
                 label={renderPieCustomLabel}
-                outerRadius={150}
+                outerRadius={isDesktopOrUpper ? 140 : 95}
                 nameKey="name"
                 dataKey="value"
                 animationEasing="ease-in-out"
