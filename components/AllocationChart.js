@@ -62,8 +62,34 @@ export default function AllocationChart({ isLoading, activeTab, assetData, error
     );
   }
 
-  function renderPieCustomLabel({ percent, name }) {
-    return `${formatPercentage(percent * 100, 2)} ${breakpointInPixels > BREAKPOINTS.LG ? name : ''}`;
+  function renderPieCustomLabel({ cx, cy, midAngle, outerRadius, percent, index, name }){
+    const RADIAN = Math.PI / 180;
+    const radius = outerRadius + 25; // Add padding
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    let y = cy + radius * Math.sin(-midAngle * RADIAN);
+    const isDesktopOrUpper = breakpointInPixels > BREAKPOINTS.LG;
+
+    // ADD vertical offset to avoid collision from tight stacking
+    const verticalPadding = percent < 0.03 ? 1 : 0; // Adjust this as needed
+    y += verticalPadding * (index % 3 - 1); // alternates -1, 0, 1 for some breathing room
+
+  
+    return (
+      <text
+        x={x}
+        y={y}
+        fill={chartColors[index % chartColors.length]}
+        fontSize={isDesktopOrUpper ? 9 : 11} // Smaller font
+        textAnchor={x > cx ? 'start' : 'end'}
+        dominantBaseline="central"
+        style={{
+          pointerEvents: 'none',
+          whiteSpace: 'nowrap'
+        }}
+      >
+        {`${(percent * 100).toFixed(2)}% ${isDesktopOrUpper ? name : ''}`}
+      </text>
+    );
   }
 
   if (error) {
@@ -121,7 +147,7 @@ export default function AllocationChart({ isLoading, activeTab, assetData, error
                 cy="50%"
                 labelLine={true}
                 label={renderPieCustomLabel}
-                outerRadius={100}
+                outerRadius={150}
                 nameKey="name"
                 dataKey="value"
                 animationEasing="ease-in-out"
