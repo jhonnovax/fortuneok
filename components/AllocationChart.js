@@ -11,10 +11,10 @@ import { useMemo } from 'react';
 import { formatCurrency, formatPercentage } from '../services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
-import { COLORS } from '../services/chartService';
+import { getChartColors } from '../services/chartService';
 import { BREAKPOINTS } from '@/services/breakpointService';
 import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
-
+import { useSystemTheme } from '@/hooks/useSystemTheme';
 // Custom tooltip component
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
@@ -37,15 +37,18 @@ const CustomTooltip = ({ active, payload }) => {
 export default function AllocationChart({ isLoading, activeTab, assetData, error }) {
 
   const { breakpointInPixels } = useTailwindBreakpoint();
+  const theme = useSystemTheme();
+
+  const chartColors = getChartColors(theme);
   
   // Add fill property to data for tooltip color  
   const assetDataWithFill = useMemo(() => {
     return assetData.map((item, index) => ({
       name: item.description,
       value: item.valuationInPreferredCurrency,
-      fill: COLORS[index % COLORS.length]
+      fill: chartColors[index % chartColors.length]
     }));
-  }, [assetData]);
+  }, [assetData, chartColors]);
   
   if (isLoading) {
     return (
@@ -119,14 +122,14 @@ export default function AllocationChart({ isLoading, activeTab, assetData, error
                 labelLine={true}
                 label={renderPieCustomLabel}
                 outerRadius={100}
-                fill="#8884d8"
                 nameKey="name"
                 dataKey="value"
                 animationEasing="ease-in-out"
                 animationDuration={150}
+                stroke={theme === 'light' ? '#fff' : '#2a303c'}
               >
                 {assetDataWithFill.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
                 ))}
               </Pie>
               <Tooltip content={<CustomTooltip />} />

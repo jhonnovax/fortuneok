@@ -6,11 +6,15 @@ import { formatDateToString, formatFullCurrency, formatNumber, formatPercentage 
 import ErrorLoadingData from './ErrorLoadingData';
 import LoadingSpinner from './LoadingSpinner';
 import { getAssetPercentage } from '@/services/assetService';
-import { COLORS } from '@/services/chartService';
+import { getChartColors } from '@/services/chartService';
+import { useSystemTheme } from '@/hooks/useSystemTheme';
 
 export default function AssetsList({ isLoading, error, assetData, totalAssetsValue, showMoreActions, onEditAsset, onDeleteAsset }) {
 
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, assetId: null });
+  const theme = useSystemTheme();
+
+  const chartColors = getChartColors(theme);
 
   if (isLoading) {
     return <LoadingSpinner className="py-8" loadingText="Loading assets..." />;
@@ -108,7 +112,7 @@ export default function AssetsList({ isLoading, error, assetData, totalAssetsVal
             className="progress w-100 custom-progress"
             value={getAssetPercentage(asset, totalAssetsValue)} 
             max="100"
-            style={{ "--progress‐fill": COLORS[assetIndex % COLORS.length] }}
+            style={{ "--progress‐fill": chartColors[assetIndex % chartColors.length] }}
           >
           </progress>
         </div>
