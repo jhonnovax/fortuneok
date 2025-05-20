@@ -122,8 +122,8 @@ export default function AllocationChart({ isLoading, activeTab, assetData, error
                 fill="#8884d8"
                 nameKey="name"
                 dataKey="value"
-                animationEasing="ease"
-                animationDuration={300}
+                animationEasing="ease-in-out"
+                animationDuration={150}
               >
                 {assetDataWithFill.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
