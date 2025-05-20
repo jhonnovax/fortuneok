@@ -4,19 +4,53 @@ import yahooFinance from 'yahoo-finance2';
 // Cache duration in seconds (24 hours)
 const CACHE_DURATION_SYMBOL_DETAILS = 24 * 60 * 60;
 
+// Known cryptocurrencies list
+const knownCryptos = [
+  'BTC', 'ETH', 'BNB', 'SOL', 'XRP', 'ADA', 'DOGE', 'AVAX',
+  'DOT', 'LINK', 'LTC', 'MATIC', 'XLM', 'UNI', 'SHIB',
+  'TRX', 'XMR', 'AAVE', 'ICP', 'ATOM'
+];
+
+// Function to normalize symbols (add the -USD suffix)
+function normalizeCryptoSymbol(symbol) {
+  const symbolNormalized = symbol.toUpperCase();
+
+  if (knownCryptos.includes(symbolNormalized)) {
+    return `${symbolNormalized}-USD`;
+  }
+
+  return symbol;
+}
+
+// Function to denormalize symbols (remove the -USD suffix)
+function denormalizeCryptoSymbol(symbol) {
+  const symbolNormalized = symbol.toUpperCase().replace('-USD', '');
+
+  if (knownCryptos.includes(symbolNormalized)) {
+    return symbolNormalized;
+  }
+
+  return symbol;
+}
+
 const fetchSymbolDataFromAPI = async (symbols) => {
-  const stockPromises = symbols.map((symbol) => yahooFinance.quote(symbol));
+  const normalizedSymbols = symbols.map(normalizeCryptoSymbol);
+  const stockPromises = normalizedSymbols.map((symbol) => yahooFinance.quote(symbol));
 	const apiResponses = await Promise.all(stockPromises);
 	let symbolDetails = {};
+  let denormalizedSymbol = '';
 
-	for (const quote of apiResponses) {		
+	for (const quote of apiResponses) {
+
 		if (quote) {
-			symbolDetails[quote.symbol] = {
-        currency: quote.currency || 'USD',
+      denormalizedSymbol = denormalizeCryptoSymbol(quote.symbol);
+      symbolDetails[denormalizedSymbol] = {
+        currency: quote.currency || 'USD', // Fallback to USD if currency is not available
         price: quote.regularMarketPrice,
         timestamp: new Date().toISOString()
       };
-		}
+    }
+    
 	}
 
 	return symbolDetails;

@@ -158,7 +158,7 @@ export const dummyData = [
     "category": "cryptocurrencies",
     "description": "Bitcoin",
     "symbol": "BTC",
-    "shares": 2.8521,
+    "shares": 1.1521,
     "notes": "Held in cold storage"
   },
 ]
