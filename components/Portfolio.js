@@ -51,6 +51,10 @@ export default function Portfolio() {
     return activeTab === 'positions';
   }, [activeTab]);
 
+  const totalNumberOfAssets = useMemo(() => {
+    return filteredAssets.length;
+  }, [filteredAssets]);
+
   const totalAssetsValue = useMemo(() => {
     return filteredAssets.reduce((total, asset) => {
       return total + (asset.valuationInPreferredCurrency || 0);
@@ -162,6 +166,7 @@ export default function Portfolio() {
 
                 {!isLoading && (
                   <div className="flex justify-between items-center !mt-0">
+                    <h2 className="italic font-semibold">{totalNumberOfAssets} Assets</h2>
                     <button 
                       className="btn btn-primary flex items-center gap-2 lg:hidden ml-auto"
                       onClick={handleNewAsset}
@@ -194,7 +199,7 @@ export default function Portfolio() {
         </main>
 
         {/* Desktop sidebar */}
-        <RightSidebar onAddAsset={handleNewAsset}>
+        <RightSidebar totalNumberOfAssets={totalNumberOfAssets} onAddAsset={handleNewAsset}>
           <TabAssetGroups 
             className="pt-4 mb-4 sticky top-0 bg-base-100 z-10" 
             activeTab={activeTab} 
