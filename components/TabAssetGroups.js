@@ -11,7 +11,7 @@ export default function TabAssetGroups({ className, activeTab, onTabChange }) {
         role="tab"
         className={`tab gap-2 ${
           activeTab === 'categories' 
-            ? 'text-success font-medium tab-active' 
+            ? 'text-green-700 dark:text-green-400 font-medium tab-active' 
             : 'text-base-content hover:text-base-content/80'
         }`}
         onClick={() => onTabChange('categories')}
@@ -27,7 +27,7 @@ export default function TabAssetGroups({ className, activeTab, onTabChange }) {
         role="tab"
         className={`tab p-6 gap-2 ${
           activeTab === 'positions' 
-            ? 'text-success font-medium tab-active' 
+            ? 'text-green-700 dark:text-green-400 font-medium tab-active' 
             : 'text-base-content hover:text-base-content/80'
         }`}
         onClick={() => onTabChange('positions')}

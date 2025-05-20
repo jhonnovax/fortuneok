@@ -53,9 +53,9 @@ export default function AssetsList({ isLoading, error, assetData, totalAssetsVal
                     )}
                     <p className="text-sm opacity-85">{formatFullCurrency(asset.valuationInPreferredCurrency || 0)}</p>
                     {asset.shares && (
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
                         <span className="mr-1">{asset.symbol}</span>
-                        <span className="badge-sm badge-ghost text-gray-600">
+                        <span className="badge-sm badge-ghost">
                           <span className='text-xs font-bold'>x</span>{formatNumber(asset.shares, 4)}
                         </span>
                       </p>

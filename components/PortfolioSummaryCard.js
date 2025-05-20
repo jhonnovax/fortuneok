@@ -20,7 +20,7 @@ export default function PortfolioSummaryCard({ isLoading, error, totalAssetsValu
     return (
       <div className="card bg-base-100 shadow-xl">
         <div className="card-body">
-          <LoadingSpinner loadingText="Loading values..." />
+          <LoadingSpinner loadingText="Loading totals..." />
         </div>
       </div>
     );
