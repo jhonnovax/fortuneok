@@ -88,7 +88,7 @@ export default function AllocationChart({ isLoading, activeTab, assetData, error
           whiteSpace: 'nowrap'
         }}
       >
-        {`${formatPercentage(percent * 100, 2)}% ${isDesktopOrUpper ? name : ''}`}
+        {`${formatPercentage(percent * 100, 2)} ${isDesktopOrUpper ? name : ''}`}
       </text>
     );
   }
