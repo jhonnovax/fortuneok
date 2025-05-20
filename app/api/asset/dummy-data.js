@@ -1,17 +1,28 @@
 export const dummyData = [
   {
     "id": 1,
-    "date": "2006-04-01T00:00:00.000Z",
+    "date": "2025-05-20T00:00:00.000Z",
     "category": "real_estate",
-    "description": "456 Oak Avenue, Austin, TX 78704",
+    "description": "3045 20th Avenue W #208, Seattle, WA 98199",
     "currentValuation": {
       "currency": "USD",
-      "amount": 500000
+      "amount": 275000
     },
-    "notes": "Primary residence, no mortgage"
+    "notes": "1-bedroom, 1-bath condo in Magnolia. Features include a cozy living space and convenient location."
   },
   {
     "id": 2,
+    "date": "2025-05-20T00:00:00.000Z",
+    "category": "real_estate",
+    "description": "1105 Spring Street #403, Seattle, WA 98104",
+    "currentValuation": {
+      "currency": "USD",
+      "amount": 250000
+    },
+    "notes": "1-bedroom, 1-bath condo in First Hill. Offers a comfortable living area and proximity to downtown amenities."
+  },
+  {
+    "id": 3,
     "date": "2020-09-01T00:00:00.000Z",
     "category": "cash",
     "description": "Checking account with Bank of America",
@@ -22,7 +33,7 @@ export const dummyData = [
     "notes": "Liquid funds"
   },
   {
-    "id": 3,
+    "id": 4,
     "date": "2010-03-10T00:00:00.000Z",
     "category": "certificates_of_deposit",
     "description": "3-year CD with Citibank",
@@ -33,7 +44,7 @@ export const dummyData = [
     "notes": "Average yield 3.8%"
   },
   {
-    "id": 4,
+    "id": 5,
     "date": "2022-05-15T00:00:00.000Z",
     "category": "savings_account",
     "description": "Savings Account at Charles Schwab",
@@ -44,7 +55,7 @@ export const dummyData = [
     "notes": "Emergency fund"
   },
   {
-    "id": 5,
+    "id": 6,
     "date": "2015-10-01T00:00:00.000Z",
     "category": "precious_metals",
     "description": "Gold and silver bullion",
@@ -55,7 +66,7 @@ export const dummyData = [
     "notes": "Held in secure vault"
   },
   {
-    "id": 6,
+    "id": 7,
     "date": "1999-04-01T00:00:00.000Z",
     "category": "etf_funds",
     "description": "Vanguard S&P 500 ETF",
@@ -64,7 +75,7 @@ export const dummyData = [
     "notes": "Held in Roth IRA"
   },
   {
-    "id": 7,
+    "id": 8,
     "date": "2004-11-01T00:00:00.000Z",
     "category": "stocks",
     "description": "Microsoft Corporation",
@@ -73,7 +84,7 @@ export const dummyData = [
     "notes": "Core long-term holding"
   },
   {
-    "id": 8,
+    "id": 9,
     "date": "2010-02-01T00:00:00.000Z",
     "category": "stocks",
     "description": "Apple Inc.",
@@ -82,7 +93,7 @@ export const dummyData = [
     "notes": "Held since 2010"
   },
   {
-    "id": 9,
+    "id": 10,
     "date": "2016-07-01T00:00:00.000Z",
     "category": "stocks",
     "description": "NVIDIA Corporation",
@@ -91,7 +102,7 @@ export const dummyData = [
     "notes": "Tech sector growth stock"
   },
   {
-    "id": 10,
+    "id": 11,
     "date": "2017-01-01T00:00:00.000Z",
     "category": "bonds",
     "description": "iShares U.S. Treasury Bond ETF",
@@ -100,7 +111,7 @@ export const dummyData = [
     "notes": "Low-risk allocation"
   },
   {
-    "id": 11,
+    "id": 12,
     "date": "2018-02-15T00:00:00.000Z",
     "category": "other",
     "description": "Private equity in green energy startup",
@@ -111,7 +122,7 @@ export const dummyData = [
     "notes": "Equity stake in Series A round"
   },
   {
-    "id": 12,
+    "id": 13,
     "date": "2008-07-01T00:00:00.000Z",
     "category": "cars",
     "description": "2008 Toyota Camry LE",
@@ -122,7 +133,7 @@ export const dummyData = [
     "notes": "Minimal resale value"
   },
   {
-    "id": 13,
+    "id": 14,
     "date": "2021-09-01T00:00:00.000Z",
     "category": "cars",
     "description": "2021 Tesla Model Y",
@@ -133,7 +144,7 @@ export const dummyData = [
     "notes": "Primary vehicle"
   },
   {
-    "id": 14,
+    "id": 15,
     "date": "2021-03-01T00:00:00.000Z",
     "category": "cryptocurrencies",
     "description": "Ethereum",
@@ -142,7 +153,7 @@ export const dummyData = [
     "notes": "Long-term crypto investment"
   },
   {
-    "id": 15,
+    "id": 16,
     "date": "2018-09-01T00:00:00.000Z",
     "category": "cryptocurrencies",
     "description": "Bitcoin",

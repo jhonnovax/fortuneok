@@ -4,7 +4,7 @@ import connectMongo from "@/libs/mongoose";
 import Asset from "@/models/Asset";
 import { authOptions } from "@/libs/next-auth";
 import { dummyData } from "./dummy-data";
-import { getStockPrices } from "@/services/stockService";
+import { getStockPrices } from "@/services/symbolService";
 import { parseCurrentValuationOfAsset } from "@/services/assetService";
 
 // GET - Retrieve all assets for the current user
