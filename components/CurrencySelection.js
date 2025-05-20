@@ -2,11 +2,18 @@ import { useState } from 'react';
 import { usePreferences } from '../contexts/PreferencesContext';
 import CurrencyCombobox from './CurrencyCombobox';
 import ClickOutside from './ClickOutside';
+import currencies from '@/public/currencies.json';
+import { BREAKPOINTS } from '@/services/breakpointService';
+import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
 
 export default function CurrencySelection({ onEditingCurrency }) {
 
   const [isEditingCurrency, setIsEditingCurrency] = useState(false);
   const { currency, setCurrency } = usePreferences();
+  const { breakpointInPixels } = useTailwindBreakpoint();
+
+  const isDesktopOrUpper = breakpointInPixels >= BREAKPOINTS.LG;
+  const selectedCurrency = currencies.find(item => item.code === currency);
 
   function handleEditingCurrency(value) {
     setIsEditingCurrency(value);
@@ -49,7 +56,7 @@ export default function CurrencySelection({ onEditingCurrency }) {
       title="Edit currency"
       onClick={() => handleEditingCurrency(true)}
     >
-      {currency}
+      {currency} {isDesktopOrUpper && selectedCurrency && `- ${selectedCurrency.label}`}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"
