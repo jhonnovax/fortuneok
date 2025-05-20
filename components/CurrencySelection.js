@@ -1,4 +1,6 @@
-import { useState } from 'react';
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
 import { usePreferences } from '../contexts/PreferencesContext';
 import CurrencyCombobox from './CurrencyCombobox';
 import ClickOutside from './ClickOutside';
@@ -15,10 +17,10 @@ export default function CurrencySelection({ onEditingCurrency }) {
   const isDesktopOrUpper = breakpointInPixels >= BREAKPOINTS.LG;
   const selectedCurrency = currencies.find(item => item.code === currency);
 
-  function handleEditingCurrency(value) {
+  const handleEditingCurrency = useCallback((value) => {
     setIsEditingCurrency(value);
     onEditingCurrency(value);
-  }
+  }, [onEditingCurrency]);
 
   function handleCurrencyChange(value) {
     if (value) {
@@ -28,6 +30,22 @@ export default function CurrencySelection({ onEditingCurrency }) {
     }
   }
 
+  // Handle Escape key to close the currency combobox
+  useEffect(() => {
+    function handleEscapeKey(event) {
+      if (event.key === 'Escape' && isEditingCurrency) {
+        handleEditingCurrency(false);
+      }
+    }
+
+    document.addEventListener('keydown', handleEscapeKey);
+
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [isEditingCurrency, handleEditingCurrency]);
+
+  // Render editing currency combobox mode
   if (isEditingCurrency) {
     return (
       <ClickOutside className="inline-flex w-[300px] max-w-full items-center" onClick={() => handleEditingCurrency(false)}>
@@ -50,6 +68,7 @@ export default function CurrencySelection({ onEditingCurrency }) {
     );
   }
 
+  // Render currency selection button
   return (
     <button 
       className="btn btn-default btn-sm gap-1 border-base-content/20"
