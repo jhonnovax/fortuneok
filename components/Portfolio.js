@@ -35,7 +35,6 @@ export default function Portfolio() {
   const updateAsset = useAssetStore((state) => state.updateAsset);
   const deleteAsset = useAssetStore((state) => state.deleteAsset);
   const assetData = getFilteredAndSortedAssets();
-
   
   const filteredAssets = useMemo(() => {
     let assets = [...assetData];
@@ -47,6 +46,10 @@ export default function Portfolio() {
     assets = assets.sort((a, b) => b.valuationInPreferredCurrency - a.valuationInPreferredCurrency);
     return assets;
   }, [assetData, activeTab]);
+
+  const showAssetActionsButton = useMemo(() => {
+    return activeTab === 'positions';
+  }, [activeTab]);
 
   const totalAssetsValue = useMemo(() => {
     return filteredAssets.reduce((total, asset) => {
@@ -176,6 +179,7 @@ export default function Portfolio() {
                   activeTab={activeTab}
                   error={error} 
                   assetData={filteredAssets} 
+                  showMoreActions={showAssetActionsButton}
                   totalAssetsValue={totalAssetsValue}
                   onEditAsset={handleEditAsset}  
                   onDeleteAsset={handleDeleteAsset}
@@ -201,6 +205,7 @@ export default function Portfolio() {
             error={error} 
             activeTab={activeTab}
             assetData={filteredAssets} 
+            showMoreActions={showAssetActionsButton}
             totalAssetsValue={totalAssetsValue}
             onEditAsset={handleEditAsset} 
             onDeleteAsset={handleDeleteAsset}

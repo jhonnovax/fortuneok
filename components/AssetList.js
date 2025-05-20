@@ -8,7 +8,7 @@ import LoadingSpinner from './LoadingSpinner';
 import { getAssetPercentage } from '@/services/assetService';
 import { COLORS } from '@/services/chartService';
 
-export default function AssetsList({ isLoading, error, assetData, totalAssetsValue, onEditAsset, onDeleteAsset }) {
+export default function AssetsList({ isLoading, error, assetData, totalAssetsValue, showMoreActions, onEditAsset, onDeleteAsset }) {
 
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, assetId: null });
 
@@ -64,11 +64,12 @@ export default function AssetsList({ isLoading, error, assetData, totalAssetsVal
                     </span>
 
                     {/* Popover */}
-                    <div className="dropdown dropdown-end">
-                      <label 
-                        tabIndex={0} 
-                        className="btn btn-ghost btn-sm btn-circle"
-                        title="More actions"
+                    {showMoreActions && (
+                      <div className="dropdown dropdown-end">
+                        <label 
+                          tabIndex={0} 
+                          className="btn btn-ghost btn-sm btn-circle"
+                          title="More actions"
                       >
                         <svg 
                           xmlns="http://www.w3.org/2000/svg" 
@@ -93,8 +94,9 @@ export default function AssetsList({ isLoading, error, assetData, totalAssetsVal
                             Remove Asset
                           </a>
                         </li>
-                      </ul>
-                    </div>
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
