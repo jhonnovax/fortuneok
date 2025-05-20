@@ -84,7 +84,7 @@ export default function AssetsList({ isLoading, error, assetData, totalAssetsVal
                           <path d="M12 8.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zM12 14.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zM12 20.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" />
                         </svg>
                       </label>
-                      <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52">
+                      <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-40">
                         <li>
                           <a onClick={() => onEditAsset(asset)}>
                             Edit Asset
