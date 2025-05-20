@@ -15,6 +15,7 @@ import { getChartColors } from '../services/chartService';
 import { BREAKPOINTS } from '@/services/breakpointService';
 import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
+
 // Custom tooltip component
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
@@ -87,7 +88,7 @@ export default function AllocationChart({ isLoading, activeTab, assetData, error
           whiteSpace: 'nowrap'
         }}
       >
-        {`${(percent * 100).toFixed(2)}% ${isDesktopOrUpper ? name : ''}`}
+        {`${formatPercentage(percent * 100, 2)}% ${isDesktopOrUpper ? name : ''}`}
       </text>
     );
   }
