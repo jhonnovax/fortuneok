@@ -6,6 +6,7 @@ const ThemeContext = createContext({
 });
 
 export const ThemeProvider = ({ children }) => {
+
   const [theme, setTheme] = useState('light');
 
   function toggleTheme() {
@@ -14,9 +15,11 @@ export const ThemeProvider = ({ children }) => {
 
   useEffect(() => {
     const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+    
     darkThemeMq.addEventListener("change", (e) => {
       setTheme(e.matches ? "dark" : "light");
     });
+
     setTheme(darkThemeMq.matches ? "dark" : "light");
   }, []);
 
@@ -25,6 +28,7 @@ export const ThemeProvider = ({ children }) => {
       {children}
     </ThemeContext.Provider>
   );
+
 };
 
 export default ThemeContext;
