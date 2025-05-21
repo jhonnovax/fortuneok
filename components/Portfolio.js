@@ -61,6 +61,10 @@ export default function Portfolio() {
     }, 0);
   }, [filteredAssets]);
 
+  const assetListTitle = useMemo(() => {
+    return `${totalNumberOfAssets} ${activeTab === 'positions' ? "Assets" : "Categories"}`;
+  }, [totalNumberOfAssets, activeTab]);
+
   async function handleNewAsset() {
     setSelectedAsset(null);
     setIsAddModalOpen(true);
@@ -166,7 +170,7 @@ export default function Portfolio() {
 
                 {!isLoading && (
                   <div className="flex justify-between items-center !mt-0">
-                    <h2 className="italic font-semibold">{totalNumberOfAssets} Assets</h2>
+                    <h2 className="italic font-semibold">{assetListTitle}</h2>
                     <button 
                       className="btn btn-primary flex items-center gap-2 lg:hidden ml-auto"
                       onClick={handleNewAsset}
@@ -199,7 +203,7 @@ export default function Portfolio() {
         </main>
 
         {/* Desktop sidebar */}
-        <RightSidebar totalNumberOfAssets={totalNumberOfAssets} onAddAsset={handleNewAsset}>
+        <RightSidebar title={assetListTitle} onAddAsset={handleNewAsset}>
           <TabAssetGroups 
             className="pt-4 mb-4 sticky top-0 bg-base-100 z-10" 
             activeTab={activeTab} 
