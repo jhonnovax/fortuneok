@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { ASSET_CATEGORIES } from "@/services/assetService";
 import toJSON from "./plugins/toJSON";
 
 // ASSET SCHEMA
@@ -16,7 +17,7 @@ const assetSchema = mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: ["real_estate", "certificates_of_deposit", "savings_account", "precious_metals", "cash", "p2p_loans", "stocks", "bonds", "cryptocurrencies", "etf_funds", "option", "futures", "other"],
+      enum: ASSET_CATEGORIES.map((category) => category.value),
     },
     description: {
       type: String,
