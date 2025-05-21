@@ -134,72 +134,71 @@ export default function Portfolio() {
 
       {/* Main content */}
       <div className="flex pt-16 min-h-screen">
-        <main className="flex-1 lg:mr-[420px] p-4 md:p-6">
-          <div className="space-y-4 md:space-y-6">
+        <main className="flex-1 lg:mr-[420px] p-4 md:p-6 space-y-4 md:space-y-6">
 
-            <div className="flex flex-col items-center sr-only">
-              <h1>{appName} | FortuneOK</h1>
-              <p>{appDescription}</p>
-            </div>
-
-            {/* Portfolio Summary Card */}
-            <PortfolioSummaryCard 
-              isLoading={isLoading}
-              error={error}
-              totalAssetsValue={totalAssetsValue}
-            />
-
-            {/* Tabs Asset Groups */}
-            <TabAssetGroups 
-              className={`lg:hidden ${isLoading ? 'hidden' : ''}`} 
-              activeTab={activeTab} 
-              onTabChange={setActiveTab} 
-            />
-
-            {/* Render Allocation Chart */}
-            <AllocationChart 
-              isLoading={isLoading}
-              activeTab={activeTab}
-              assetData={filteredAssets} 
-              error={error}
-            />
-
-            {/* Mobile Assets List */}
-            <div className="card bg-base-100 shadow-xl lg:hidden">
-              <div className="card-body p-4">
-
-                {!isLoading && (
-                  <div className="flex justify-between items-center !mt-0">
-                    <h2 className="italic font-semibold">{assetListTitle}</h2>
-                    <button 
-                      className="btn btn-primary flex items-center gap-2 lg:hidden ml-auto"
-                      onClick={handleNewAsset}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                      </svg>
-                      <span>Add Asset</span>
-                    </button>
-                  </div>
-                )}
-
-                <AssetList 
-                  isLoading={isLoading} 
-                  activeTab={activeTab}
-                  error={error} 
-                  assetData={filteredAssets} 
-                  showMoreActions={showAssetActionsButton}
-                  totalAssetsValue={totalAssetsValue}
-                  onEditAsset={handleEditAsset}  
-                  onDeleteAsset={handleDeleteAsset}
-                />
-
-              </div>
-            </div>
-
-            {/* Footer */}  
-            <Footer />
+          <div className="flex flex-col items-center sr-only">
+            <h1>{appName} | FortuneOK</h1>
+            <p>{appDescription}</p>
           </div>
+
+          {/* Portfolio Summary Card */}
+          <PortfolioSummaryCard 
+            isLoading={isLoading}
+            error={error}
+            totalAssetsValue={totalAssetsValue}
+          />
+
+          {/* Tabs Asset Groups */}
+          <TabAssetGroups 
+            className={`lg:hidden ${isLoading ? 'hidden' : ''}`} 
+            activeTab={activeTab} 
+            onTabChange={setActiveTab} 
+          />
+
+          {/* Render Allocation Chart */}
+          <AllocationChart 
+            isLoading={isLoading}
+            activeTab={activeTab}
+            assetData={filteredAssets} 
+            error={error}
+          />
+
+          {/* Mobile Assets List */}
+          <div className="card bg-base-100 shadow-xl lg:hidden">
+            <div className="card-body p-4">
+
+              {!isLoading && (
+                <div className="flex justify-between items-center !mt-0">
+                  <h2 className="italic font-semibold">{assetListTitle}</h2>
+                  <button 
+                    className="btn btn-primary flex items-center gap-2 lg:hidden ml-auto"
+                    onClick={handleNewAsset}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                    <span>Add Asset</span>
+                  </button>
+                </div>
+              )}
+
+              <AssetList 
+                isLoading={isLoading} 
+                activeTab={activeTab}
+                error={error} 
+                assetData={filteredAssets} 
+                showMoreActions={showAssetActionsButton}
+                totalAssetsValue={totalAssetsValue}
+                onEditAsset={handleEditAsset}  
+                onDeleteAsset={handleDeleteAsset}
+              />
+
+            </div>
+          </div>
+
+          {/* Footer */}  
+          <Footer />
+          
         </main>
 
         {/* Desktop sidebar */}

@@ -15,32 +15,19 @@ export default function PortfolioSummaryCard({ isLoading, error, totalAssetsValu
   const { breakpointInPixels } = useTailwindBreakpoint();
   const isDesktopOrUpper = breakpointInPixels >= BREAKPOINTS.LG;
   const showTotalValue = !isEditingCurrency || isDesktopOrUpper;
+  let summaryUI = null;
 
   if (isLoading) {
-    return (
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body">
-          <LoadingSpinner loadingText="Loading totals..." />
-        </div>
-      </div>
+    summaryUI = (
+      <LoadingSpinner loadingText="Loading totals..." />
     );
-  }
-
-  if (error) {
-    return (
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body">
-          <ErrorLoadingData error={error} />
-        </div>
-      </div>
+  } else if (error) {
+    summaryUI = (
+      <ErrorLoadingData error={error} />
     );
-  }
-
-  return (
-    <div className="card bg-base-100 shadow-xl">
-      <div className="card-body">
-
-        <div className="flex items-center gap-2 md:gap-4">
+  } else {
+    summaryUI = (
+      <div className="flex items-center gap-2 md:gap-4">
 
           {/* Portfolio Total Value */}
           {showTotalValue && (
@@ -78,8 +65,16 @@ export default function PortfolioSummaryCard({ isLoading, error, totalAssetsValu
           )}
 
         </div>
+    );
+  }
 
+  return (
+    <div className="card bg-base-100 shadow-xl !mt-0">
+
+      <div className="card-body">
+        {summaryUI}
       </div>
+
     </div>
   );
 
