@@ -123,8 +123,8 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
   }, [asset]);
 
   // Helper function to render label with required asterisk
-  const renderLabel = (text, required = true, srOnly = false) => (
-    <label className={`label ${srOnly ? 'sr-only' : ''}`}>
+  const renderLabel = (text, required = true) => (
+    <label className="label">
       <span className="label-text">
         {text} {required && <span className="text-error">*</span>}
       </span>
@@ -216,10 +216,6 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
 
             {showCurrentValuation && (
               <>
-                <div className={`divider md:col-span-2 ${(errors.currentValuationCurrency || errors.currentValuation) ? 'divider-error text-error' : ''}`}>
-                  {DEPOSIT_CATEGORIES.includes(form.category) ? 'Deposit Information' : 'Current Valuation'}
-                </div>
-
                 {/* Purchase Price Currency */}
                 <div className="form-control">
                   {renderLabel('Currency')}
@@ -233,7 +229,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
 
                 {/* Purchase Price */}
                 <div className="form-control">
-                  {renderLabel(DEPOSIT_CATEGORIES.includes(form.category) ? 'Deposit Amount' : 'Purchase Price')}
+                  {renderLabel(DEPOSIT_CATEGORIES.includes(form.category) ? 'Deposit Amount' : 'Valuation Price')}
                   <CurrencyInput
                     id="price-input"
                     name="price"
@@ -255,11 +251,8 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
             {/* Shares */}
             {showShares && (
                 <>
-                  <div className={`divider md:col-span-2 ${errors.shares ? 'divider-error text-error' : ''}`}>
-                    Shares
-                  </div>
                   <div className="form-control md:col-span-2">
-                    {renderLabel('Shares', true, true)}
+                    {renderLabel('Shares')}
                     <CurrencyInput
                       id="shares-input"
                       name="shares"
@@ -278,14 +271,9 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                 </>
             )}
 
-            <div className='divider md:col-span-2'>
-              Notes
-            </div>
-
-
             {/* Notes */}
             <div className="form-control md:col-span-2">
-              {renderLabel('Notes', false, true)}
+              {renderLabel('Notes')}
               <textarea 
                 className="textarea textarea-bordered w-full"
                 value={form.notes}
