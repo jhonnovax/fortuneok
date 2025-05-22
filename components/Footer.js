@@ -6,7 +6,7 @@ import { handlePayment, PLAN_BASIC } from "@/services/paymentService";
 
 const Footer = () => {
   return (
-    <footer className="bg-base-200 border-t border-base-content/10 max-w-7xl mx-auto pt-6">
+    <footer className="bg-base-200 border-t border-base-content/10 max-w-7xl mx-auto pt-6 md:pt-8">
 
       <div className="mx-auto text-center">
         <p className="flex flex-col gap-2 md:gap-4 md:flex-row justify-center items-center text-sm text-base-content/80">
