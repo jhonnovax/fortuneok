@@ -48,7 +48,7 @@ export default function CurrencySelection({ onEditingCurrency }) {
   // Render editing currency combobox mode
   if (isEditingCurrency) {
     return (
-      <ClickOutside className="inline-flex w-[300px] max-w-full items-center" onClick={() => handleEditingCurrency(false)}>
+      <ClickOutside className="inline-flex w-full 2xl:w-[300px] items-center" onClick={() => handleEditingCurrency(false)}>
         <CurrencyCombobox
           autoFocus={true}
           value={currency}

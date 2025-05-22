@@ -71,7 +71,7 @@ export default function PortfolioSummaryCard({ isLoading, error, totalAssetsValu
   return (
     <div className="card bg-base-100 shadow-xl !mt-0">
 
-      <div className="card-body">
+      <div className="card-body p-6 lg:p-8">
         {summaryUI}
       </div>
 
