@@ -48,14 +48,14 @@ export default function CurrencySelection({ onEditingCurrency }) {
   // Render editing currency combobox mode
   if (isEditingCurrency) {
     return (
-      <ClickOutside className="inline-flex w-full 2xl:w-[300px] items-center" onClick={() => handleEditingCurrency(false)}>
+      <ClickOutside className="inline-flex w-full 2xl:w-[400px] items-center" onClick={() => handleEditingCurrency(false)}>
         <CurrencyCombobox
           autoFocus={true}
           value={currency}
           onChange={handleCurrencyChange}
         />
         <button 
-          className="btn btn-default btn-sm border-base-content/20 ml-2" 
+          className="btn btn-default btn-sm lg:btn-md border-base-content/20 ml-2" 
           title="Go back"
           onClick={() => handleEditingCurrency(false)}
         >
@@ -71,7 +71,7 @@ export default function CurrencySelection({ onEditingCurrency }) {
   // Render currency selection button
   return (
     <button 
-      className="btn btn-default btn-sm gap-1 border-base-content/20"
+      className="btn btn-default btn-sm lg:btn-md gap-1 border-base-content/20"
       title="Edit currency"
       onClick={() => handleEditingCurrency(true)}
     >
