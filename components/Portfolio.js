@@ -108,6 +108,29 @@ export default function Portfolio() {
     }
   }
 
+  // TabAssetGroups component
+  const TabAssetGroupsComponent = ({ className }) => (
+    <TabAssetGroups 
+      className={className} 
+      activeTab={activeTab} 
+      onTabChange={setActiveTab} 
+    /> 
+  );
+
+  // AssetList component
+  const AssetListComponent = () => (
+    <AssetList 
+      isLoading={isLoading} 
+      error={error} 
+      activeTab={activeTab}
+      assetData={filteredAssets} 
+      showMoreActions={showAssetActionsButton}
+      totalAssetsValue={totalAssetsValue}
+      onEditAsset={handleEditAsset} 
+      onDeleteAsset={handleDeleteAsset}
+    />
+  );
+
   // Fetch assets
   useEffect(() => {
     setIsLoading(true);
@@ -149,11 +172,7 @@ export default function Portfolio() {
           />
 
           {/* Tabs Asset Groups */}
-          <TabAssetGroups 
-            className={`lg:hidden ${isLoading ? 'hidden' : ''}`} 
-            activeTab={activeTab} 
-            onTabChange={setActiveTab} 
-          />
+          <TabAssetGroupsComponent className={`lg:hidden ${isLoading ? 'hidden' : ''}`} />
 
           {/* Render Allocation Chart */}
           <AllocationChart 
@@ -182,17 +201,7 @@ export default function Portfolio() {
                 </div>
               )}
 
-              <AssetList 
-                isLoading={isLoading} 
-                activeTab={activeTab}
-                error={error} 
-                assetData={filteredAssets} 
-                showMoreActions={showAssetActionsButton}
-                totalAssetsValue={totalAssetsValue}
-                onEditAsset={handleEditAsset}  
-                onDeleteAsset={handleDeleteAsset}
-              />
-
+              <AssetListComponent />
             </div>
           </div>
 
@@ -203,21 +212,8 @@ export default function Portfolio() {
 
         {/* Desktop sidebar */}
         <RightSidebar title={assetListTitle} onAddAsset={handleNewAsset}>
-          <TabAssetGroups 
-            className="pt-4 mb-4 sticky top-0 bg-base-100 z-10" 
-            activeTab={activeTab} 
-            onTabChange={setActiveTab} 
-          />
-          <AssetList 
-            isLoading={isLoading} 
-            error={error} 
-            activeTab={activeTab}
-            assetData={filteredAssets} 
-            showMoreActions={showAssetActionsButton}
-            totalAssetsValue={totalAssetsValue}
-            onEditAsset={handleEditAsset} 
-            onDeleteAsset={handleDeleteAsset}
-          />
+          <TabAssetGroupsComponent className="pt-4 mb-4 sticky top-0 bg-base-100 z-10" />
+          <AssetListComponent />
         </RightSidebar>
 
         {/* Add Asset Modal */}
