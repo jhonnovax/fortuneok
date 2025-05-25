@@ -16,8 +16,8 @@ const Footer = () => {
           <Link href="/tos" className="link link-hover">
             📜 Terms of services
           </Link>
-          <Link href="#" className="link link-hover order-first md:order-none" onClick={() => handlePayment(PLAN_BASIC)}>
-            ❤️ Create my portfolio
+          <Link href="mailto:support@fortuneok.com" className="link link-hover order-first md:order-none" target="_blank">
+            📧 Support
           </Link>
         </p>
 

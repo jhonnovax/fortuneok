@@ -134,7 +134,7 @@ export default function Portfolio() {
 
       {/* Main content */}
       <div className="flex pt-16 min-h-screen">
-        <main className="flex-1 lg:mr-[420px] p-4 md:p-8 space-y-6 md:space-y-8">
+        <main className="flex-1 lg:mr-[420px] p-6 md:p-8 space-y-6 md:space-y-8">
 
           <div className="flex flex-col items-center sr-only">
             <h1>{appName} | FortuneOK</h1>
