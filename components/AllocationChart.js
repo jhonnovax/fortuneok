@@ -156,7 +156,7 @@ export default function AllocationChart({ isLoading, activeTab, assetData, error
 
   return (
     <div className="card bg-base-100 shadow-xl">
-      <div className="card-body p-4 h-[400px] flex items-center justify-center">
+      <div className="card-body p-4 h-[300px] lg:h-[400px] flex items-center justify-center">
 
         {chartUI}
 
