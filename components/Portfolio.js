@@ -140,7 +140,7 @@ export default function Portfolio() {
         setError('Failed to load data');
       })
       .finally(() => {
-        /* setIsLoading(false); */
+        setIsLoading(false);
       });
   }, [getAssets]);
 
