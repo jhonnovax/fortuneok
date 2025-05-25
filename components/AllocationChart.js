@@ -10,7 +10,6 @@ import {
 import { useMemo } from 'react';
 import { formatCurrency, formatPercentage } from '../services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
-import LoadingSpinner from './LoadingSpinner';
 import { getChartColors } from '../services/chartService';
 import { BREAKPOINTS } from '@/services/breakpointService';
 import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
@@ -89,7 +88,16 @@ export default function AllocationChart({ isLoading, activeTab, assetData, error
 
   if (isLoading) {
     chartUI = (
-      <LoadingSpinner loadingText="Loading chart..." />
+      <div className="flex w-full flex-col gap-4">
+         <div className="flex items-center justify-center mx-auto gap-4">
+          <div className="skeleton h-48 w-48 shrink-0 rounded-full"></div>
+          <div className="flex w-full flex-col gap-4 hidden md:flex">
+            <div className="skeleton h-4 w-20"></div>
+            <div className="skeleton h-4 w-32"></div>
+            <div className="skeleton h-4 w-32"></div>
+          </div>
+        </div>
+      </div>
     );
   } else if (error) {
     chartUI = (

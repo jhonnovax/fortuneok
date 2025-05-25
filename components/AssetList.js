@@ -4,7 +4,6 @@ import { useState } from 'react';
 import DeleteAssetModal from './DeleteAssetModal';
 import { formatDateToString, formatFullCurrency, formatNumber, formatPercentage } from '@/services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
-import LoadingSpinner from './LoadingSpinner';
 import { getAssetPercentage } from '@/services/assetService';
 import { getChartColors } from '@/services/chartService';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
@@ -18,7 +17,17 @@ export default function AssetsList({ isLoading, error, assetData, totalAssetsVal
   let assetListUI = null;
 
   if (isLoading) {
-    assetListUI = <LoadingSpinner className="py-8" loadingText="Loading assets..." />;
+    assetListUI = (
+      <div className="flex w-full flex-col gap-4">
+        {[...Array(3)].map((item, index) => (
+          <div key={index} className="flex flex-col gap-4 py-4">
+            <div className="skeleton h-4 w-28"></div>
+            <div className="skeleton h-4 w-29"></div>
+            <div className="skeleton h-4 w-full"></div>
+          </div>
+        ))}
+      </div>
+    );
   }
   else if (error) {
     assetListUI = <ErrorLoadingData error={error} />;

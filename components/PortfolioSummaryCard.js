@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { formatFullCurrency, maskValue } from '../services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
-import LoadingSpinner from './LoadingSpinner';
 import CurrencySelection from './CurrencySelection';
 import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
 import { BREAKPOINTS } from '@/services/breakpointService';
@@ -19,7 +18,9 @@ export default function PortfolioSummaryCard({ isLoading, error, totalAssetsValu
 
   if (isLoading) {
     summaryUI = (
-      <LoadingSpinner loadingText="Loading totals..." />
+      <div className="flex w-full flex-col gap-4">
+        <div className="skeleton h-12 w-full"></div>
+      </div>
     );
   } else if (error) {
     summaryUI = (
