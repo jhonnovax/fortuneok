@@ -51,19 +51,8 @@ export default function AllocationChart({ isLoading, activeTab, assetData, error
       fill: chartColors[index % chartColors.length]
     }));
   }, [assetData, chartColors]);
-  
-  if (isLoading) {
-    return (
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body">
-          <div className="space-y-6"> 
-            <LoadingSpinner loadingText="Loading chart..." />
-          </div>
-        </div>
-      </div>
-    );
-  }
 
+  // Render pie custom label
   function renderPieCustomLabel({ cx, cy, midAngle, outerRadius, percent, index, name }){
     const RADIAN = Math.PI / 180;
     const radius = outerRadius + 25; // Add padding
@@ -95,38 +84,26 @@ export default function AllocationChart({ isLoading, activeTab, assetData, error
     );
   }
 
-  if (error) {
-    return (
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body">
-          <div className="space-y-6"> 
-            <ErrorLoadingData error={error} />
-          </div>
-        </div>
-      </div>
+  // Chart UI based on the state of the component
+  let chartUI = null;
+
+  if (isLoading) {
+    chartUI = (
+      <LoadingSpinner loadingText="Loading chart..." />
     );
-  }
-
-  if (assetData.length === 0) {
-    return (
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body">
-          <div className="space-y-6"> 
-            <div className="w-full h-[300px] flex items-center justify-center">
-              <p className="text-center text-base-content/60">
-                No allocation data available. Add assets to see your portfolio allocation.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+  } else if (error) {
+    chartUI = (
+      <ErrorLoadingData error={error} />
     );
-  }
-
-  return (
-    <div className="card bg-base-100 shadow-xl">
-      <div className="card-body p-4 h-[400px]">
-
+  } else if (assetData.length === 0) {
+    chartUI = (
+      <p className="text-center text-base-content/60">
+        No allocation data available. Add assets to see your portfolio allocation.
+      </p>
+    );
+  } else {
+    chartUI = (
+      <>
         {/* Heading */}
         <h3 className="text-lg font-semibold text-center flex items-center justify-center gap-2 sr-only">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -165,6 +142,15 @@ export default function AllocationChart({ isLoading, activeTab, assetData, error
             </PieChart>
           </ResponsiveContainer>
         )}
+      </>
+    );
+  }
+
+  return (
+    <div className="card bg-base-100 shadow-xl">
+      <div className="card-body p-4 h-[400px] flex items-center justify-center">
+
+        {chartUI}
 
       </div>
     </div>
