@@ -123,9 +123,9 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
   }, [asset]);
 
   // Helper function to render label with required asterisk
-  const renderLabel = (text, required = true) => (
+  const renderLabel = (text, required = true, error = false) => (
     <label className="label">
-      <span className="label-text">
+      <span className={`label-text ${error ? 'text-error' : ''}`}>
         {text} {required && <span className="text-error">*</span>}
       </span>
     </label>
@@ -158,7 +158,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Date */}
             <div className="form-control md:col-span-2">
-              {renderLabel('Date')}
+              {renderLabel('Date', true, errors.date)}
               <input 
                 type="date"
                 className={`input input-bordered w-full ${errors.date ? 'input-error' : ''}`}
@@ -172,7 +172,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
 
             {/* Category */}
             <div className="form-control">
-              {renderLabel('Category')}
+              {renderLabel('Category', true, errors.category)}
               <select 
                 className={`select select-bordered w-full ${errors.category ? 'select-error' : ''}`}
                 value={form.category}
@@ -191,7 +191,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
             {/* Description or Symbol based on category */}
             {showDescription ? (
               <div className="form-control">
-                {renderLabel('Description')}
+                {renderLabel('Description', true, errors.description)}
                 <input 
                   type="text"
                   className={`input input-bordered w-full ${errors.description ? 'input-error' : ''}`}
@@ -204,7 +204,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
               </div>
             ) : (
               <div className="form-control">
-                {renderLabel('Symbol')}
+                {renderLabel('Symbol', true, errors.symbol)}
                 <SymbolCombobox
                   value={form.symbol}
                   onChange={(selection) => setForm({ ...form, symbol: selection.symbol, description: selection.description })}
@@ -220,7 +220,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
               <>
                 {/* Purchase Price Currency */}
                 <div className="form-control">
-                  {renderLabel('Currency')}
+                  {renderLabel('Currency', true, errors.currentValuationCurrency)}
                   <CurrencyCombobox
                     value={form.currentValuation?.currency}
                     onChange={(value) => setForm({ ...form, currentValuation: { ...form.currentValuation, currency: value } })}
@@ -231,7 +231,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
 
                 {/* Purchase Price */}
                 <div className="form-control">
-                  {renderLabel(DEPOSIT_CATEGORIES.includes(form.category) ? 'Deposit Amount' : 'Valuation Price')}
+                  {renderLabel(DEPOSIT_CATEGORIES.includes(form.category) ? 'Deposit Amount' : 'Valuation Price', true, errors.currentValuation)}
                   <CurrencyInput
                     id="price-input"
                     name="price"
@@ -254,7 +254,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
             {showShares && (
                 <>
                   <div className="form-control md:col-span-2">
-                    {renderLabel('Shares')}
+                    {renderLabel('Shares', true, errors.shares)}
                     <CurrencyInput
                       id="shares-input"
                       name="shares"
@@ -275,7 +275,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
 
             {/* Notes */}
             <div className="form-control md:col-span-2">
-              {renderLabel('Notes')}
+              {renderLabel('Notes', false, false)}
               <textarea 
                 className="textarea textarea-bordered w-full"
                 value={form.notes}
