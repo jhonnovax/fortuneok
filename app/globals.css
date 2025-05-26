@@ -5,6 +5,7 @@
 html,
 body {
   scroll-behavior: smooth !important;
+  scrollbar-gutter: auto !important; /* This is needed since DaisyUI uses scrollbar-gutter: stable; when modal is open */
 }
 
 /* Custom progress bar animation and style */
