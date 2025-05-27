@@ -1,21 +1,19 @@
 import { create } from 'zustand';
 import { parseDataFromAPI } from '@/services/assetService';
-import { filterAssets, sortAssetList } from '@/services/assetService';
+import { sortAssetList } from '@/services/assetService';
 import { useCurrencyRatesStore } from './currencyRatesStore';
 
 export const useAssetStore = create((set, get) => ({
   assets: [],
   selectedAssetIds: [],
-  filters: { cutoffTimeFrame: 'all' },
   sortBy: { field: 'total', type: 'desc' },
 
   getFilteredAndSortedAssets: () => {
-    const { assets, selectedAssetIds, filters, sortBy } = get();
+    const { assets, selectedAssetIds, sortBy } = get();
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const currencyRates = useCurrencyRatesStore(state => state.currencyRates);
     let filteredAndSortedAssets = assets.map((asset) => parseDataFromAPI(asset, selectedAssetIds, currencyRates));
 
-    filteredAndSortedAssets = filterAssets(filteredAndSortedAssets, filters);
     filteredAndSortedAssets = sortAssetList(filteredAndSortedAssets, sortBy);
 
     return filteredAndSortedAssets;
@@ -74,15 +72,6 @@ export const useAssetStore = create((set, get) => ({
   toggleAsset: (selectedAssetIds) => set(() => ({
     selectedAssetIds: selectedAssetIds
   })),
-
-  filterByTimeFrame: (cutoffTimeFrame) => {
-    set({
-      filters: {
-        ...get().filters,
-        cutoffTimeFrame
-      },
-    });
-  },
 
   sortAssets: (sortBy) => {
     set({

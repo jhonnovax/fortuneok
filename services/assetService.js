@@ -1,23 +1,5 @@
 import { getLocalDateFromUTCString } from "@/services/dateService";
 
-
-function convertFromBaseCurrency(baseCurrency = 'USD', amount = 0, rates = {}) {
-  const amountInBaseCurrency = amount / (rates[baseCurrency.toLowerCase()] || 1);
-
-  return amountInBaseCurrency;
-}
-
-export const getAssetPercentage = (asset, totalAssetsValue) => {
-  const assetValue = asset.valuationInPreferredCurrency || 0;
-  return (assetValue / totalAssetsValue) * 100;
-};
-
-export function filterAssets(data) {
-  let filteredData = [...data];
-
-  return filteredData;
-}
-
 export const ASSET_CATEGORIES = [
   { value: 'real_estate', label: '🏠 Real Estate' },
   { value: 'cars', label: '🚗 Cars' },
@@ -34,6 +16,17 @@ export const ASSET_CATEGORIES = [
   { value: 'futures', label: '📈 Futures' },
   { value: 'other', label: '🔷 Other custom assets' }
 ];
+
+export function convertFromBaseCurrency(baseCurrency = 'USD', amount = 0, rates = {}) {
+  const amountInBaseCurrency = amount / (rates[baseCurrency.toLowerCase()] || 1);
+
+  return amountInBaseCurrency;
+}
+
+export const getAssetPercentage = (asset, totalAssetsValue) => {
+  const assetValue = asset.valuationInPreferredCurrency || 0;
+  return (assetValue / totalAssetsValue) * 100;
+};
 
 export function sortAssetList(data, sortBy) {
   const sortedData = data.toSorted((a, b) => {

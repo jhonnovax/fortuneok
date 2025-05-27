@@ -6,7 +6,7 @@ import RightSidebar from "./RightSidebar";
 import AssetList from "./AssetList";
 import AllocationChart from "./AllocationChart";
 import AssetEditionModal from "./AssetEditionModal";
-import PortfolioSummaryCard from "./PortfolioSummaryCard";
+import SummaryCard from "./SummaryCard";
 import { useAssetStore } from '@/store/assetStore';
 import { useCurrencyRatesStore } from '@/store/currencyRatesStore';
 import config from '@/config';
@@ -131,6 +131,11 @@ export default function Portfolio() {
     />
   );
 
+  // Fetch currency rates
+  useEffect(() => {
+    getCurrencyRates(baseCurrency);
+  }, [getCurrencyRates, baseCurrency]);
+
   // Fetch assets
   useEffect(() => {
     setIsLoading(true);
@@ -143,11 +148,6 @@ export default function Portfolio() {
         setIsLoading(false);
       });
   }, [getAssets]);
-
-  // Fetch currency rates
-  useEffect(() => {
-    getCurrencyRates(baseCurrency);
-  }, [getCurrencyRates, baseCurrency]);
   
   return (
     <div className="min-h-screen flex flex-col bg-base-200">
@@ -165,7 +165,7 @@ export default function Portfolio() {
           </div>
 
           {/* Portfolio Summary Card */}
-          <PortfolioSummaryCard 
+          <SummaryCard 
             isLoading={isLoading}
             error={error}
             totalAssetsValue={totalAssetsValue}

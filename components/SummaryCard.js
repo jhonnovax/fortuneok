@@ -7,7 +7,7 @@ import CurrencySelection from './CurrencySelection';
 import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
 import { BREAKPOINTS } from '@/services/breakpointService';
 
-export default function PortfolioSummaryCard({ isLoading, error, totalAssetsValue }) {
+export default function SummaryCard({ isLoading, error, totalAssetsValue }) {
   
   const [isValueVisible, setIsValueVisible] = useState(true);
   const [isEditingCurrency, setIsEditingCurrency] = useState(false);
