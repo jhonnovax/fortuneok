@@ -17,7 +17,7 @@ import { parseAssetCategoryFromAssetList } from '@/services/assetService';
 
 export default function Portfolio() {
 
-  const { appName, appDescription } = config;
+  const { appName, appShortDescription, appDescription } = config;
 
   const [isSavingAsset, setIsSavingAsset] = useState(false);
   const [submitAssetError, setSubmitAssetError] = useState(null);
@@ -160,7 +160,7 @@ export default function Portfolio() {
         <main className="flex-1 lg:mr-[420px] p-6 md:p-8 space-y-6 md:space-y-8">
 
           <div className="flex flex-col items-center sr-only">
-            <h1>{appName} | FortuneOK</h1>
+            <h1>{appShortDescription} | {appName}</h1>
             <p>{appDescription}</p>
           </div>
 

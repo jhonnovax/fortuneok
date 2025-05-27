@@ -1,17 +1,15 @@
-import { daisyui } from "@/tailwind.config";
-
 const config = {
   // REQUIRED
-  appName: "Quick Portfolio Tracker – Simple Asset Tracking App",
-  // REQUIRED: a short description of your app for SEO tags (can be overwritten)
+  appName: "FortuneOK",
+  // Short description used for title and heading
+  appShortDescription: "Quick Portfolio Tracker – Simple Asset Tracking App",
+  // Long description of your app for SEO tags (can be overwritten)
   appDescription: "Manage your assets effortlessly! Track everything in one place, no more spreadsheets or scattered records. Stay organized, make smarter decisions, and grow your wealth!",
-  // REQUIRED (no https://, not trialing slash at the end, just the naked domain)
+  // (no https://, not trialing slash at the end, just the naked domain)
   domainName: "fortuneok.com",
-  crisp: {
-    // Crisp website ID. IF YOU DON'T USE CRISP: just remove this => Then add a support email in this config file (resend.supportEmail) otherwise customer support won't work.
-    id: "",
-    // Hide Crisp by default, except on route "/". Crisp is toggled with <ButtonSupport/>. If you want to show Crisp on every routes, just remove this below
-    onlyShowOnRoutes: ["/"],
+  ownership: {
+    name: "Jhon Nova",
+    username: "jhonnovax",
   },
   stripe: {
     // Create multiple plans in your Stripe dashboard, then add them here. You can add as many plans as you want, just make sure to add the priceId
