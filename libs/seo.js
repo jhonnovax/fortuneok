@@ -14,7 +14,7 @@ export const getSEOTags = ({
 } = {}) => {
   return {
     // up to 50 characters (what does your app do for the user?) > your main should be here
-    title: title || `${config.appShortDescription} | ${config.appName}`,
+    title: title || config.appName,
     // up to 160 characters (how does your app help the user?)
     description: description || config.appDescription,
     // some keywords separated by commas. by default it will be your app name
@@ -32,8 +32,15 @@ export const getSEOTags = ({
       description: openGraph?.description || config.appDescription,
       url: openGraph?.url || `https://${config.domainName}/`,
       siteName: openGraph?.title || config.appName,
+      // If you add an opengraph-image.(jpg|jpeg|png|gif) image to the /app folder, you don't need the code below
+      // images: [
+      //   {
+      //     url: `https://${config.domainName}/icon.png`,
+      //     width: 1200,
+      //     height: 660,
+      //   },
+      // ],
       locale: "en_US",
-      logo: `https://${config.domainName}/icon.png`,
       type: "website",
     },
 
