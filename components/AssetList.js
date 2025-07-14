@@ -66,11 +66,6 @@ export default function AssetsList({ isLoading, error, assetData, totalAssetsVal
                       )}
                     </div>
                     <div className="flex items-center gap-1">
-                      {/* Asset Percentage */}
-                      <span className="text-xs opacity-85 font-bold">
-                        {formatPercentage(getAssetPercentage(asset, totalAssetsValue), 2)}
-                      </span>
-
                       {/* Popover */}
                       {showMoreActions && (
                         <div className="dropdown dropdown-end">
@@ -112,13 +107,20 @@ export default function AssetsList({ isLoading, error, assetData, totalAssetsVal
             </div>
 
             {/* Progress Bar */}
-            <progress 
-              className="progress w-100 custom-progress"
-              value={getAssetPercentage(asset, totalAssetsValue)} 
-              max="100"
-              style={{ "--progress‐fill": chartColors[assetIndex % chartColors.length] }}
-            >
-            </progress>
+            <div className="flex items-center gap-2">  
+              {/* Progress Bar */}
+              <progress 
+                className="progress w-100 custom-progress"
+                value={getAssetPercentage(asset, totalAssetsValue)} 
+                max="100"
+                style={{ "--progress‐fill": chartColors[assetIndex % chartColors.length] }}
+              >
+              </progress>
+              {/* Asset Percentage */}
+              <div className="flex items-center gap-2 text-xs font-bold" style={{ color: chartColors[assetIndex % chartColors.length] }}>
+                {formatPercentage(getAssetPercentage(asset, totalAssetsValue), 2)}
+              </div>
+            </div>
           </div>
         ))}
       </>
