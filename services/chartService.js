@@ -13,10 +13,10 @@ const CHART_COLORS_LIGHT_BG = [
 
 const CHART_COLORS_DARK_BG = [
   '#4cc9f0', // Light Blue
-  '#f72585', // Pink
+  '#ff3cf2', // Pink
   '#b5e48c', // Light Green
   '#ffd166', // Light Orange
-  '#9d4edd', // Violet
+  '#d96aff', // Violet
   '#f9844a', // Coral
   '#06d6a0', // Mint
   '#ffb4a2', // Soft Red
