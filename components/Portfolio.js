@@ -211,7 +211,7 @@ export default function Portfolio() {
         </main>
 
         {/* Desktop sidebar */}
-        <RightSidebar title={assetListTitle} onAddAsset={handleNewAsset}>
+        <RightSidebar isLoading={isLoading} title={assetListTitle} onAddAsset={handleNewAsset}>
           <TabAssetGroupsComponent className="pt-4 mb-4 sticky top-0 bg-base-100 z-10" />
           <AssetListComponent />
         </RightSidebar>
