@@ -2,12 +2,12 @@ import Image from "next/image";
 import logo from "@/app/icon.png";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { handlePayment, PLAN_BASIC } from "@/services/paymentService";
 import ButtonAccount from "@/components/ButtonAccount";
 import ButtonSignin from "@/components/ButtonSignin";
+
 export default function TopNavbar() {
 
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     const ctaButton = session 
         ? <ButtonAccount /> 
         /* : <button className="btn btn-primary btn-sm" onClick={() => handlePayment(PLAN_BASIC)}>Get Started</button>;   */
@@ -30,7 +30,10 @@ export default function TopNavbar() {
           </Link>
 
           <div className="flex items-center gap-2">
-            {ctaButton}
+            {status === "loading" 
+              ? (<div className="skeleton h-8 w-28"></div>) 
+              : ctaButton
+            }
           </div>
           
         </div>

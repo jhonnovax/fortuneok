@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import Header from "./Header";
+import TopNavbar from "./TopNavbar";
 import RightSidebar from "./RightSidebar";
 import AssetList from "./AssetList";
 import AllocationChart from "./AllocationChart";
@@ -153,7 +153,7 @@ export default function Portfolio() {
     <div className="min-h-screen flex flex-col bg-base-200">
 
       {/* Header */}
-      <Header />
+      <TopNavbar />
 
       {/* Main content */}
       <div className="flex pt-16 min-h-screen">
