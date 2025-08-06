@@ -1,8 +1,8 @@
 import { getCache, setCache } from '@/libs/redis';
 import yahooFinance from 'yahoo-finance2';
 
-// Cache duration in seconds (24 hours)
-const CACHE_DURATION_SYMBOL_DETAILS = 24 * 60 * 60;
+// Cache duration in seconds (1 hour)
+const CACHE_SYMBOL_DETAILS_DURATION = 1 * 60 * 60;
 
 // Known cryptocurrencies list
 const knownCryptos = [
@@ -83,7 +83,7 @@ export async function getStockPrices(symbols) {
 		// Cache the new data and update the result
 		for (const symbol of symbolsToFetch) {
 			if (newData[symbol]) {
-				await setCache(`symbol_data:${symbol}`, newData[symbol], CACHE_DURATION_SYMBOL_DETAILS);
+				await setCache(`symbol_data:${symbol}`, newData[symbol], CACHE_SYMBOL_DETAILS_DURATION);
 				result[symbol] = newData[symbol]; // Merge the new data
 			}
 		}

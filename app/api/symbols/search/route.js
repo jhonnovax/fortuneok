@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getCache, setCache } from '@/libs/redis';
 
-// Cache expiration time in seconds (24 hours)
-const CACHE_EXPIRATION = 86400;
+// Cache expiration time in seconds (1 hour)
+const CACHE_REDIS_DURATION = 1 * 60 * 60;
 
 /**
  * Search for symbols using Financial Modeling Prep API
@@ -117,7 +117,7 @@ export async function GET(request) {
     
     // Try to cache the results (wrapped in try/catch to handle Redis errors)
     try {
-      await setCache(cacheKey, resultsWithImages, CACHE_EXPIRATION);
+      await setCache(cacheKey, resultsWithImages, CACHE_REDIS_DURATION);
     } catch (cacheError) {
       console.error('Redis cache set error:', cacheError);
       // Continue without caching if there's an error

@@ -1,7 +1,7 @@
 import { getCache, setCache } from '@/libs/redis';
 
-// Cache duration in seconds (24 hours)
-const CACHE_DURATION = 24 * 60 * 60;
+// Cache duration in seconds (1 hour)
+const CACHE_CURRENCY_RATES_DURATION = 1 * 60 * 60;
 
 async function fetchCurrencyRates(baseCurrency) {
   const baseCurrencyFormatted = baseCurrency.toLowerCase();
@@ -30,7 +30,7 @@ export async function getConversionRates(baseCurrency = 'USD') {
 
   // Cache the fetched data in Redis
   if (currencyRates) {
-    await setCache(`currencyRates:${baseCurrency}`, currencyRates, CACHE_DURATION);
+    await setCache(`currencyRates:${baseCurrency}`, currencyRates, CACHE_CURRENCY_RATES_DURATION);
   }
 
   return currencyRates;
