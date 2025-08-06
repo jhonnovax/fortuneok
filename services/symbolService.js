@@ -1,7 +1,7 @@
 import { getCache, setCache } from '@/libs/redis';
 import yahooFinance from 'yahoo-finance2';
 
-// Cache duration in seconds (1 hour)
+// Cache symbol details duration (1 hour)
 const CACHE_SYMBOL_DETAILS_DURATION = 1 * 60 * 60;
 
 // Known cryptocurrencies list

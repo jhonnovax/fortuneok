@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getCache, setCache } from '@/libs/redis';
 
-// Cache expiration time in seconds (1 hour)
-const CACHE_REDIS_DURATION = 1 * 60 * 60;
+// Cache redis duration (4 hours)
+const CACHE_REDIS_DURATION = 4 * 60 * 60;
 
 /**
  * Search for symbols using Financial Modeling Prep API
