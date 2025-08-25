@@ -106,33 +106,33 @@ export function getAssetCategoryGroup(assetCategory) {
   switch (assetCategory) {
 
     case 'bonds':
-      return '📈 Bonds';
+      return 'bonds';
 
     case 'cars':
-      return '🚗 Cars';
+      return 'cars';
 
     case 'certificates_of_deposit':
     case 'checking_account':
     case 'savings_account':
     case 'p2p_loans':
-      return '💵 Cash';
+      return 'cash';
 
     case 'cryptocurrencies':
-      return '📈 Cryptos';
+      return 'cryptocurrencies';
 
     case 'etf_funds':
-      return '📈 ETFs';
+      return 'etf_funds';
 
     case 'real_estate':
-      return '🏠 Real Estate';
+      return 'real_estate';
 
     case 'stocks':
     case 'option':
     case 'futures':
-      return '📈 Stocks';
+      return 'stocks';
 
     default:
-      return '🔷 Others';
+      return 'other';
   }
 
 }

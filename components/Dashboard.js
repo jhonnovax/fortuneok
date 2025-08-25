@@ -13,7 +13,7 @@ import config from '@/config';
 import Footer from './Footer';
 import TabAssetGroups from './TabAssetGroups';
 import { usePreferences } from '@/contexts/PreferencesContext';
-import { parseAssetCategoryFromAssetList } from '@/services/assetService';
+import { getAssetCategoryDescription, parseAssetCategoryFromAssetList } from '@/services/assetService';
 
 export default function Dashboard() {
 
@@ -42,7 +42,6 @@ export default function Dashboard() {
 
     if (activeTab === 'categories') {
       if (selectedCategory) {
-        console.log('assets', selectedCategory, assets);
         assets = assets.filter((asset) => asset.category === selectedCategory);
       } else {
         assets = parseAssetCategoryFromAssetList(assetData);
@@ -58,8 +57,8 @@ export default function Dashboard() {
   }, [activeTab]);
 
   const showAssetViewDetailsButton = useMemo(() => {
-    return activeTab === 'categories';
-  }, [activeTab]);
+    return activeTab === 'categories' && !selectedCategory;
+  }, [activeTab, selectedCategory]);
 
   const totalNumberOfAssets = useMemo(() => {
     return filteredAssets.length;
@@ -118,7 +117,6 @@ export default function Dashboard() {
   }
 
   async function handleViewDetails(asset) {
-    console.log('asset', asset);
     setSelectedCategory(asset.category);
   }
 
@@ -133,18 +131,31 @@ export default function Dashboard() {
 
   // AssetList component
   const AssetListComponent = () => (
-    <AssetList 
-      isLoading={isLoading} 
-      error={error} 
-      activeTab={activeTab}
-      assetData={filteredAssets} 
-      totalAssetsValue={totalAssetsValue}
-      showMoreActions={showAssetActionsButton}
-      showViewDetails={showAssetViewDetailsButton}
-      onEditAsset={handleEditAsset} 
-      onDeleteAsset={handleDeleteAsset}
-      onViewDetails={handleViewDetails}
-    />
+    <>
+      {activeTab === 'categories' && selectedCategory && (
+        <div className="mb-0">
+          <button className="btn btn-primary" onClick={() => setSelectedCategory(null)}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+            {getAssetCategoryDescription(selectedCategory)}
+          </button>
+        </div>
+      )}
+
+      <AssetList 
+        isLoading={isLoading} 
+        error={error} 
+        activeTab={activeTab}
+        assetData={filteredAssets} 
+        totalAssetsValue={totalAssetsValue}
+        showMoreActions={showAssetActionsButton}
+        showViewDetails={showAssetViewDetailsButton}
+        onEditAsset={handleEditAsset} 
+        onDeleteAsset={handleDeleteAsset}
+        onViewDetails={handleViewDetails}
+      />
+    </>
   );
 
   // Fetch currency rates

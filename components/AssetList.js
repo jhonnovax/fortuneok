@@ -8,7 +8,7 @@ import { getAssetPercentage } from '@/services/assetService';
 import { getChartColors } from '@/services/chartService';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
 
-export default function AssetsList({ isLoading, error, assetData, totalAssetsValue, showMoreActions, onEditAsset, onDeleteAsset }) {
+export default function AssetsList({ isLoading, error, assetData, totalAssetsValue, showMoreActions, showViewDetails, onEditAsset, onDeleteAsset, onViewDetails }) {
 
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, assetId: null });
   const theme = useSystemTheme();
@@ -40,7 +40,7 @@ export default function AssetsList({ isLoading, error, assetData, totalAssetsVal
       <>
         {/* Assets List */}
         {assetData.map((asset, assetIndex) => (
-          <div key={asset.id} className="hover:bg-base-200/50 transition-colors">
+          <div key={asset.id} className="transition-colors">
             <div className="px-2 py-4 pr-1">
               <div className="flex items-center gap-3">
                 <div className="flex-1">
@@ -66,7 +66,17 @@ export default function AssetsList({ isLoading, error, assetData, totalAssetsVal
                       <p className="text-sm">{formatFullCurrency(asset.valuationInPreferredCurrency || 0)}</p>
                     </div>
                     <div className="flex items-center gap-1">
-                      {/* Popover */}
+                      { /* Show view details */}
+                      {showViewDetails && (
+                        <button className="btn btn-ghost btn-sm" onClick={() => onViewDetails(asset)}>
+                          Assets
+                          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
+                            <path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/>
+                          </svg>
+                        </button>
+                      )}
+
+                      {/* Show more actions */}
                       {showMoreActions && (
                         <div className="dropdown dropdown-end">
                           <label 
