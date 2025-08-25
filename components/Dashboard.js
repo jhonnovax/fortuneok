@@ -15,7 +15,7 @@ import TabAssetGroups from './TabAssetGroups';
 import { usePreferences } from '@/contexts/PreferencesContext';
 import { parseAssetCategoryFromAssetList } from '@/services/assetService';
 
-export default function Portfolio() {
+export default function Dashboard() {
 
   const { appName, appShortDescription, appDescription } = config;
 
@@ -25,6 +25,7 @@ export default function Portfolio() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [activeTab, setActiveTab] = useState('positions');
   const { currency: baseCurrency } = usePreferences();
 
@@ -40,15 +41,24 @@ export default function Portfolio() {
     let assets = [...assetData];
 
     if (activeTab === 'categories') {
-      assets = parseAssetCategoryFromAssetList(assetData);
+      if (selectedCategory) {
+        console.log('assets', selectedCategory, assets);
+        assets = assets.filter((asset) => asset.category === selectedCategory);
+      } else {
+        assets = parseAssetCategoryFromAssetList(assetData);
+      }
     }
     
     assets = assets.sort((a, b) => b.valuationInPreferredCurrency - a.valuationInPreferredCurrency);
     return assets;
-  }, [assetData, activeTab]);
+  }, [assetData, activeTab, selectedCategory]);
 
   const showAssetActionsButton = useMemo(() => {
     return activeTab === 'positions';
+  }, [activeTab]);
+
+  const showAssetViewDetailsButton = useMemo(() => {
+    return activeTab === 'categories';
   }, [activeTab]);
 
   const totalNumberOfAssets = useMemo(() => {
@@ -100,12 +110,16 @@ export default function Portfolio() {
 
   async function handleDeleteAsset(assetId) {
     try {
-      // TODO: Implement delete asset
       const response = await deleteAsset(assetId);
       console.log('Deleted asset:', response);
     } catch (err) {
       console.error('Failed to delete asset:', err);
     }
+  }
+
+  async function handleViewDetails(asset) {
+    console.log('asset', asset);
+    setSelectedCategory(asset.category);
   }
 
   // TabAssetGroups component
@@ -124,10 +138,12 @@ export default function Portfolio() {
       error={error} 
       activeTab={activeTab}
       assetData={filteredAssets} 
-      showMoreActions={showAssetActionsButton}
       totalAssetsValue={totalAssetsValue}
+      showMoreActions={showAssetActionsButton}
+      showViewDetails={showAssetViewDetailsButton}
       onEditAsset={handleEditAsset} 
       onDeleteAsset={handleDeleteAsset}
+      onViewDetails={handleViewDetails}
     />
   );
 

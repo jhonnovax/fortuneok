@@ -1,5 +1,5 @@
 import config from '@/config';
-import Portfolio from '@/components/Portfolio';
+import Dashboard from '@/components/Dashboard';
 import { getSEOTags } from "@/libs/seo";
 
 export const metadata = getSEOTags({
@@ -10,7 +10,7 @@ export const metadata = getSEOTags({
 export default function Home() {
   
   return (
-    <Portfolio />
+    <Dashboard />
   );
 
 }
