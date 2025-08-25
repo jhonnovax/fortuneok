@@ -111,6 +111,7 @@ export function getAssetCategoryGroup(assetCategory) {
     case 'cars':
       return 'cars';
 
+    case 'cash':
     case 'certificates_of_deposit':
     case 'checking_account':
     case 'savings_account':
