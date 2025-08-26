@@ -13,7 +13,7 @@ import config from '@/config';
 import Footer from './Footer';
 import TabAssetGroups from './TabAssetGroups';
 import { usePreferences } from '@/contexts/PreferencesContext';
-import { getAssetCategoryDescription, parseAssetCategoryFromAssetList } from '@/services/assetService';
+import { getAssetCategoryDescription, parseAssetCategoryFromAssetList, getAssetCategoryGroup } from '@/services/assetService';
 
 export default function Dashboard() {
 
@@ -42,7 +42,9 @@ export default function Dashboard() {
 
     if (activeTab === 'categories') {
       if (selectedCategory) {
-        assets = assets.filter((asset) => asset.category === selectedCategory);
+        const categoryGroup = getAssetCategoryGroup(selectedCategory);
+        console.log('selectedCategory', assets, selectedCategory, categoryGroup);
+        assets = assets.filter((asset) => getAssetCategoryGroup(asset.category) === categoryGroup);
       } else {
         assets = parseAssetCategoryFromAssetList(assetData);
       }
