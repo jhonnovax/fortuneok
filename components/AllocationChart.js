@@ -34,7 +34,7 @@ const CustomTooltip = ({ active, payload }) => {
   return null;
 };
 
-export default function AllocationChart({ isLoading, activeTab, assetData, error }) {
+export default function AllocationChart({ isLoading, title, assetData, error }) {
 
   const { breakpointInPixels } = useTailwindBreakpoint();
   const theme = useSystemTheme();
@@ -118,7 +118,7 @@ export default function AllocationChart({ isLoading, activeTab, assetData, error
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
           </svg>
-          {activeTab === 'categories' ? 'Categories' : 'Positions'}
+          {title}
         </h3>
 
         {/* Chart */}

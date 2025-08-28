@@ -11,7 +11,6 @@ import { useAssetStore } from '@/store/assetStore';
 import { useCurrencyRatesStore } from '@/store/currencyRatesStore';
 import config from '@/config';
 import Footer from './Footer';
-import TabAssetGroups from './TabAssetGroups';
 import { usePreferences } from '@/contexts/PreferencesContext';
 import { getAssetCategoryDescription, parseAssetCategoryFromAssetList, getAssetCategoryGroup } from '@/services/assetService';
 
@@ -26,7 +25,6 @@ export default function Dashboard() {
   const [error, setError] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [activeTab, setActiveTab] = useState('positions');
   const { currency: baseCurrency } = usePreferences();
 
   const getCurrencyRates = useCurrencyRatesStore((state) => state.getCurrencyRates);
@@ -40,27 +38,29 @@ export default function Dashboard() {
   const filteredAssets = useMemo(() => {
     let assets = [...assetData];
 
-    if (activeTab === 'categories') {
-      if (selectedCategory) {
-        const categoryGroup = getAssetCategoryGroup(selectedCategory);
-        console.log('selectedCategory', assets, selectedCategory, categoryGroup);
-        assets = assets.filter((asset) => getAssetCategoryGroup(asset.category) === categoryGroup);
-      } else {
-        assets = parseAssetCategoryFromAssetList(assetData);
-      }
+    // If a category is selected, and it's not 'all', filter the assets to only include the assets in that category
+    if (selectedCategory && selectedCategory !== 'all') {
+      const categoryGroup = getAssetCategoryGroup(selectedCategory);      
+      assets = assets.filter((asset) => getAssetCategoryGroup(asset.category) === categoryGroup);
+    }
+    
+    // If no category is selected, parse the asset data to get the categories
+    if (!selectedCategory) {
+      assets = parseAssetCategoryFromAssetList(assetData);
     }
     
     assets = assets.sort((a, b) => b.valuationInPreferredCurrency - a.valuationInPreferredCurrency);
+
     return assets;
-  }, [assetData, activeTab, selectedCategory]);
+  }, [assetData, selectedCategory]);
 
   const showAssetActionsButton = useMemo(() => {
-    return activeTab === 'positions';
-  }, [activeTab]);
+    return selectedCategory;
+  }, [selectedCategory]);
 
   const showAssetViewDetailsButton = useMemo(() => {
-    return activeTab === 'categories' && !selectedCategory;
-  }, [activeTab, selectedCategory]);
+    return !selectedCategory;
+  }, [selectedCategory]);
 
   const totalNumberOfAssets = useMemo(() => {
     return filteredAssets.length;
@@ -73,8 +73,8 @@ export default function Dashboard() {
   }, [filteredAssets]);
 
   const assetListTitle = useMemo(() => {
-    return `${totalNumberOfAssets} ${activeTab === 'positions' ? "Assets" : "Categories"}`;
-  }, [totalNumberOfAssets, activeTab]);
+    return `${totalNumberOfAssets} ${selectedCategory ? "Assets" : "Categories"}`;
+  }, [totalNumberOfAssets, selectedCategory]);
 
   async function handleNewAsset() {
     setSelectedAsset(null);
@@ -122,33 +122,42 @@ export default function Dashboard() {
     setSelectedCategory(asset.category);
   }
 
-  // TabAssetGroups component
-  const TabAssetGroupsComponent = ({ className }) => (
-    <TabAssetGroups 
-      className={className} 
-      activeTab={activeTab} 
-      onTabChange={setActiveTab} 
-    /> 
-  );
-
   // AssetList component
   const AssetListComponent = () => (
     <>
-      {activeTab === 'categories' && selectedCategory && (
+      {/* Asset List Top Spacing */}
+      <div className="mt-2 lg:mt-4 mb-0"></div>
+
+      {/* View All Assets button */}
+      {!selectedCategory && (
         <div className="mb-0">
-          <button className="btn btn-primary" onClick={() => setSelectedCategory(null)}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+          <button className="btn btn-primary" onClick={() => setSelectedCategory('all')}>
+            📊 All Assets 
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
+              <path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/>
             </svg>
-            {getAssetCategoryDescription(selectedCategory)}
           </button>
+        </div>
+      )}
+
+      {/* Back button to go back to the asset groups */}
+      {selectedCategory && (
+        <div className="flex items-center gap-2">
+          <div className="mb-0">
+            <button className="btn btn-primary" onClick={() => setSelectedCategory(null)}>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+              </svg>
+              Categories
+            </button>
+          </div>
+          {selectedCategory === 'all' ? '📊 All Assets' : getAssetCategoryDescription(selectedCategory)}
         </div>
       )}
 
       <AssetList 
         isLoading={isLoading} 
         error={error} 
-        activeTab={activeTab}
         assetData={filteredAssets} 
         totalAssetsValue={totalAssetsValue}
         showMoreActions={showAssetActionsButton}
@@ -200,13 +209,10 @@ export default function Dashboard() {
             totalAssetsValue={totalAssetsValue}
           />
 
-          {/* Tabs Asset Groups */}
-          <TabAssetGroupsComponent className={`lg:hidden ${isLoading ? 'hidden' : ''}`} />
-
           {/* Render Allocation Chart */}
           <AllocationChart 
             isLoading={isLoading}
-            activeTab={activeTab}
+            title={assetListTitle}
             assetData={filteredAssets} 
             error={error}
           />
@@ -241,7 +247,6 @@ export default function Dashboard() {
 
         {/* Desktop sidebar */}
         <RightSidebar isLoading={isLoading} title={assetListTitle} onAddAsset={handleNewAsset}>
-          <TabAssetGroupsComponent className="pt-4 mb-4 sticky top-0 bg-base-100 z-10" />
           <AssetListComponent />
         </RightSidebar>
 
