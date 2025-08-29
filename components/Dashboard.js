@@ -219,7 +219,6 @@ export default function Dashboard() {
           <AllocationChart 
             isLoading={isLoading}
             title={assetListTitle}
-            assetData={assetData} 
             filteredAssetData={filteredAssets} 
             totalAssetsValue={totalAssetsValue}
             error={error}

@@ -77,6 +77,7 @@ export function parseAssetCategoryFromAssetList(assetData) {
     if (!categoryExists) {
       categories = categories.concat({
         id: Date.now().toString() + Math.floor(Math.random() * 1000000).toString(),
+        assets: [asset],
         category: assetCategoryGroup,
         description: getAssetCategoryDescription(assetCategoryGroup),
         currencies: [asset.currentValuation?.currency],
@@ -87,6 +88,7 @@ export function parseAssetCategoryFromAssetList(assetData) {
         if (category.category === assetCategoryGroup) {
           return { 
             ...category, 
+            assets: [...category.assets, asset],
             currencies: [...new Set([...category.currencies, asset.currentValuation?.currency])].sort(),
             valuationInPreferredCurrency: category.valuationInPreferredCurrency + (asset.valuationInPreferredCurrency || 0) 
           };

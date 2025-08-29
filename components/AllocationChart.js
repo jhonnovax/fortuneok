@@ -34,7 +34,7 @@ const CustomTooltip = ({ active, payload }) => {
   return null;
 };
 
-export default function AllocationChart({ isLoading, error, title, assetData, filteredAssetData, totalAssetsValue }) {
+export default function AllocationChart({ isLoading, error, title, filteredAssetData, totalAssetsValue }) {
 
   const { breakpointInPixels } = useTailwindBreakpoint();
   const theme = useSystemTheme();
@@ -43,8 +43,11 @@ export default function AllocationChart({ isLoading, error, title, assetData, fi
   const isDesktopOrUpper = breakpointInPixels >= BREAKPOINTS.LG;
 
   const assetsValuesByCurrency = useMemo(() => {
-    return Object.groupBy(assetData, asset => asset.currentValuation?.currency);
-  }, [assetData]);
+    const isCategory = filteredAssetData.some(asset => asset.assets?.length > 1);
+    const assetsInCategories = isCategory ? filteredAssetData.flatMap(asset => asset.assets) : filteredAssetData;
+
+    return Object.groupBy(assetsInCategories, asset => asset.currentValuation?.currency);
+  }, [filteredAssetData]);
 
   const totalAssetsbyCurrency = useMemo(() => {
     const totalAssetsbyCurrency = Object.keys(assetsValuesByCurrency).map(currency => {
