@@ -30,7 +30,7 @@ export default function TopNavbar({ onAddAsset }) {
 
           <div className="flex items-center gap-2">
             {status === "loading" 
-              ? (<div className="skeleton h-8 w-52"></div>) 
+              ? (<div className="skeleton h-8 w-32 md:w-52"></div>) 
               : ctaButton
             }
           </div>
