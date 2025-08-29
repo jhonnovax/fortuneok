@@ -247,7 +247,10 @@ export default function SymbolCombobox({
                       />
                     </div>
                     <div className="flex flex-col min-w-0 flex-1">
-                      <span className="font-medium">{item.symbol}</span>
+                      <span className="font-medium flex items-center">
+                        {item.symbol}
+                        <span className="badge badge-sm badge-ghost ml-1">{item.currency?.toUpperCase()}</span>
+                      </span>
                       <span className="text-xs opacity-70 truncate w-full">{item.name || item.description || ''}</span>
                     </div>
                   </button>

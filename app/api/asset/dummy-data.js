@@ -36,9 +36,9 @@ export const dummyData = [
     "id": 4,
     "date": "2010-03-10T00:00:00.000Z",
     "category": "certificates_of_deposit",
-    "description": "3-year CD with Citibank",
+    "description": "3-year CD with HSBC",
     "currentValuation": {
-      "currency": "USD",
+      "currency": "GBP",
       "amount": 25000
     },
     "notes": "Average yield 3.8%"
@@ -47,9 +47,9 @@ export const dummyData = [
     "id": 5,
     "date": "2022-05-15T00:00:00.000Z",
     "category": "savings_account",
-    "description": "Savings Account at Charles Schwab",
+    "description": "Savings Account at Deutsche Bank",
     "currentValuation": {
-      "currency": "USD",
+      "currency": "EUR",
       "amount": 20000
     },
     "notes": "Emergency fund"
@@ -69,7 +69,6 @@ export const dummyData = [
     "id": 7,
     "date": "1999-04-01T00:00:00.000Z",
     "category": "etf_funds",
-    "description": "Vanguard S&P 500 ETF",
     "symbol": "VOO",
     "shares": 687.1765,
     "notes": "Held in Roth IRA"
@@ -78,7 +77,6 @@ export const dummyData = [
     "id": 8,
     "date": "2004-11-01T00:00:00.000Z",
     "category": "stocks",
-    "description": "Microsoft Corporation",
     "symbol": "MSFT",
     "shares": 192.1568,
     "notes": "Core long-term holding"
@@ -87,7 +85,6 @@ export const dummyData = [
     "id": 9,
     "date": "2010-02-01T00:00:00.000Z",
     "category": "stocks",
-    "description": "Apple Inc.",
     "symbol": "AAPL",
     "shares": 200.3215,
     "notes": "Held since 2010"
@@ -96,7 +93,6 @@ export const dummyData = [
     "id": 10,
     "date": "2016-07-01T00:00:00.000Z",
     "category": "stocks",
-    "description": "NVIDIA Corporation",
     "symbol": "NVDA",
     "shares": 125.6875,
     "notes": "Tech sector growth stock"
@@ -105,7 +101,6 @@ export const dummyData = [
     "id": 11,
     "date": "2017-01-01T00:00:00.000Z",
     "category": "bonds",
-    "description": "iShares U.S. Treasury Bond ETF",
     "symbol": "GOVT",
     "shares": 6570.8276,
     "notes": "Low-risk allocation"
@@ -147,7 +142,6 @@ export const dummyData = [
     "id": 15,
     "date": "2021-03-01T00:00:00.000Z",
     "category": "cryptocurrencies",
-    "description": "Ethereum",
     "symbol": "ETH",
     "shares": 8.6424,
     "notes": "Long-term crypto investment"
@@ -156,10 +150,60 @@ export const dummyData = [
     "id": 16,
     "date": "2018-09-01T00:00:00.000Z",
     "category": "cryptocurrencies",
-    "description": "Bitcoin",
     "symbol": "BTC",
     "shares": 1.1521,
     "notes": "Held in cold storage"
   },
+  {
+    "id": 17,
+    "date": "2005-06-18T00:00:00.000Z",
+    "category": "etf_funds",
+    "symbol": 'GSPX.L',
+    "shares": 617.9534,
+    "notes": "Held in Roth IRA"
+  },
+  {
+    "id": 18,
+    "date": "2005-06-18T00:00:00.000Z",
+    "category": "etf_funds",
+    "symbol": 'EQQQ.DE',
+    "shares": 245.7881,
+    "notes": "Held in Robinhood"
+  },
+  {
+    "id": 19,
+    "date": "2002-02-04T00:00:00.000Z",
+    "category": "etf_funds",
+    "symbol": 'QQQ',
+    "shares": 356.7818,
+    "notes": "Held in Robinhood"
+  },
+  {
+    "id": 20,
+    "date": "2002-02-04T00:00:00.000Z",
+    "category": "real_estate",
+    "description": "1105 Spring Street #403, London, UK",
+    "currentValuation": {
+      "currency": "GBP",
+      "amount": 450000
+    },
+    "notes": "1-bedroom, 1-bath condo in First Hill. Offers a comfortable living area and proximity to downtown amenities."
+  },
+  {
+    "id": 21,
+    "date": "1998-09-03T00:00:00.000Z",
+    "category": "bonds",
+    "symbol": 'DE000ETFL581.SG',
+    "shares": 875.5678,
+    "notes": "Held in Trade Republic"
+  },
+  {
+    "id": 22,
+    "date": "2001-06-13T00:00:00.000Z",
+    "category": "bonds",
+    "symbol": 'FRA.DE',
+    "shares": 567.8912,
+    "notes": "Held in Trade Republic"
+  }
 ]
 
