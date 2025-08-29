@@ -71,7 +71,7 @@ export default function CurrencySelection({ onEditingCurrency }) {
   // Render currency selection button
   return (
     <button 
-      className="btn btn-default btn-sm lg:btn-md gap-1"
+      className="btn btn-sm lg:btn-md gap-1"
       title="Edit currency"
       onClick={() => handleEditingCurrency(true)}
     >
@@ -80,7 +80,7 @@ export default function CurrencySelection({ onEditingCurrency }) {
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"
         fill="currentColor"
-        className="w-4 h-4 duration-200 opacity-50"
+        className="w-4 h-4 duration-200"
       >
         <path
           fillRule="evenodd"

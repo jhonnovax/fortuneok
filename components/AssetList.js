@@ -74,13 +74,13 @@ export default function AssetsList({ isLoading, error, assetData, totalAssetsVal
                         ))}
                       </p>
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center">
                       { /* Show view details */}
                       {showViewDetails && (
                         <button className="btn btn-sm" onClick={() => onViewDetails(asset)}>
                           Assets
-                          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
-                            <path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/>
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="currentColor" className="w-4 h-4">
+                            <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
                           </svg>
                         </button>
                       )}
