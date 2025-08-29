@@ -28,7 +28,7 @@ export default function AssetTopBarNavigation({ onAddAsset, assetData, selectedC
     <div className="flex justify-between items-center !mt-0">
       <div className="items-start">
         {/* Topbar Title */}
-        <h2 className="italic font-semibold flex items-center gap-1">
+        <h2 className="italic font-semibold flex items-center gap-1 text-xs sm:text-sm md:text-base">
           <div className="badge badge-primary badge-md">{totalAssets}</div> {getTopbarTitle()}
         </h2>
 
