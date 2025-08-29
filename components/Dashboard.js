@@ -157,7 +157,7 @@ export default function Dashboard() {
     <div className="min-h-screen flex flex-col bg-base-200">
 
       {/* Header */}
-      <TopNavbar />
+      <TopNavbar onAddAsset={handleNewAsset} />
 
       {/* Main content */}
       <div className="flex pt-16 min-h-screen">

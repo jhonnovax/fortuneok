@@ -13,7 +13,7 @@ import apiClient from "@/libs/api";
 //     You have to manually activate the Customer Portal in your Stripe Dashboard (https://dashboard.stripe.com/test/settings/billing/portal)
 //     This is only available if the customer has a customerId (they made a purchase previously)
 //  2. Logout: sign out and go back to homepage
-const ButtonAccount = () => {
+const ButtonAccount = ({ onAddAsset }) => {
   const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const { breakpointInPixels } = useTailwindBreakpoint();
@@ -102,21 +102,12 @@ const ButtonAccount = () => {
                 <div className="space-y-0.5 text-sm">
                   <button
                     className="flex items-center gap-2 hover:bg-base-300 duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
-                    onClick={handleBilling}
+                    onClick={onAddAsset}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M2.5 4A1.5 1.5 0 001 5.5V6h18v-.5A1.5 1.5 0 0017.5 4h-15zM19 8.5H1v6A1.5 1.5 0 002.5 16h15a1.5 1.5 0 001.5-1.5v-6zM3 13.25a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5h-1.5a.75.75 0 01-.75-.75zm4.75-.75a.75.75 0 000 1.5h3.5a.75.75 0 000-1.5h-3.5z"
-                        clipRule="evenodd"
-                      />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
-                    Billing
+                    Add Asset
                   </button>
                   <button
                     className="flex items-center gap-2 hover:bg-error/20 hover:text-error duration-200 py-1.5 px-4 w-full rounded-lg font-medium"

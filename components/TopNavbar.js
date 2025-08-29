@@ -5,12 +5,11 @@ import { useSession } from "next-auth/react";
 import ButtonAccount from "@/components/ButtonAccount";
 import ButtonSignin from "@/components/ButtonSignin";
 
-export default function TopNavbar() {
+export default function TopNavbar({ onAddAsset }) {
 
     const { data: session, status } = useSession();
     const ctaButton = session 
-        ? <ButtonAccount /> 
-        /* : <button className="btn btn-primary btn-sm" onClick={() => handlePayment(PLAN_BASIC)}>Get Started</button>;   */
+        ? <ButtonAccount onAddAsset={onAddAsset} /> 
         : <ButtonSignin extraStyle="btn-primary" />
 
     return (
