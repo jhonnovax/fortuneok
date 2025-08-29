@@ -24,7 +24,7 @@ export default function RightSidebar({ children, isLoading, assetData, onAddAsse
         </div>
 
         <div className="flex-1 overflow-y-auto">
-          <div className="p-4 pt-0">
+          <div className="p-4 pt-0 pb-0">
             {children}
           </div>
         </div>
