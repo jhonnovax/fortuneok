@@ -6,7 +6,15 @@ export default function AssetTopBarNavigation({ onAddAsset, assetData, selectedC
 
   function getTopbarTitle() {
     if (!selectedCategory) {
-      return 'Categories';
+      return (
+        <span className="inline-flex items-center mr-1">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
+          </svg>
+          Categories
+        </span>
+      );
     }
 
     if (selectedCategory === 'all') {
@@ -20,7 +28,7 @@ export default function AssetTopBarNavigation({ onAddAsset, assetData, selectedC
     <div className="flex justify-between items-center !mt-0">
       <div className="items-start">
         {/* Topbar Title */}
-        <h2 className="italic font-semibold">
+        <h2 className="italic font-semibold flex items-center gap-1">
           <div className="badge badge-primary badge-md">{totalAssets}</div> {getTopbarTitle()}
         </h2>
 
@@ -39,9 +47,13 @@ export default function AssetTopBarNavigation({ onAddAsset, assetData, selectedC
 
           {/* Back button to go back to the asset groups */}
           {selectedCategory && (
-            <button className="btn btn-sm btn-default" onClick={() => setSelectedCategory(null)}>
+            <button className="btn btn-sm btn-default gap-0.5" onClick={() => setSelectedCategory(null)}>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
               </svg>
               Categories
             </button>
