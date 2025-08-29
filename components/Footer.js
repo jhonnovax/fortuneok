@@ -16,8 +16,8 @@ const Footer = () => {
           <Link href="/tos" className="link link-hover">
             📜 Terms of services
           </Link>
-          <Link href="mailto:support@fortuneok.com" className="link link-hover order-first md:order-none" target="_blank" rel="noopener noreferrer">
-            📧 Support
+          <Link href="https://donate.stripe.com/4gwdUI9W4dOZaac7ss" className="link link-hover order-first md:order-none">
+            ❤️ Support Us
           </Link>
         </p>
 
