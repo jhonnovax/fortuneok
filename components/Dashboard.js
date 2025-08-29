@@ -36,7 +36,12 @@ export default function Dashboard() {
   const assetData = getFilteredAndSortedAssets();
   
   const filteredAssets = useMemo(() => {
-    let assets = [...assetData];
+    let assets = assetData.map((asset) => {
+      return {
+        ...asset,
+        currencies: [asset.currentValuation?.currency]
+      };
+    });
 
     // If a category is selected, and it's not 'all', filter the assets to only include the assets in that category
     if (selectedCategory && selectedCategory !== 'all') {

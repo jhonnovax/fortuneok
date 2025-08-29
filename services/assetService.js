@@ -79,12 +79,17 @@ export function parseAssetCategoryFromAssetList(assetData) {
         id: Date.now().toString() + Math.floor(Math.random() * 1000000).toString(),
         category: assetCategoryGroup,
         description: getAssetCategoryDescription(assetCategoryGroup),
+        currencies: [asset.currentValuation?.currency],
         valuationInPreferredCurrency: asset.valuationInPreferredCurrency
       });
     } else {
       categories = categories.map(category => {
         if (category.category === assetCategoryGroup) {
-          return { ...category, valuationInPreferredCurrency: category.valuationInPreferredCurrency + (asset.valuationInPreferredCurrency || 0) };
+          return { 
+            ...category, 
+            currencies: [...new Set([...category.currencies, asset.currentValuation?.currency])].sort(),
+            valuationInPreferredCurrency: category.valuationInPreferredCurrency + (asset.valuationInPreferredCurrency || 0) 
+          };
         }
 
         return category;

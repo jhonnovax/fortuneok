@@ -46,7 +46,9 @@ export default function AssetsList({ isLoading, error, assetData, totalAssetsVal
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-bold text-sm">{asset.description}</h3>
+                      <h3 className="font-bold text-sm">
+                        {asset.description}
+                      </h3>
                       {asset.date && (
                         <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400">
                         <svg xmlns="http://www.w3.org/2000/svg" width="12px" height="12px" viewBox="0 0 24 24" fill="none">
@@ -63,12 +65,19 @@ export default function AssetsList({ isLoading, error, assetData, totalAssetsVal
                           </span>
                         </p>
                       )}
-                      <p className="text-sm">{formatFullCurrency(asset.valuationInPreferredCurrency || 0)}</p>
+                      <p className="text-sm">
+                        {formatFullCurrency(asset.valuationInPreferredCurrency || 0)}
+                        {asset.currencies.map((currency, currencyIndex) => (
+                          <span key={currencyIndex} className="badge badge-sm badge-ghost ml-1">
+                            {currency}
+                          </span>
+                        ))}
+                      </p>
                     </div>
                     <div className="flex items-center gap-1">
                       { /* Show view details */}
                       {showViewDetails && (
-                        <button className="btn btn-ghost btn-sm" onClick={() => onViewDetails(asset)}>
+                        <button className="btn btn-sm" onClick={() => onViewDetails(asset)}>
                           Assets
                           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
                             <path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/>
