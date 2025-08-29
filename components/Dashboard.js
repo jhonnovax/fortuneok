@@ -136,7 +136,7 @@ export default function Dashboard() {
       {/* View All Assets button */}
       {!isLoading && !selectedCategory && (
         <div className="mb-0">
-          <button className="btn btn-primary" onClick={() => setSelectedCategory('all')}>
+          <button className="btn btn-sm btn-default" onClick={() => setSelectedCategory('all')}>
             📊 All Assets 
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
               <path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/>
@@ -149,7 +149,7 @@ export default function Dashboard() {
       {!isLoading && selectedCategory && (
         <div className="flex items-center gap-2">
           <div className="mb-0">
-            <button className="btn btn-primary" onClick={() => setSelectedCategory(null)}>
+            <button className="btn btn-sm btn-default" onClick={() => setSelectedCategory(null)}>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
               </svg>
