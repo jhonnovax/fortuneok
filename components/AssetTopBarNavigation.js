@@ -29,7 +29,7 @@ export default function AssetTopBarNavigation({ onAddAsset, assetData, selectedC
       <div className="items-start">
         {/* Topbar Title */}
         <h2 className="italic font-semibold flex items-center gap-1 text-xs sm:text-sm md:text-base">
-          <div className="badge badge-primary badge-md">{totalAssets}</div> {getTopbarTitle()}
+          <div className="badge badge-ghost badge-md">{totalAssets}</div> {getTopbarTitle()}
         </h2>
 
         <div className="mt-1">

@@ -186,7 +186,7 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, t
               {formatPercentage(value.percentage * 100, 2)}
             </span>
             <div className="p-1 border rounded-lg shadow-sm bg-base-100 text-sm md:text-base">
-              {formatFullCurrency(value.totalValue)} in {value.currency}
+              {formatFullCurrency(value.totalValue)} in <span className="badge badge-sm badge-ghost">{value.currency}</span>
             </div>
           </div>
         ))}
