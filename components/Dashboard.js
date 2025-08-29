@@ -134,7 +134,7 @@ export default function Dashboard() {
       <div className="mt-2 lg:mt-4 mb-0"></div>
 
       {/* View All Assets button */}
-      {!selectedCategory && (
+      {!isLoading && !selectedCategory && (
         <div className="mb-0">
           <button className="btn btn-primary" onClick={() => setSelectedCategory('all')}>
             📊 All Assets 
@@ -146,7 +146,7 @@ export default function Dashboard() {
       )}
 
       {/* Back button to go back to the asset groups */}
-      {selectedCategory && (
+      {!isLoading && selectedCategory && (
         <div className="flex items-center gap-2">
           <div className="mb-0">
             <button className="btn btn-primary" onClick={() => setSelectedCategory(null)}>
