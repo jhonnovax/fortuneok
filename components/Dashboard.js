@@ -12,7 +12,8 @@ import { useCurrencyRatesStore } from '@/store/currencyRatesStore';
 import config from '@/config';
 import Footer from './Footer';
 import { usePreferences } from '@/contexts/PreferencesContext';
-import { getAssetCategoryDescription, parseAssetCategoryFromAssetList, getAssetCategoryGroup } from '@/services/assetService';
+import { parseAssetCategoryFromAssetList, getAssetCategoryGroup } from '@/services/assetService';
+import AssetTopBarNavigation from './AssetTopBarNavigation';
 
 export default function Dashboard() {
 
@@ -67,19 +68,11 @@ export default function Dashboard() {
     return !selectedCategory;
   }, [selectedCategory]);
 
-  const totalNumberOfAssets = useMemo(() => {
-    return filteredAssets.length;
-  }, [filteredAssets]);
-
   const totalAssetsValue = useMemo(() => {
     return filteredAssets.reduce((total, asset) => {
       return total + (asset.valuationInPreferredCurrency || 0);
     }, 0);
   }, [filteredAssets]);
-
-  const assetListTitle = useMemo(() => {
-    return `${totalNumberOfAssets} ${selectedCategory ? "Assets" : "Categories"}`;
-  }, [totalNumberOfAssets, selectedCategory]);
 
   async function handleNewAsset() {
     setSelectedAsset(null);
@@ -129,49 +122,17 @@ export default function Dashboard() {
 
   // AssetList component
   const AssetListComponent = () => (
-    <>
-      {/* Asset List Top Spacing */}
-      <div className="mt-2 lg:mt-4 mb-0"></div>
-
-      {/* View All Assets button */}
-      {!isLoading && !selectedCategory && (
-        <div className="mb-0">
-          <button className="btn btn-sm btn-default" onClick={() => setSelectedCategory('all')}>
-            📊 All Assets 
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
-              <path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/>
-            </svg>
-          </button>
-        </div>
-      )}
-
-      {/* Back button to go back to the asset groups */}
-      {!isLoading && selectedCategory && (
-        <div className="flex items-center gap-2">
-          <div className="mb-0">
-            <button className="btn btn-sm btn-default" onClick={() => setSelectedCategory(null)}>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-              </svg>
-              Categories
-            </button>
-          </div>
-          {selectedCategory === 'all' ? '📊 All Assets' : getAssetCategoryDescription(selectedCategory)}
-        </div>
-      )}
-
-      <AssetList 
-        isLoading={isLoading} 
-        error={error} 
-        assetData={filteredAssets} 
-        totalAssetsValue={totalAssetsValue}
-        showMoreActions={showAssetActionsButton}
-        showViewDetails={showAssetViewDetailsButton}
-        onEditAsset={handleEditAsset} 
-        onDeleteAsset={handleDeleteAsset}
-        onViewDetails={handleViewDetails}
-      />
-    </>
+    <AssetList 
+      isLoading={isLoading} 
+      error={error} 
+      assetData={filteredAssets} 
+      totalAssetsValue={totalAssetsValue}
+      showMoreActions={showAssetActionsButton}
+      showViewDetails={showAssetViewDetailsButton}
+      onEditAsset={handleEditAsset} 
+      onDeleteAsset={handleDeleteAsset}
+      onViewDetails={handleViewDetails}
+    />
   );
 
   // Fetch currency rates
@@ -218,7 +179,6 @@ export default function Dashboard() {
           {/* Render Allocation Chart */}
           <AllocationChart 
             isLoading={isLoading}
-            title={assetListTitle}
             filteredAssetData={filteredAssets} 
             totalAssetsValue={totalAssetsValue}
             error={error}
@@ -227,22 +187,14 @@ export default function Dashboard() {
           {/* Mobile Assets List */}
           <div className="card bg-base-100 shadow-xl lg:hidden">
             <div className="card-body p-4">
-
               {!isLoading && (
-                <div className="flex justify-between items-center !mt-0">
-                  <h2 className="italic font-semibold">{assetListTitle}</h2>
-                  <button 
-                    className="btn btn-primary flex items-center gap-2 lg:hidden ml-auto"
-                    onClick={handleNewAsset}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
-                    <span>Add Asset</span>
-                  </button>
-                </div>
+                <AssetTopBarNavigation 
+                  onAddAsset={handleNewAsset} 
+                  assetData={filteredAssets} 
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                />
               )}
-
               <AssetListComponent />
             </div>
           </div>
@@ -253,7 +205,13 @@ export default function Dashboard() {
         </main>
 
         {/* Desktop sidebar */}
-        <RightSidebar isLoading={isLoading} title={assetListTitle} onAddAsset={handleNewAsset}>
+        <RightSidebar 
+          isLoading={isLoading} 
+          assetData={filteredAssets}  
+          onAddAsset={handleNewAsset}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+        >
           <AssetListComponent />
         </RightSidebar>
 
