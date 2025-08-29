@@ -211,6 +211,7 @@ export default function Dashboard() {
           <SummaryCard 
             isLoading={isLoading}
             error={error}
+            assetData={assetData} 
             totalAssetsValue={totalAssetsValue}
           />
 
@@ -218,7 +219,9 @@ export default function Dashboard() {
           <AllocationChart 
             isLoading={isLoading}
             title={assetListTitle}
-            assetData={filteredAssets} 
+            assetData={assetData} 
+            filteredAssetData={filteredAssets} 
+            totalAssetsValue={totalAssetsValue}
             error={error}
           />
 

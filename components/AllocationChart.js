@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from 'recharts';
 import { useMemo } from 'react';
-import { formatCurrency, formatPercentage } from '../services/intlService';
+import { formatCurrency, formatFullCurrency, formatPercentage } from '../services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import { getChartColors } from '../services/chartService';
 import { BREAKPOINTS } from '@/services/breakpointService';
@@ -34,22 +34,41 @@ const CustomTooltip = ({ active, payload }) => {
   return null;
 };
 
-export default function AllocationChart({ isLoading, title, assetData, error }) {
+export default function AllocationChart({ isLoading, error, title, assetData, filteredAssetData, totalAssetsValue }) {
 
   const { breakpointInPixels } = useTailwindBreakpoint();
   const theme = useSystemTheme();
 
   const chartColors = getChartColors(theme);
   const isDesktopOrUpper = breakpointInPixels >= BREAKPOINTS.LG;
+
+  const assetsValuesByCurrency = useMemo(() => {
+    return Object.groupBy(assetData, asset => asset.currentValuation?.currency);
+  }, [assetData]);
+
+  const totalAssetsbyCurrency = useMemo(() => {
+    const totalAssetsbyCurrency = Object.keys(assetsValuesByCurrency).map(currency => {
+      const totalValue = assetsValuesByCurrency[currency].reduce((acc, asset) => acc + asset.valuationInPreferredCurrency, 0);
+
+      return {
+        currency,
+        percentage: totalValue / totalAssetsValue,
+        totalValue
+      }
+    });
+    const totalAssetsbyCurrencyOrdered = totalAssetsbyCurrency.sort((a, b) => b.totalValue - a.totalValue);
+
+    return totalAssetsbyCurrencyOrdered;
+  }, [assetsValuesByCurrency, totalAssetsValue]);
   
   // Add fill property to data for tooltip color  
   const assetDataWithFill = useMemo(() => {
-    return assetData.map((item, index) => ({
+    return filteredAssetData.map((item, index) => ({
       name: item.description,
       value: item.valuationInPreferredCurrency,
       fill: chartColors[index % chartColors.length]
     }));
-  }, [assetData, chartColors]);
+  }, [filteredAssetData, chartColors]);
 
   // Render pie custom label
   function renderPieCustomLabel({ cx, cy, midAngle, outerRadius, percent, index, name }){
@@ -62,7 +81,7 @@ export default function AllocationChart({ isLoading, title, assetData, error }) 
     const verticalPadding = percent < 0.03 ? 1 : 0; // Adjust this as needed
     y += verticalPadding * (index % 3 - 1); // alternates -1, 0, 1 for some breathing room
 
-    const totalNumberOfAssets = assetData.length;
+    const totalNumberOfAssets = filteredAssetData.length;
     const fontSize = (isDesktopOrUpper && totalNumberOfAssets > 10) ? 9 : 12;
 
     return (
@@ -103,7 +122,7 @@ export default function AllocationChart({ isLoading, title, assetData, error }) 
     chartUI = (
       <ErrorLoadingData error={error} />
     );
-  } else if (assetData.length === 0) {
+  } else if (filteredAssetData.length === 0) {
     chartUI = (
       <p className="text-center text-base-content/60">
         No allocation data available. Add assets to see your portfolio allocation.
@@ -112,18 +131,9 @@ export default function AllocationChart({ isLoading, title, assetData, error }) 
   } else {
     chartUI = (
       <>
-        {/* Heading */}
-        <h3 className="text-lg font-semibold text-center flex items-center justify-center gap-2 sr-only">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
-          </svg>
-          {title}
-        </h3>
-
         {/* Chart */}
-        {assetData.length === 0 ? (
-          <div className="h-full flex items-center justify-center">
+        {filteredAssetData.length === 0 ? (
+          <div className="h-full">
             <p className="text-gray-500">No data available</p>
           </div>
         ) : (
@@ -156,11 +166,34 @@ export default function AllocationChart({ isLoading, title, assetData, error }) 
 
   return (
     <div className="card bg-base-100 shadow-xl">
-      <div className="card-body p-4 h-[300px] lg:h-[400px] flex items-center justify-center">
+      {/* Heading */}
+      <h3 className="text-lg font-semibold text-center flex items-center justify-center gap-2 sr-only">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
+          </svg>
+          {title}
+        </h3>
 
-        {chartUI}
-
+      {/* Total Assets Values by Currency */}
+      <div className="join mt-4 md:mt-6 flex items-center justify-center">
+        {totalAssetsbyCurrency.map(value => (
+          <div className="indicator mr-2" key={value.currency}>
+            <span className="indicator-item indicator-center badge badge-sm badge-primary">
+              {formatPercentage(value.percentage * 100, 2)}
+            </span>
+            <div className="p-1 border rounded-lg shadow-sm bg-base-100 text-sm md:text-base">
+              {formatFullCurrency(value.totalValue)} in {value.currency}
+            </div>
+          </div>
+        ))}
       </div>
+
+      {/* Chart */}
+      <div className="card-body p-0 h-[300px] lg:h-[400px]">
+        {chartUI}
+      </div>
+
     </div>
   );
   
