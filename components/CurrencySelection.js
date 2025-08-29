@@ -55,7 +55,7 @@ export default function CurrencySelection({ onEditingCurrency }) {
           onChange={handleCurrencyChange}
         />
         <button 
-          className="btn btn-default btn-sm lg:btn-md border-base-content/20 ml-2" 
+          className="btn btn-default btn-sm lg:btn-md ml-2" 
           title="Go back"
           onClick={() => handleEditingCurrency(false)}
         >
@@ -71,7 +71,7 @@ export default function CurrencySelection({ onEditingCurrency }) {
   // Render currency selection button
   return (
     <button 
-      className="btn btn-default btn-sm lg:btn-md gap-1 border-base-content/20"
+      className="btn btn-default btn-sm lg:btn-md gap-1"
       title="Edit currency"
       onClick={() => handleEditingCurrency(true)}
     >

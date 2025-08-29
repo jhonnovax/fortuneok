@@ -48,7 +48,7 @@ export default function SummaryCard({ isLoading, error, totalAssetsValue }) {
           {/* Toggle Portfolio Value Visibility */}
           {showTotalValue && (
             <button 
-              className="btn btn-circle btn-default btn-sm lg:btn-md border-base-content/20"
+              className="btn btn-circle btn-default btn-sm lg:btn-md"
               title={isValueVisible ? 'Hide portfolio value' : 'Show portfolio value'}
               onClick={() => setIsValueVisible(!isValueVisible)}
             >
