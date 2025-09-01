@@ -52,7 +52,8 @@ export const parseCurrentValuationOfAsset = (asset, stocksData) => {
 
   return {
     ...asset,
-    currentValuation
+    currentValuation,
+    description: symbolDetails.description || asset.description
   }
 }
 

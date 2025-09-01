@@ -58,13 +58,6 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
                           {formatDateToString(asset.date)}
                         </div>
                       )}
-                      {asset.shares && (
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          <span className="mr-1">{asset.symbol}</span>
-                          <span className='text-xs font-bold'>x</span>
-                          <span className='text-xs font-bold'>{formatNumber(asset.shares, 4)}</span>
-                        </p>
-                      )}
                       <p className="text-sm">
                         {currencies.find(currency => currency.code === (!selectedCategory ? baseCurrency : asset.currentValuation?.currency))?.flag} 
                         {selectedCategory ? asset.currentValuation.currency : baseCurrency}
@@ -80,6 +73,13 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
                           </div>
                         )}
                       </p>
+                      {asset.shares && (
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          <span className="mr-1">{asset.symbol}</span>
+                          <span className='text-xs font-bold'>x</span>
+                          <span className='text-xs font-bold'>{formatNumber(asset.shares, 4)}</span>
+                        </p>
+                      )}
                     </div>
                     <div className="flex items-center">
                       { /* Show view details */}

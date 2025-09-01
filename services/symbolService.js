@@ -45,6 +45,7 @@ const fetchSymbolDataFromAPI = async (symbols) => {
 		if (quote) {
       denormalizedSymbol = denormalizeCryptoSymbol(quote.symbol);
       symbolDetails[denormalizedSymbol] = {
+        description: quote.longName || quote.shortName || '',
         currency: quote.currency || 'USD', // Fallback to USD if currency is not available
         price: quote.regularMarketPrice,
         timestamp: new Date().toISOString()
