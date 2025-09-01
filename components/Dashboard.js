@@ -163,7 +163,7 @@ export default function Dashboard() {
 
       {/* Main content */}
       <div className="flex pt-16 min-h-screen">
-        <main className="flex-1 lg:mr-[420px] p-6 md:p-8 space-y-6 md:space-y-8">
+        <main className="flex-1 lg:mr-[420px] xl:mr-[520px] p-6 md:p-8 space-y-6 md:space-y-8">
 
           <div className="flex flex-col items-center sr-only">
             <h1>{appShortDescription} | {appName}</h1>
