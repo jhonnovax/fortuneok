@@ -59,11 +59,15 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
                         </div>
                       )}
                       <p className="text-sm">
-                        {currencies.find(currency => currency.code === (!selectedCategory ? baseCurrency : asset.currentValuation?.currency))?.flag} 
-                        {selectedCategory ? asset.currentValuation.currency : baseCurrency}
-                        <span className="ml-1">{formatFullCurrency(asset.valuationInPreferredCurrency || 0)}</span>
-                        {!selectedCategory && (
-                          <div>
+                        {currencies.find(currency => currency.code === baseCurrency)?.flag} 
+                        {baseCurrency}
+
+                        <span className="ml-1">
+                          {formatFullCurrency(asset.valuationInPreferredCurrency || 0)}
+                        </span>
+
+                        {asset.currencies.length > 0 && (
+                          <div className={`${selectedCategory ? 'inline-block' : ''}`}>
                             <span className="ml-1">In</span>
                             {asset.currencies.map((currency, currencyIndex) => (
                               <span key={currencyIndex} className="badge badge-sm badge-ghost ml-1">
