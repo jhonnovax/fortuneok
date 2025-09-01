@@ -125,7 +125,9 @@ export default function Dashboard() {
     <AssetList 
       isLoading={isLoading} 
       error={error} 
+      baseCurrency={baseCurrency}
       assetData={filteredAssets} 
+      selectedCategory={selectedCategory}
       totalAssetsValue={totalAssetsValue}
       showMoreActions={showAssetActionsButton}
       showViewDetails={showAssetViewDetailsButton}

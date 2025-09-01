@@ -7,8 +7,9 @@ import ErrorLoadingData from './ErrorLoadingData';
 import { getAssetPercentage } from '@/services/assetService';
 import { getChartColors } from '@/services/chartService';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
+import currencies from '@/public/currencies.json';
 
-export default function AssetsList({ isLoading, error, assetData, totalAssetsValue, showMoreActions, showViewDetails, onEditAsset, onDeleteAsset, onViewDetails }) {
+export default function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategory, totalAssetsValue, showMoreActions, showViewDetails, onEditAsset, onDeleteAsset, onViewDetails }) {
 
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, assetId: null });
   const theme = useSystemTheme();
@@ -60,18 +61,24 @@ export default function AssetsList({ isLoading, error, assetData, totalAssetsVal
                       {asset.shares && (
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                           <span className="mr-1">{asset.symbol}</span>
-                          <span className="badge-sm badge-ghost text-gray-600 dark:text-gray-400">
-                            <span className='text-xs font-bold'>x</span>{formatNumber(asset.shares, 4)}
-                          </span>
+                          <span className='text-xs font-bold'>x</span>
+                          <span className='text-xs font-bold'>{formatNumber(asset.shares, 4)}</span>
                         </p>
                       )}
                       <p className="text-sm">
-                        {formatFullCurrency(asset.valuationInPreferredCurrency || 0)}
-                        {asset.currencies.map((currency, currencyIndex) => (
-                          <span key={currencyIndex} className="badge badge-sm badge-ghost ml-1">
-                            {currency}
-                          </span>
-                        ))}
+                        {currencies.find(currency => currency.code === (!selectedCategory ? baseCurrency : asset.currentValuation?.currency))?.flag} 
+                        {selectedCategory ? asset.currentValuation.currency : baseCurrency}
+                        <span className="ml-1">{formatFullCurrency(asset.valuationInPreferredCurrency || 0)}</span>
+                        {!selectedCategory && (
+                          <div>
+                            <span className="ml-1">In</span>
+                            {asset.currencies.map((currency, currencyIndex) => (
+                              <span key={currencyIndex} className="badge badge-sm badge-ghost ml-1">
+                                {currency}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </p>
                     </div>
                     <div className="flex items-center">
