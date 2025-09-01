@@ -180,14 +180,15 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, t
         </h3>
 
       {/* Total Assets Values by Currency */}
-      <div className="join mt-4 md:mt-6 flex items-center justify-center">
+      <div className="p-4 md:p-6 pb-0 flex items-center justify-center flex-wrap gap-2">
         {totalAssetsbyCurrency.map(value => (
-          <div className="indicator mr-2" key={value.currency}>
-            <span className="indicator-item indicator-center badge badge-sm badge-primary">
-              {formatPercentage(value.percentage * 100, 2)}
-            </span>
+          <div className="inline-block" key={value.currency}>
             <div className="p-1 border rounded-lg shadow-sm bg-base-100 text-sm md:text-base">
-              {currencies.find(currency => currency.code === value.currency)?.flag} {formatFullCurrency(value.totalValue)} in <span className="badge badge-sm badge-ghost">{value.currency}</span>
+              {currencies.find(currency => currency.code === value.currency)?.flag} 
+              <span className="font-bold ml-1">{formatPercentage(value.percentage * 100, 2)}</span>
+              <div className="text-md">
+                {formatFullCurrency(value.totalValue)} in <span className="badge badge-sm badge-ghost">{value.currency}</span>
+              </div>
             </div>
           </div>
         ))}

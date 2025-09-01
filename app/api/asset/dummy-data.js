@@ -204,6 +204,17 @@ export const dummyData = [
     "symbol": 'FRA.DE',
     "shares": 567.8912,
     "notes": "Held in Trade Republic"
+  },
+  {
+    "id": 23,
+    "date": "2008-08-17T00:00:00.000Z",
+    "category": "real_estate",
+    "description": "1105 Spring Street #403, Sydney, Australia",
+    "currentValuation": {
+      "currency": "AUD",
+      "amount": 550000
+    },
+    "notes": "1-bedroom, 1-bath condo in First Hill. Offers a comfortable living area and proximity to downtown amenities."
   }
 ]
 
