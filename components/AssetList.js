@@ -4,7 +4,7 @@ import { useState } from 'react';
 import DeleteAssetModal from './DeleteAssetModal';
 import { formatDateToString, formatFullCurrency, formatNumber, formatPercentage } from '@/services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
-import { getAssetPercentage } from '@/services/assetService';
+import { getAssetCategoryGroupIcon, getAssetPercentage } from '@/services/assetService';
 import { getChartColors } from '@/services/chartService';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
 import currencies from '@/public/currencies.json';
@@ -48,7 +48,7 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="font-bold text-sm">
-                        {asset.description}
+                        {selectedCategory === 'all' && getAssetCategoryGroupIcon(asset.category)} {asset.description}
                       </h3>
                       {asset.date && (
                         <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400">

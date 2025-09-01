@@ -12,7 +12,7 @@ import { useCurrencyRatesStore } from '@/store/currencyRatesStore';
 import config from '@/config';
 import Footer from './Footer';
 import { usePreferences } from '@/contexts/PreferencesContext';
-import { parseAssetCategoryFromAssetList, getAssetCategoryGroup } from '@/services/assetService';
+import { parseAssetCategoryFromAssetList, getAssetCategoryGroupName } from '@/services/assetService';
 import AssetTopBarNavigation from './AssetTopBarNavigation';
 
 export default function Dashboard() {
@@ -46,8 +46,8 @@ export default function Dashboard() {
 
     // If a category is selected, and it's not 'all', filter the assets to only include the assets in that category
     if (selectedCategory && selectedCategory !== 'all') {
-      const categoryGroup = getAssetCategoryGroup(selectedCategory);      
-      assets = assets.filter((asset) => getAssetCategoryGroup(asset.category) === categoryGroup);
+      const categoryGroupName = getAssetCategoryGroupName(selectedCategory);      
+      assets = assets.filter((asset) => getAssetCategoryGroupName(asset.category) === categoryGroupName);
     }
     
     // If no category is selected, parse the asset data to get the categories

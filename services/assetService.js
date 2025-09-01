@@ -11,7 +11,7 @@ export const ASSET_CATEGORIES = [
   { value: 'etf_funds', label: '📈 ETF / Funds' },
   { value: 'stocks', label: '📈 Stocks' },
   { value: 'bonds', label: '📈 Bonds' },
-  { value: 'cryptocurrencies', label: '📈 Cryptocurrencies' },
+  { value: 'cryptocurrencies', label: '📉 Cryptocurrencies' },
   { value: 'option', label: '📈 Option' },
   { value: 'futures', label: '📈 Futures' },
   { value: 'other', label: '🔷 Other custom assets' }
@@ -72,7 +72,7 @@ export function parseDataFromAPI(asset, selectedIds, conversionRates) {
 
 export function parseAssetCategoryFromAssetList(assetData) {
   const assetCategories = assetData.reduce((categories, asset) => {
-    const assetCategoryGroup = getAssetCategoryGroup(asset.category);
+    const assetCategoryGroup = getAssetCategoryGroupName(asset.category);
     const categoryExists = categories.some(category => category.category === assetCategoryGroup);
 
     if (!categoryExists) {
@@ -109,7 +109,28 @@ export function getAssetCategoryDescription(assetCategory) {
   return ASSET_CATEGORIES.find(category => category.value === assetCategory)?.label || assetCategory;
 }
 
-export function getAssetCategoryGroup(assetCategory) {
+export function getAssetCategoryGroupIcon (assetCategoryGroupName) {
+  switch (assetCategoryGroupName) {
+    case 'bonds':
+      return '📈';
+    case 'cars':
+      return '🚗';
+    case 'cash':
+      return '💵';
+    case 'cryptocurrencies':
+      return '📉';
+    case 'etf_funds':
+      return '📈';
+    case 'real_estate':
+      return '🏠';
+    case 'stocks':
+      return '📈';
+    case 'other':
+      return '🔷';
+  }
+}
+
+export function getAssetCategoryGroupName(assetCategory) {
 
   switch (assetCategory) {
 
