@@ -183,7 +183,7 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, t
       <div className="p-4 md:p-6 pb-0 flex items-center justify-center flex-wrap gap-2">
         {totalAssetsbyCurrency.map(value => (
           <div className="inline-block" key={value.currency}>
-            <div className="p-1 border rounded-lg shadow-sm bg-base-100 text-sm md:text-base">
+            <div className="p-1 border border-base-content/10 rounded-lg shadow-sm bg-base-100 text-sm md:text-base">
               {currencies.find(currency => currency.code === value.currency)?.flag} 
               <span className="font-bold ml-1">{formatPercentage(value.percentage * 100, 2)}</span>
               <div className="text-md">
