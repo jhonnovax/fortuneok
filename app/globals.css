@@ -1,9 +1,11 @@
+@import './fonts.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 html,
 body {
+  font-family: 'FuturaPT', 'Montserrat', sans-serif;
   scroll-behavior: smooth !important;
   scrollbar-gutter: auto !important; /* This is needed since DaisyUI uses scrollbar-gutter: stable; when modal is open */
 }
@@ -23,10 +25,7 @@ progress::-webkit-progress-value {
 
 /* Custom layout styles */
 @layer base {
-  .btn-gradient {
-    @apply !bg-gradient !bg-[length:300%_300%] hover:saturate-[1.2] shadow duration-100 !border-0 !border-transparent !bg-transparent animate-shimmer disabled:!bg-none disabled:!bg-gray-500/30  !text-white;
-  }
-  .btn {
-    @apply !capitalize;
+  html {
+    font-size: 18px;
   }
 }
