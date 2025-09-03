@@ -2,10 +2,10 @@ const CHART_COLORS_LIGHT_BG = [
   '#1f77b4', // Blue
   '#d62728', // Red
   '#248824', // Green
-  '#ff7f0e', // Orange
+  '#b95b08', // Orange
   '#8c61b3', // Purple
   '#8c564b', // Brown
-  '#e377c2', // Pink
+  '#a4558c', // Pink
   '#17becf', // Cyan
   '#7f7f7f', // Gray
   '#bcbd22', // Yellow-green
