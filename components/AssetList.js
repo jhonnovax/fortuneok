@@ -8,6 +8,7 @@ import { getAssetCategoryGroupIcon, getAssetPercentage } from '@/services/assetS
 import { getChartColors } from '@/services/chartService';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
 import currencies from '@/public/currencies.json';
+import CurrencyBadge from './CurrencyBadge';
 
 export default function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategory, totalAssetsValue, showMoreActions, showViewDetails, onEditAsset, onDeleteAsset, onViewDetails }) {
 
@@ -63,9 +64,7 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
                           <div className={`${selectedCategory ? 'inline-block' : ''}`}>
                             <span className="ml-1">In</span>
                             {asset.currencies.map((currency, currencyIndex) => (
-                              <span key={currencyIndex} className="badge badge-sm badge-ghost ml-1">
-                                {currency}
-                              </span>
+                              <CurrencyBadge key={currencyIndex} currencyCode={currency} />
                             ))}
                           </div>
                         )}

@@ -15,6 +15,7 @@ import { BREAKPOINTS } from '@/services/breakpointService';
 import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
 import currencies from '@/public/currencies.json';
+import CurrencyBadge from './CurrencyBadge';
 
 // Custom tooltip component
 const CustomTooltip = ({ active, payload }) => {
@@ -187,7 +188,7 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, t
               {currencies.find(currency => currency.code === value.currency)?.flag} 
               <span className="font-bold ml-1">{formatPercentage(value.percentage * 100, 2)}</span>
               <div className="text-md">
-                {formatFullCurrency(value.totalValue)} in <span className="badge badge-sm badge-ghost">{value.currency}</span>
+                {formatFullCurrency(value.totalValue)} in <CurrencyBadge currencyCode={value.currency} />
               </div>
             </div>
           </div>
