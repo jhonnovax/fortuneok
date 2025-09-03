@@ -16,6 +16,7 @@ import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
 import currencies from '@/public/currencies.json';
 import CurrencyBadge from './CurrencyBadge';
+import { ASSET_CATEGORIES } from '../services/assetService';
 
 // Custom tooltip component
 const CustomTooltip = ({ active, payload }) => {
@@ -69,11 +70,11 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, t
   // Add fill property to data for tooltip color  
   const assetDataWithFill = useMemo(() => {
     return filteredAssetData.map((item, index) => ({
-      name: item.description,
+      name: isDesktopOrUpper ? item.description : ASSET_CATEGORIES.find(category => category.value === item.category)?.icon,
       value: item.valuationInPreferredCurrency,
       fill: chartColors[index % chartColors.length]
     }));
-  }, [filteredAssetData, chartColors]);
+  }, [filteredAssetData, chartColors, isDesktopOrUpper]);
 
   // Render pie custom label
   function renderPieCustomLabel({ cx, cy, midAngle, outerRadius, percent, index, name }){
@@ -102,7 +103,7 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, t
           whiteSpace: 'nowrap'
         }}
       >
-        {`${formatPercentage(percent * 100, 2)} ${isDesktopOrUpper ? name : ''}`}
+        {`${formatPercentage(percent * 100, 2)} ${name}`}
       </text>
     );
   }

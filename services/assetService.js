@@ -1,20 +1,21 @@
 import { getLocalDateFromUTCString } from "@/services/dateService";
 
 export const ASSET_CATEGORIES = [
-  { value: 'real_estate', label: '🏠 Real Estate' },
-  { value: 'cars', label: '🚗 Cars' },
-  { value: 'cash', label: '💵 Cash' },
-  { value: 'certificates_of_deposit', label: '🏦 Certificates of deposit' },
-  { value: 'savings_account', label: '🏦 Savings account' },
-  { value: 'p2p_loans', label: '🤝 P2P loans' },
-  { value: 'precious_metals', label: '👑 Precious metals' },
-  { value: 'etf_funds', label: '📈 ETF / Funds' },
-  { value: 'stocks', label: '📈 Stocks' },
-  { value: 'bonds', label: '📈 Bonds' },
-  { value: 'cryptocurrencies', label: '📉 Cryptocurrencies' },
-  { value: 'option', label: '📈 Option' },
-  { value: 'futures', label: '📈 Futures' },
-  { value: 'other', label: '🔷 Other custom assets' }
+  { group: 'bonds', label: '📈 Bonds', value: 'bonds', icon: '📈' },
+  { group: 'cars', label: '🚗 Cars', value: 'cars', icon: '🚗' },
+  { group: 'cash', label: '💵 Cash', value: 'cash', icon: '💵' },
+  { group: 'cash', label: '🏦 Certificates of deposit', value: 'certificates_of_deposit', icon: '🏦' },
+  { group: 'cash', label: '💵 Checking account', value: 'checking_account', icon: '🏦' },
+  { group: 'cash', label: '🏦 Savings account', value: 'savings_account', icon: '🏦' },
+  { group: 'cash', label: '🤝 P2P loans', value: 'p2p_loans', icon: '🤝' },
+  { group: 'cryptocurrencies', label: '📉 Cryptocurrencies', value: 'cryptocurrencies', icon: '📉' },
+  { group: 'etf_funds', label: '📈 ETF / Funds', value: 'etf_funds', icon: '📈' },
+  { group: 'precious_metals', label: '👑 Precious metals', value: 'precious_metals', icon: '👑' },
+  { group: 'real_estate', label: '🏠 Real Estate', value: 'real_estate', icon: '🏠' },
+  { group: 'stocks', label: '📈 Stocks', value: 'stocks', icon: '📈' },
+  { group: 'stocks', label: '📈 Option', value: 'option', icon: '📈' },
+  { group: 'stocks', label: '📈 Futures', value: 'futures', icon: '📈' },
+  { group: 'other', label: '🔷 Other custom assets', value: 'other', icon: '🔷' }
 ];
 
 export function convertFromBaseCurrency(baseCurrency = 'USD', amount = 0, rates = {}) {
@@ -152,6 +153,9 @@ export function getAssetCategoryGroupName(assetCategory) {
 
     case 'etf_funds':
       return 'etf_funds';
+
+    case 'precious_metals':
+      return 'precious_metals';
 
     case 'real_estate':
       return 'real_estate';
