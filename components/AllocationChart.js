@@ -37,7 +37,7 @@ const CustomTooltip = ({ active, payload, showValues }) => {
   return null;
 };
 
-export default function AllocationChart({ isLoading, error, filteredAssetData, totalAssetsValue, showValues, setShowValues }) {
+export default function AllocationChart({ isLoading, error, baseCurrency, filteredAssetData, totalAssetsValue, showValues }) {
 
   const { breakpointInPixels } = useTailwindBreakpoint();
   const theme = useSystemTheme();
@@ -186,10 +186,11 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, t
         {totalAssetsbyCurrency.map(value => (
           <div className="inline-block" key={value.currency}>
             <div className="p-1 border border-base-content/10 rounded-lg shadow-sm bg-base-100 text-sm md:text-base">
-              {currencies.find(currency => currency.code === value.currency)?.flag} 
-              <span className="font-bold ml-1">{formatPercentage(value.percentage * 100, 2)}</span>
-              <div className="text-md">
-                {showValues ? formatFullCurrency(value.totalValue) : maskValue(value.totalValue)} in <CurrencyBadge currencyCode={value.currency} />
+              <div className="flex items-center">
+                <span className="font-bold mr-1">{formatPercentage(value.percentage * 100, 2)}</span> in <CurrencyBadge currencyCode={value.currency} />
+              </div>
+              <div className="text-xs text-center">
+                {currencies.find(currency => currency.code === baseCurrency)?.flag}{baseCurrency} {showValues ? formatFullCurrency(value.totalValue) : maskValue(value.totalValue)}
               </div>
             </div>
           </div>

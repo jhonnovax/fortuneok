@@ -186,6 +186,7 @@ export default function Dashboard() {
           {/* Render Allocation Chart */}
           <AllocationChart 
             isLoading={isLoading}
+            baseCurrency={baseCurrency}
             filteredAssetData={filteredAssets} 
             totalAssetsValue={totalAssetsValue}
             error={error}
