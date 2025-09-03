@@ -60,7 +60,7 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
                           {formatFullCurrency(asset.valuationInPreferredCurrency || 0)}
                         </span>
 
-                        {asset.currencies.length > 0 && (
+                        {asset.currencies.filter(currency => currency !== baseCurrency).length > 0 && (
                           <div className={`${selectedCategory ? 'inline-block' : ''}`}>
                             <span className="ml-1">In</span>
                             {asset.currencies.map((currency, currencyIndex) => (
