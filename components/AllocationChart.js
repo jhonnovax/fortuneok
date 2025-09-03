@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from 'recharts';
 import { useMemo } from 'react';
-import { formatCurrency, formatFullCurrency, formatPercentage } from '../services/intlService';
+import { formatCurrency, formatFullCurrency, formatPercentage, maskValue } from '../services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import { getChartColors } from '../services/chartService';
 import { BREAKPOINTS } from '@/services/breakpointService';
@@ -19,7 +19,7 @@ import CurrencyBadge from './CurrencyBadge';
 import { ASSET_CATEGORIES } from '../services/assetService';
 
 // Custom tooltip component
-const CustomTooltip = ({ active, payload }) => {
+const CustomTooltip = ({ active, payload, showValues }) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-base-100 p-2 border border-base-300 shadow-md rounded-md">
@@ -30,14 +30,14 @@ const CustomTooltip = ({ active, payload }) => {
           />
           <span className="font-medium">{payload[0].payload.name}</span>
         </div>
-        <p className="text-sm mt-1">{formatCurrency(payload[0].value)}</p>
+        <p className="text-sm mt-1">{showValues ? formatCurrency(payload[0].value) : maskValue(payload[0].value)}</p>
       </div>
     );
   }
   return null;
 };
 
-export default function AllocationChart({ isLoading, error, filteredAssetData, totalAssetsValue }) {
+export default function AllocationChart({ isLoading, error, filteredAssetData, totalAssetsValue, showValues, setShowValues }) {
 
   const { breakpointInPixels } = useTailwindBreakpoint();
   const theme = useSystemTheme();
@@ -162,7 +162,7 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, t
                   <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
                 ))}
               </Pie>
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip content={<CustomTooltip showValues={showValues} />} />
             </PieChart>
           </ResponsiveContainer>
         )}
@@ -189,7 +189,7 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, t
               {currencies.find(currency => currency.code === value.currency)?.flag} 
               <span className="font-bold ml-1">{formatPercentage(value.percentage * 100, 2)}</span>
               <div className="text-md">
-                {formatFullCurrency(value.totalValue)} in <CurrencyBadge currencyCode={value.currency} />
+                {showValues ? formatFullCurrency(value.totalValue) : maskValue(value.totalValue)} in <CurrencyBadge currencyCode={value.currency} />
               </div>
             </div>
           </div>

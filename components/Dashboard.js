@@ -23,6 +23,7 @@ export default function Dashboard() {
   const [submitAssetError, setSubmitAssetError] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [showValues, setShowValues] = useState(true);
   const [error, setError] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -131,6 +132,8 @@ export default function Dashboard() {
       totalAssetsValue={totalAssetsValue}
       showMoreActions={showAssetActionsButton}
       showViewDetails={showAssetViewDetailsButton}
+      showValues={showValues}
+      setShowValues={setShowValues}
       onEditAsset={handleEditAsset} 
       onDeleteAsset={handleDeleteAsset}
       onViewDetails={handleViewDetails}
@@ -176,6 +179,8 @@ export default function Dashboard() {
             error={error}
             assetData={assetData} 
             totalAssetsValue={totalAssetsValue}
+            showValues={showValues}
+            setShowValues={setShowValues}
           />
 
           {/* Render Allocation Chart */}
@@ -184,6 +189,8 @@ export default function Dashboard() {
             filteredAssetData={filteredAssets} 
             totalAssetsValue={totalAssetsValue}
             error={error}
+            showValues={showValues}
+            setShowValues={setShowValues}
           />
 
           {/* Mobile Assets List */}

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import DeleteAssetModal from './DeleteAssetModal';
-import { formatDateToString, formatFullCurrency, formatNumber, formatPercentage } from '@/services/intlService';
+import { formatDateToString, formatFullCurrency, formatNumber, formatPercentage, maskValue } from '@/services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import { getAssetCategoryGroupIcon, getAssetPercentage } from '@/services/assetService';
 import { getChartColors } from '@/services/chartService';
@@ -10,7 +10,7 @@ import { useSystemTheme } from '@/hooks/useSystemTheme';
 import currencies from '@/public/currencies.json';
 import CurrencyBadge from './CurrencyBadge';
 
-export default function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategory, totalAssetsValue, showMoreActions, showViewDetails, onEditAsset, onDeleteAsset, onViewDetails }) {
+export default function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategory, totalAssetsValue, showMoreActions, showViewDetails, showValues, setShowValues, onEditAsset, onDeleteAsset, onViewDetails }) {
 
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, assetId: null });
   const theme = useSystemTheme();
@@ -57,7 +57,7 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
                         {baseCurrency}
 
                         <span className="ml-1">
-                          {formatFullCurrency(asset.valuationInPreferredCurrency || 0)}
+                          {showValues ? formatFullCurrency(asset.valuationInPreferredCurrency || 0) : maskValue(asset.valuationInPreferredCurrency || 0)}
                         </span>
 
                         {asset.currencies.filter(currency => currency !== baseCurrency).length > 0 && (

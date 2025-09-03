@@ -1,5 +1,9 @@
-export function maskValue() {
-  return '$●●●●●●●';
+export function maskValue(value) {
+  const valueString = value.toString().split('.')[0];
+  const valueLength = valueString.length > 5 ? 5 : valueString.length;
+  const maskedValue = '●'.repeat(valueLength);
+
+  return `$${maskedValue}`;
 }
 
 export function formatCurrency(value, decimals = 0, currency = 'USD') {
