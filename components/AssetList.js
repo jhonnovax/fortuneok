@@ -10,7 +10,7 @@ import { useSystemTheme } from '@/hooks/useSystemTheme';
 import currencies from '@/public/currencies.json';
 import CurrencyBadge from './CurrencyBadge';
 
-export default function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategory, totalAssetsValue, showMoreActions, showViewDetails, showValues, setShowValues, onEditAsset, onDeleteAsset, onViewDetails }) {
+export default function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategory, totalAssetsValue, showMoreActions, showViewDetails, showValues, onEditAsset, onDeleteAsset, onViewDetails }) {
 
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, assetId: null });
   const theme = useSystemTheme();

@@ -133,7 +133,6 @@ export default function Dashboard() {
       showMoreActions={showAssetActionsButton}
       showViewDetails={showAssetViewDetailsButton}
       showValues={showValues}
-      setShowValues={setShowValues}
       onEditAsset={handleEditAsset} 
       onDeleteAsset={handleDeleteAsset}
       onViewDetails={handleViewDetails}
@@ -191,7 +190,6 @@ export default function Dashboard() {
             totalAssetsValue={totalAssetsValue}
             error={error}
             showValues={showValues}
-            setShowValues={setShowValues}
           />
 
           {/* Mobile Assets List */}
