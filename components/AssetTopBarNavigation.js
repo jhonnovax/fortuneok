@@ -28,7 +28,7 @@ export default function AssetTopBarNavigation({ onAddAsset, assetData, selectedC
     <div className="flex justify-between items-center !mt-0">
       <div className="items-start">
         {/* Topbar Title */}
-        <h2 className="italic font-semibold flex items-center gap-1 text-xs sm:text-sm md:text-base">
+        <h2 className="font-semibold flex items-center gap-1 md:text-base">
           {getTopbarTitle()} <span className="badge badge-ghost badge-md">{totalAssets}</span>
         </h2>
       </div>
@@ -39,7 +39,7 @@ export default function AssetTopBarNavigation({ onAddAsset, assetData, selectedC
           <div className="mb-0">
             <button className="btn btn-sm btn-default" onClick={() => setSelectedCategory('all')}>
               📊 All Assets 
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="currentColor" className="w-4 h-4 mr-1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="currentColor" className="w-4 h-4">
                 <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
               </svg>
             </button>
