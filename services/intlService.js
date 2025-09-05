@@ -25,19 +25,14 @@ export function formatFullCurrency(value, decimals = 0, currency = 'USD') {
   }).format(value);
 }
 
-export function formatDateToString(date) {
-  const day = date.getDate().toString().padStart(2, '0');
-  const month = date.toLocaleString('default', { month: 'short' });
-  const year = date.getFullYear();
+export function formatDateToString(date, monthFormat = 'long') {
+  const formatted = new Intl.DateTimeFormat(undefined, {
+    year: "numeric",
+    month: monthFormat, // or "long", "numeric"
+    day: "numeric"
+  }).format(date);
 
-  return `${year}/${month}/${day}`;
-}
-
-export function formatPercentage(percentageValue, decimals = 2) {
-  return new Intl.NumberFormat("en-US", {
-    style: "percent",
-    maximumFractionDigits: decimals
-  }).format(percentageValue / 100);
+  return formatted;
 }
 
 export function formatNumber(value, decimals = 0) {
@@ -45,4 +40,11 @@ export function formatNumber(value, decimals = 0) {
     style: "decimal",
     maximumFractionDigits: decimals
   }).format(value);
+}
+
+export function formatPercentage(percentageValue, decimals = 2) {
+  return new Intl.NumberFormat("en-US", {
+    style: "percent",
+    maximumFractionDigits: decimals
+  }).format(percentageValue / 100);
 }
