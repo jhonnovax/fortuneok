@@ -25,7 +25,7 @@ export default function AssetTopBarNavigation({ onAddAsset, assetData, selectedC
   }
 
   return (
-    <div className="flex justify-between items-center !mt-0">
+    <div className="flex justify-between items-center flex-wrap !mt-0">
       <div className="items-start">
         {/* Topbar Title */}
         <h2 className="font-semibold flex items-center gap-1 text-sm md:text-base">
