@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import TopNavbar from "./TopNavbar";
-import RightSidebar from "./RightSidebar";
+import Sidebar from "./Sidebar";
 import AssetList from "./AssetList";
 import AllocationChart from "./AllocationChart";
 import AssetEditionModal from "./AssetEditionModal";
@@ -165,7 +165,7 @@ export default function Dashboard() {
 
       {/* Main content */}
       <div className="flex pt-16 min-h-screen">
-        <main className="flex-1 lg:mr-[420px] xl:mr-[520px] p-6 md:p-8 space-y-6 md:space-y-8">
+        <main className="flex-1 lg:ml-[420px] xl:ml-[520px] p-6 md:p-8 space-y-6 md:space-y-8">
 
           <div className="flex flex-col items-center sr-only">
             <h1>{appShortDescription} | {appName}</h1>
@@ -213,7 +213,7 @@ export default function Dashboard() {
         </main>
 
         {/* Desktop sidebar */}
-        <RightSidebar 
+        <Sidebar 
           isLoading={isLoading} 
           assetData={filteredAssets}  
           onAddAsset={handleNewAsset}
@@ -221,7 +221,7 @@ export default function Dashboard() {
           setSelectedCategory={setSelectedCategory}
         >
           <AssetListComponent />
-        </RightSidebar>
+        </Sidebar>
 
         {/* Add Asset Modal */}
         <AssetEditionModal

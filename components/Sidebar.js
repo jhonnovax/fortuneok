@@ -2,10 +2,10 @@
 
 import AssetTopBarNavigation from './AssetTopBarNavigation';
 
-export default function RightSidebar({ children, isLoading, assetData, onAddAsset, selectedCategory, setSelectedCategory }) {
+export default function Sidebar({ children, isLoading, assetData, onAddAsset, selectedCategory, setSelectedCategory }) {
 
   return (
-    <aside className="hidden lg:block fixed right-0 top-16 w-[420px] xl:w-[520px] h-[calc(100vh-4rem)] bg-base-100 border-l border-base-content/10">
+    <aside className="hidden lg:block fixed left-0 top-16 w-[420px] xl:w-[520px] h-[calc(100vh-4rem)] bg-base-100 border-l border-base-content/10">
       <div className="flex flex-col h-full">
 
         <div className="p-4 border-b border-base-content/10 bg-base-100">
