@@ -1,7 +1,6 @@
 export function maskValue(value) {
   const valueString = value.toString().split('.')[0];
-  const valueLength = valueString.length > 5 ? 5 : valueString.length;
-  const maskedValue = '●'.repeat(valueLength);
+  const maskedValue = '●'.repeat(valueString.length);
 
   return `$${maskedValue}`;
 }
