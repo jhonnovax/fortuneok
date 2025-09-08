@@ -2,7 +2,7 @@
 
 import AssetTopBarNavigation from './AssetTopBarNavigation';
 
-export default function Sidebar({ children, isLoading, assetData, onAddAsset, selectedCategory, setSelectedCategory }) {
+export default function Sidebar({ children, isLoading, assetData, selectedCategory, setSelectedCategory }) {
 
   return (
     <aside className="hidden lg:block fixed left-0 top-16 w-[420px] xl:w-[520px] h-[calc(100vh-4rem)] bg-base-100 border-l border-base-content/10">
@@ -15,7 +15,6 @@ export default function Sidebar({ children, isLoading, assetData, onAddAsset, se
 
           {!isLoading && (
             <AssetTopBarNavigation 
-              onAddAsset={onAddAsset} 
               assetData={assetData}
               selectedCategory={selectedCategory}
               setSelectedCategory={setSelectedCategory}

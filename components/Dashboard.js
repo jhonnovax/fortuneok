@@ -14,6 +14,7 @@ import Footer from './Footer';
 import { usePreferences } from '@/contexts/PreferencesContext';
 import { parseAssetCategoryFromAssetList, getAssetCategoryGroupName } from '@/services/assetService';
 import AssetTopBarNavigation from './AssetTopBarNavigation';
+import FloatingBtnAddAsset from './FloatingBtnAddAsset';
 
 export default function Dashboard() {
 
@@ -197,7 +198,6 @@ export default function Dashboard() {
             <div className="card-body p-4">
               {!isLoading && (
                 <AssetTopBarNavigation 
-                  onAddAsset={handleNewAsset} 
                   assetData={filteredAssets} 
                   selectedCategory={selectedCategory}
                   setSelectedCategory={setSelectedCategory}
@@ -216,7 +216,6 @@ export default function Dashboard() {
         <Sidebar 
           isLoading={isLoading} 
           assetData={filteredAssets}  
-          onAddAsset={handleNewAsset}
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
         >
@@ -232,6 +231,9 @@ export default function Dashboard() {
           onClose={() => setIsAddModalOpen(false)}
           onSave={handleSaveAsset}
         />
+
+        {/* Floating Add Asset Button */}
+        <FloatingBtnAddAsset onAddAsset={handleNewAsset} />
 
       </div>
 

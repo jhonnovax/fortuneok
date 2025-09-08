@@ -1,6 +1,6 @@
 import { getAssetCategoryDescription } from '@/services/assetService';
 
-export default function AssetTopBarNavigation({ onAddAsset, assetData, selectedCategory, setSelectedCategory }) {
+export default function AssetTopBarNavigation({ assetData, selectedCategory, setSelectedCategory }) {
 
   const totalAssets = assetData.length;
 
@@ -56,22 +56,6 @@ export default function AssetTopBarNavigation({ onAddAsset, assetData, selectedC
           </button>
         )}
       </div>
-
-      <button 
-        className="fixed bottom-6 right-6 btn btn-primary rounded-full flex items-center gap-0 hover:gap-2 group opacity-60 hover:opacity-100 transition-opacity duration-300"
-        onClick={onAddAsset}
-      >
-        {/* Icon */}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus w-4 h-4">
-          <path d="M12 5v14" />
-          <path d="M5 12h14" />
-        </svg>
-
-        {/* Hidden text, revealed on hover */}
-        <span className="max-w-0 opacity-0 group-hover:max-w-xs group-hover:opacity-100 transition-all duration-300 whitespace-nowrap overflow-hidden">
-          Add Asset
-        </span>
-      </button>
 
     </div>
   );
