@@ -15,7 +15,6 @@ import { BREAKPOINTS } from '@/services/breakpointService';
 import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
 import { ASSET_CATEGORIES } from '../services/assetService';
-import TotalAssetsByCurrency from './TotalAssetsByCurrency';
 
 // Custom tooltip component
 const CustomTooltip = ({ active, payload, showValues }) => {
@@ -36,7 +35,7 @@ const CustomTooltip = ({ active, payload, showValues }) => {
   return null;
 };
 
-export default function AllocationChart({ isLoading, error, baseCurrency, filteredAssetData, totalAssetsValue, showValues }) {
+export default function AllocationChart({ isLoading, error, filteredAssetData, showValues }) {
 
   const { breakpointInPixels } = useTailwindBreakpoint();
   const theme = useSystemTheme();
@@ -151,20 +150,12 @@ export default function AllocationChart({ isLoading, error, baseCurrency, filter
     <div className="card bg-base-100 shadow-xl">
       {/* Heading */}
       <h3 className="text-lg font-semibold text-center flex items-center justify-center gap-2 sr-only">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
-          </svg>
-          Allocation Chart
-        </h3>
-
-      {/* Total Assets Values by Currency */}
-      <TotalAssetsByCurrency 
-        baseCurrency={baseCurrency} 
-        filteredAssetData={filteredAssetData} 
-        totalAssetsValue={totalAssetsValue} 
-        showValues={showValues} 
-      />
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
+        </svg>
+        Allocation Chart
+      </h3>
 
       {/* Chart */}
       <div className="card-body p-0 h-[300px] lg:h-[400px] items-center justify-center">

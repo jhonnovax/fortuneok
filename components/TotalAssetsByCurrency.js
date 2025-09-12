@@ -3,7 +3,7 @@ import CurrencyBadge from './CurrencyBadge';
 import currencies from '@/public/currencies.json';
 import { useMemo } from 'react';
 
-export default function TotalAssetsByCurrency({ baseCurrency, filteredAssetData, totalAssetsValue, showValues }) {
+export default function TotalAssetsByCurrency({ baseCurrency, className, filteredAssetData, totalAssetsValue, showValues }) {
 
   const assetsValuesByCurrency = useMemo(() => {
     const isCategory = filteredAssetData.some(asset => asset.assets?.length > 1);
@@ -28,7 +28,7 @@ export default function TotalAssetsByCurrency({ baseCurrency, filteredAssetData,
   }, [assetsValuesByCurrency, totalAssetsValue]);
 
   return (
-    <div className="p-4 md:p-6 pb-0 flex items-center justify-center flex-wrap gap-2">
+    <div className={`flex items-center justify-center flex-wrap gap-2 ${className}`}>
       {totalAssetsbyCurrency.map(value => (
         <div className="inline-block" key={value.currency}>
           <div className="p-1 border border-base-content/10 rounded-lg shadow-sm bg-base-100 text-xs md:text-sm md:text-base">

@@ -5,7 +5,7 @@ export default function CurrencyBadge({ currencyCode }) {
   const { flag: currencyFlag, label: currencyLabel } = currencyDetails;
 
   return (
-    <span className="badge badge-sm badge-ghost ml-1 py-1" title={currencyLabel}>
+    <span className="badge badge-sm badge-ghost ml-1 py-1 flex-shrink-0" title={currencyLabel}>
       {currencyFlag} {currencyCode}
     </span>
   );

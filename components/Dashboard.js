@@ -177,7 +177,8 @@ export default function Dashboard() {
           <SummaryCard 
             isLoading={isLoading}
             error={error}
-            assetData={assetData} 
+            baseCurrency={baseCurrency}
+            filteredAssetData={filteredAssets} 
             totalAssetsValue={totalAssetsValue}
             showValues={showValues}
             setShowValues={setShowValues}
@@ -186,10 +187,8 @@ export default function Dashboard() {
           {/* Render Allocation Chart */}
           <AllocationChart 
             isLoading={isLoading}
-            baseCurrency={baseCurrency}
-            filteredAssetData={filteredAssets} 
-            totalAssetsValue={totalAssetsValue}
             error={error}
+            filteredAssetData={filteredAssets} 
             showValues={showValues}
           />
 
