@@ -60,11 +60,14 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
                           {showValues ? formatFullCurrency(asset.valuationInPreferredCurrency || 0) : maskValue(asset.valuationInPreferredCurrency || 0)}
                         </span>
 
-                        {asset.currencies.filter(currency => currency !== baseCurrency).length > 0 && (
-                          <div className={`${selectedCategory ? 'inline-block' : ''}`}>
-                            <span className="ml-1">In</span>
-                            {asset.currencies.map((currency, currencyIndex) => (
-                              <CurrencyBadge key={currencyIndex} currencyCode={currency} />
+                        {asset.currencies.length > 0 && (
+                          <div className='block'>
+                            {asset.currencies.map((currencyData, currencyIndex) => (
+                              <CurrencyBadge 
+                                key={currencyIndex}
+                                currencyCode={currencyData.currency} 
+                                percentage={formatPercentage(currencyData.valuationInPreferredCurrency / asset.valuationInPreferredCurrency * 100, 2)} 
+                              />
                             ))}
                           </div>
                         )}
@@ -173,4 +176,5 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
   
     </div>
   );
+
 } 

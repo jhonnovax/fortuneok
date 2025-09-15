@@ -82,7 +82,7 @@ export function parseAssetCategoryFromAssetList(assetData) {
         assets: [asset],
         category: assetCategoryGroup,
         description: getAssetCategoryDescription(assetCategoryGroup),
-        currencies: [asset.currentValuation?.currency],
+        currencies: asset.currencies,
         valuationInPreferredCurrency: asset.valuationInPreferredCurrency
       });
     } else {
@@ -91,7 +91,7 @@ export function parseAssetCategoryFromAssetList(assetData) {
           return { 
             ...category, 
             assets: [...category.assets, asset],
-            currencies: [...new Set([...category.currencies, asset.currentValuation?.currency])].sort(),
+            currencies: [...new Set([...category.currencies, ...asset.currencies])].sort((a, b) => b.valuationInPreferredCurrency - a.valuationInPreferredCurrency),
             valuationInPreferredCurrency: category.valuationInPreferredCurrency + (asset.valuationInPreferredCurrency || 0) 
           };
         }

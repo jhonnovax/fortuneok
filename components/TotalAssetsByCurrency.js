@@ -32,11 +32,11 @@ export default function TotalAssetsByCurrency({ baseCurrency, className, filtere
       {totalAssetsbyCurrency.map(value => (
         <div className="inline-block" key={value.currency}>
           <div className="p-1 border border-base-content/10 rounded-lg shadow-sm bg-base-100 text-xs md:text-sm md:text-base">
-            <div className="flex items-center">
-              <span className="font-bold mr-1">{formatPercentage(value.percentage * 100, 2)}</span> in <CurrencyBadge currencyCode={value.currency} />
+            <div className="flex items-center justify-center">
+              {currencies.find(currency => currency.code === baseCurrency)?.flag}{baseCurrency} {showValues ? formatFullCurrency(value.totalValue) : maskValue(value.totalValue)}
             </div>
             <div className="text-center">
-              {currencies.find(currency => currency.code === baseCurrency)?.flag}{baseCurrency} {showValues ? formatFullCurrency(value.totalValue) : maskValue(value.totalValue)}
+              <CurrencyBadge currencyCode={value.currency} percentage={formatPercentage(value.percentage * 100, 2)} />
             </div>
           </div>
         </div>

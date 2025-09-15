@@ -42,7 +42,10 @@ export default function Dashboard() {
     let assets = assetData.map((asset) => {
       return {
         ...asset,
-        currencies: [asset.currentValuation?.currency]
+        currencies: [{
+          currency: asset.currentValuation?.currency,
+          valuationInPreferredCurrency: asset.valuationInPreferredCurrency
+        }]
       };
     });
 
@@ -54,7 +57,7 @@ export default function Dashboard() {
     
     // If no category is selected, parse the asset data to get the categories
     if (!selectedCategory) {
-      assets = parseAssetCategoryFromAssetList(assetData);
+      assets = parseAssetCategoryFromAssetList(assets);
     }
     
     assets = assets.sort((a, b) => b.valuationInPreferredCurrency - a.valuationInPreferredCurrency);
