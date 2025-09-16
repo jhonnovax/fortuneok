@@ -88,10 +88,29 @@ export function parseAssetCategoryFromAssetList(assetData) {
     } else {
       categories = categories.map(category => {
         if (category.category === assetCategoryGroup) {
+          const categoryCurrencies = [...category.currencies, ...asset.currencies].reduce((categoryCurrencies, currentCurrency) => {
+            const categoryCurrencyExists = categoryCurrencies.find(c => c.currency === currentCurrency.currency);
+
+            if (categoryCurrencyExists) {
+              return categoryCurrencies.map(categoryCurrency => {
+                if (categoryCurrency.currency === currentCurrency.currency) {
+                  return { 
+                    ...categoryCurrency, 
+                    valuationInPreferredCurrency: (categoryCurrency.valuationInPreferredCurrency + currentCurrency.valuationInPreferredCurrency)
+                  };
+                }
+
+                return categoryCurrency;
+              });
+            }
+
+            return [...categoryCurrencies, currentCurrency];
+          }, []);
+
           return { 
             ...category, 
             assets: [...category.assets, asset],
-            currencies: [...new Set([...category.currencies, ...asset.currencies])].sort((a, b) => b.valuationInPreferredCurrency - a.valuationInPreferredCurrency),
+            currencies: categoryCurrencies.sort((a, b) => b.valuationInPreferredCurrency - a.valuationInPreferredCurrency),
             valuationInPreferredCurrency: category.valuationInPreferredCurrency + (asset.valuationInPreferredCurrency || 0) 
           };
         }
