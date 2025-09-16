@@ -158,7 +158,7 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, s
       </h3>
 
       {/* Chart */}
-      <div className="card-body p-0 h-[300px] lg:h-[400px] items-center justify-center">
+      <div className="card-body p-4 lg:p-6 h-[300px] lg:h-[400px] items-center justify-center">
         {chartUI}
       </div>
 

@@ -68,7 +68,7 @@ export default function SummaryCard({ isLoading, error, baseCurrency, filteredAs
 
         {/* Total Assets Values by Currency */}
         <TotalAssetsByCurrency 
-          className="ml-auto"
+          className="2xl:ml-auto"
           baseCurrency={baseCurrency} 
           filteredAssetData={filteredAssetData} 
           totalAssetsValue={totalAssetsValue} 
