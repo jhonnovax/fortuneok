@@ -235,7 +235,7 @@ export default function Dashboard() {
         />
 
         {/* Floating Add Asset Button */}
-        <FloatingBtnAddAsset onAddAsset={handleNewAsset} />
+        {!isLoading && <FloatingBtnAddAsset onAddAsset={handleNewAsset} />}
 
       </div>
 
