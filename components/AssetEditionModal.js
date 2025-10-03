@@ -124,7 +124,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
 
   // Helper function to render label with required asterisk
   const renderLabel = (text, required = true, error = false) => (
-    <label className="label">
+    <label className="label pt-0">
       <span className={`label-text ${error ? 'text-error' : ''}`}>
         {text} {required && <span className="text-error">*</span>}
       </span>
@@ -204,7 +204,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                     className={`input input-bordered w-full ${errors.description ? 'input-error' : ''}`}
                     value={form.description}
                     onChange={(e) => setForm({ ...form, description: e.target.value })}
-                    placeholder="Enter description"
+                    placeholder="Enter asset description"
                     disabled={isSubmitting}
                   />
                   {errors.description && <span className="text-error text-sm mt-1">{errors.description}</span>}
@@ -284,7 +284,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
               <div className="form-control md:col-span-2">
                 {renderLabel('Notes', false, false)}
                 <textarea 
-                  className="textarea textarea-bordered w-full"
+                  className="textarea textarea-bordered w-full text-md"
                   value={form.notes}
                   onChange={(e) => setForm({ ...form, notes: e.target.value })}
                   placeholder="Add any additional notes here..."
