@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import currencies from '@/public/currencies.json';
+import ReactDOM from 'react-dom';
 
 export default function CurrencyCombobox({ 
   autoFocus = false,
@@ -17,6 +18,7 @@ export default function CurrencyCombobox({
   const [showDropdown, setShowDropdown] = useState(false);
   const comboboxRef = useRef(null);
   const inputRef = useRef(null);
+  const [dropdownCoords, setDropdownCoords] = useState({});
   
   // Filter currencies based on input
   function filterCurrencies(query) {
@@ -106,6 +108,18 @@ export default function CurrencyCombobox({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [inputValue, onChange]);
+
+  useEffect(() => {
+    if (showDropdown && inputRef.current) {
+      const rect = inputRef.current.getBoundingClientRect();
+      setDropdownCoords({
+        top: rect.bottom + window.scrollY,
+        left: rect.left + window.scrollX,
+        width: rect.width,
+        zIndex: 9999,
+      });
+    }
+  }, [showDropdown]);
   
   return (
     <div className={`form-control w-full relative ${className}`} ref={comboboxRef}>
@@ -131,7 +145,7 @@ export default function CurrencyCombobox({
             onClick={handleClear}
             aria-label="Clear input"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 hover:text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -142,34 +156,36 @@ export default function CurrencyCombobox({
       
       {/* Dropdown */}
       {showDropdown && (
-        <div className="absolute left-0 right-0 top-full mt-2 z-50">
-          <div className="shadow bg-base-100 rounded-box overflow-hidden">
-            <ul className="max-h-60 overflow-y-auto overflow-x-hidden">
-              {(filteredCurrencies.length > 0 ? filteredCurrencies : currencies).map((currency) => (
-                <li key={currency.code} className="border-b border-base-200 last:border-b-0">
-                  <button 
-                    type="button"
-                    onClick={() => handleSelect(currency)}
-                    className="w-full flex items-center gap-1 p-3 hover:bg-base-200 text-left"
-                  >
-                    {/* Flag with border */}
-                    <div className="w-8 h-6 flex-shrink-0 overflow-hidden rounded flex items-center justify-center">
-                      <span className="text-xl">{currency.flag}</span>
-                    </div>
-                    
-                    {/* Currency code in pill */}
-                    <div className="text-sm pr-1 py-1 rounded">
-                      {currency.code}
-                    </div>
-                    
-                    {/* Currency name */}
-                    <span className="text-base-content">{currency.label}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
+        ReactDOM.createPortal(
+          <div className="absolute left-0 right-0 top-full mt-2 z-50" style={dropdownCoords}>
+            <div className="shadow bg-base-200 overflow-hidden">
+              <ul className="max-h-60 overflow-y-auto overflow-x-hidden">
+                {(filteredCurrencies.length > 0 ? filteredCurrencies : currencies).map((currency) => (
+                  <li key={currency.code} className="border-b border-base-200 last:border-b-0">
+                    <button 
+                      type="button"
+                      onMouseDown={() => handleSelect(currency)}
+                      className="w-full flex items-center gap-1 p-3 hover:bg-primary/10 text-left"
+                    >
+                      {/* Flag with border */}
+                      <div className="w-8 h-6 flex-shrink-0 overflow-hidden rounded flex items-center justify-center">
+                        <span className="text-xl">{currency.flag}</span>
+                      </div>
+                      
+                      {/* Currency code in pill */}
+                      <div className="text-sm pr-1 py-1 rounded">
+                        {currency.code}
+                      </div>
+                      
+                      {/* Currency name */}
+                      <span className="text-base-content">{currency.label}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
+        , document.body)
       )}
       
     </div>
