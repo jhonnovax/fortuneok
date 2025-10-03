@@ -2,7 +2,7 @@ const config = {
   // REQUIRED
   appName: "FortuneOK",
   // Short description used for title and heading
-  appShortDescription: "Your Smart Portfolio Tracker for All Assets",
+  appShortDescription: "Your Investment Portfolio Tracker for All Assets",
   // Long description of your app for SEO tags (can be overwritten)
   appDescription: "Effortlessly manage your assets in one place. Say goodbye to spreadsheets and scattered records. Stay organized, track your portfolio, and make smarter financial decisions with ease.",
   // (no https://, not trialing slash at the end, just the naked domain)
@@ -49,7 +49,7 @@ const config = {
     // REQUIRED — Email 'From' field to be used when sending magic login links
     fromNoReply: `FortuneOK <noreply@mail.fortuneok.com>`,
     // REQUIRED — Email 'From' field to be used when sending other emails, like abandoned carts, updates etc..
-    fromAdmin: `Jhon at FortuneOK <jhon@mail.fortuneok.com>`,
+    fromAdmin: `FortuneOK <support@fortuneok.com>`,
     // Email shown to customer if need support. Leave empty if not needed => if empty, set up Crisp above, otherwise you won't be able to offer customer support."
     supportEmail: "support@fortuneok.com",
   },
