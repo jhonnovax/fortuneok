@@ -144,9 +144,11 @@ export default function CurrencyCombobox({
     }
 
     window.addEventListener('resize', closeDropdown);
+    window.visualViewport?.addEventListener('resize', closeDropdown);
     window.addEventListener('scroll', handleScroll, true);
     return () => {
       window.removeEventListener('resize', closeDropdown);
+      window.visualViewport?.removeEventListener('resize', closeDropdown);
       window.removeEventListener('scroll', handleScroll, true);
     };
   }, [showDropdown]);
