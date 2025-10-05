@@ -137,19 +137,18 @@ export default function CurrencyCombobox({
 
   // Close dropdown on resize or scroll
   useEffect(() => {
+    function handleScroll(event) {
+      const isScrollingSuggestions = event.target.classList.contains('suggestions-list');
+      if (!showDropdown || isScrollingSuggestions) return;
+      closeDropdown();
+    }
+
     window.addEventListener('resize', closeDropdown);
-    window.addEventListener('scroll', closeDropdown, true);
+    window.addEventListener('scroll', handleScroll, true);
     return () => {
       window.removeEventListener('resize', closeDropdown);
-      window.removeEventListener('scroll', closeDropdown, true);
+      window.removeEventListener('scroll', handleScroll, true);
     };
-  }, []);
-
-  // Update dropdown coords on scroll
-  useEffect(() => {
-    if (!showDropdown) return;
-    window.addEventListener('scroll', updateDropdownCoords, true);
-    return () => window.removeEventListener('scroll', updateDropdownCoords);
   }, [showDropdown]);
 
   return (
@@ -190,7 +189,7 @@ export default function CurrencyCombobox({
         ReactDOM.createPortal(
           <div className="absolute left-0 right-0 top-full mt-1 z-50" style={dropdownCoords}>
             <div className="shadow bg-base-200 overflow-hidden">
-              <ul className="max-h-60 overflow-y-auto overflow-x-hidden">
+              <ul className="max-h-60 overflow-y-auto overflow-x-hidden suggestions-list">
                 {(filteredCurrencies.length > 0 ? filteredCurrencies : currencies).map((currency) => (
                   <li key={currency.code} className="border-b border-base-200 last:border-b-0">
                     <button 
