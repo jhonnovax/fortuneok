@@ -143,12 +143,17 @@ export default function CurrencyCombobox({
       closeDropdown();
     }
 
-    window.addEventListener('resize', closeDropdown);
-    window.visualViewport?.addEventListener('resize', closeDropdown);
+    function handleResize() {
+      if (!showDropdown) return;
+      closeDropdown();
+    }
+
+    window.addEventListener('resize', handleResize);
+    window.visualViewport?.addEventListener('resize', handleResize);
     window.addEventListener('scroll', handleScroll, true);
     return () => {
-      window.removeEventListener('resize', closeDropdown);
-      window.visualViewport?.removeEventListener('resize', closeDropdown);
+      window.removeEventListener('resize', handleResize);
+      window.visualViewport?.removeEventListener('resize', handleResize);
       window.removeEventListener('scroll', handleScroll, true);
     };
   }, [showDropdown]);
