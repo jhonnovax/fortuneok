@@ -295,10 +295,10 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
         </form>
 
         {/* Action Buttons */}
-        <div className="mt-auto flex justify-end gap-4 p-4 border-t border-base-content/20 bg-base-200">
+        <div className="mt-auto flex justify-end gap-4 p-4 border-t border-base-content/20">
           <button 
             type="button" 
-            className="btn btn-outline"
+            className="btn btn-tertiary"
             onClick={onClose}
             disabled={isSubmitting}
           >
@@ -308,7 +308,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
           {session 
             ? <button 
                 type="button" 
-                className="btn btn-primary border border-neutral hover:border-neutral"
+                className="btn btn-primary"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
               >
