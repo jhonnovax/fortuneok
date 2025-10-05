@@ -134,7 +134,7 @@ export default function CurrencyCombobox({
       // wait for viewport to stabilize (keyboard fully open in mobile ios/android)
       setTimeout(() => {
         updateDropdownCoords();
-      }, 50);
+      }, 100);
     }
   }, [showDropdown]);
 
