@@ -86,6 +86,7 @@ export default function CurrencyCombobox({
   // Close dropdown
   function closeDropdown() {
     setShowDropdown(false);
+    inputRef.current?.blur();
   }
 
   // Initialize with value
@@ -163,7 +164,7 @@ export default function CurrencyCombobox({
           placeholder="Select currency"
           value={inputValue}
           onChange={handleInputChange}
-          onClick={handleFocus}
+          onFocus={handleFocus}
           disabled={disabled}
         />
         
