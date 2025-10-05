@@ -131,7 +131,10 @@ export default function CurrencyCombobox({
   // Update dropdown coords on show dropdown
   useEffect(() => {
     if (showDropdown) {
-      updateDropdownCoords();
+      // wait for viewport to stabilize (keyboard fully open in mobile ios/android)
+      setTimeout(() => {
+        updateDropdownCoords();
+      }, 50);
     }
   }, [showDropdown]);
 
