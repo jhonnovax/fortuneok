@@ -70,6 +70,24 @@ export default function CurrencyCombobox({
     inputRef.current?.focus?.();
   }
 
+  // Update dropdown coords
+  function updateDropdownCoords() {
+    if (inputRef.current) {
+      const rect = inputRef.current.getBoundingClientRect();
+      setDropdownCoords({
+        top: rect.bottom + window.scrollY,
+        left: rect.left + window.scrollX,
+        width: rect.width,
+        zIndex: 9999,
+      });
+    }
+  }
+
+  // Close dropdown
+  function closeDropdown() {
+    setShowDropdown(false);
+  }
+
   // Initialize with value
   useEffect(() => {
     if (value) {
@@ -88,7 +106,7 @@ export default function CurrencyCombobox({
   useEffect(() => {
     function handleClickOutside(event) {
       if (comboboxRef.current && !comboboxRef.current.contains(event.target)) {
-        setShowDropdown(false);
+        closeDropdown();
         
         // Check if the current input value corresponds to a valid selection
         const inputText = inputValue.trim();
@@ -109,18 +127,30 @@ export default function CurrencyCombobox({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [inputValue, onChange]);
 
+  // Update dropdown coords on show dropdown
   useEffect(() => {
-    if (showDropdown && inputRef.current) {
-      const rect = inputRef.current.getBoundingClientRect();
-      setDropdownCoords({
-        top: rect.bottom + window.scrollY,
-        left: rect.left + window.scrollX,
-        width: rect.width,
-        zIndex: 9999,
-      });
+    if (showDropdown) {
+      updateDropdownCoords();
     }
   }, [showDropdown]);
-  
+
+  // Close dropdown on resize or scroll
+  useEffect(() => {
+    window.addEventListener('resize', closeDropdown);
+    window.addEventListener('scroll', closeDropdown, true);
+    return () => {
+      window.removeEventListener('resize', closeDropdown);
+      window.removeEventListener('scroll', closeDropdown, true);
+    };
+  }, []);
+
+  // Update dropdown coords on scroll
+  useEffect(() => {
+    if (!showDropdown) return;
+    window.addEventListener('scroll', updateDropdownCoords, true);
+    return () => window.removeEventListener('scroll', updateDropdownCoords);
+  }, [showDropdown]);
+
   return (
     <div className={`form-control w-full relative ${className}`} ref={comboboxRef}>
       <div className="w-full">
@@ -133,7 +163,7 @@ export default function CurrencyCombobox({
           placeholder="Select currency"
           value={inputValue}
           onChange={handleInputChange}
-          onFocus={handleFocus}
+          onClick={handleFocus}
           disabled={disabled}
         />
         
