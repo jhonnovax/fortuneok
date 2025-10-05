@@ -126,7 +126,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
   const renderLabel = (text, required = true, error = false) => (
     <label className="label pt-0">
       <span className={`label-text ${error ? 'text-error' : ''}`}>
-        {text} {required && <span className="text-error">*</span>}
+        {text} {error && <span className="text-error"> is required</span>} {required && <span className="text-error">*</span>}
       </span>
     </label>
   );
@@ -173,7 +173,6 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                   onChange={(e) => setForm({ ...form, date: e.target.value })}
                   disabled={isSubmitting}
                 />
-                {errors.date && <span className="text-error text-sm mt-1">{errors.date}</span>}
               </div>
 
               {/* Category */}
@@ -191,7 +190,6 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                     <option key={cat.value} value={cat.value}>{cat.label}</option>
                   ))}
                 </select>
-                {errors.category && <span className="text-error text-sm mt-1">{errors.category}</span>}
               </div>
 
               {/* Description or Symbol based on category */}
@@ -206,7 +204,6 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                     placeholder="Enter asset description"
                     disabled={isSubmitting}
                   />
-                  {errors.description && <span className="text-error text-sm mt-1">{errors.description}</span>}
                 </div>
               ) : (
                 <div className="form-control">
@@ -251,7 +248,6 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                       decimalSeparator="."
                       prefix="$"
                     />
-                    {errors.currentValuation && <span className="text-error text-sm mt-1">{errors.currentValuation}</span>}
                   </div>
                 </>
               )}
@@ -274,7 +270,6 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                         disableGroupSeparators={true}
                         decimalSeparator="."
                       />
-                      {errors.shares && <span className="text-error text-sm mt-1">{errors.shares}</span>}
                     </div>
                   </>
               )}
