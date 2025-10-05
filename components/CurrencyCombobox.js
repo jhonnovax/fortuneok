@@ -192,8 +192,6 @@ export default function CurrencyCombobox({
         )}
       </div>
       
-      {error && <span className="text-error text-sm mt-1">{error}</span>}
-      
       {/* Dropdown */}
       {showDropdown && (
         ReactDOM.createPortal(
