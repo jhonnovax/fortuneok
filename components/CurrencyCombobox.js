@@ -130,7 +130,7 @@ export default function CurrencyCombobox({
           autoComplete="off"
           type="text"
           className={`input input-bordered w-full ${error ? 'input-error' : ''} ${inputValue ? 'pr-16' : ''}`}
-          placeholder="Select currency..."
+          placeholder="Select currency"
           value={inputValue}
           onChange={handleInputChange}
           onFocus={handleFocus}
@@ -143,9 +143,9 @@ export default function CurrencyCombobox({
             type="button"
             className="absolute inset-y-0 right-0 top-0 flex items-center pr-3"
             onClick={handleClear}
-            aria-label="Clear input"
+            title="Clear"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 hover:text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 hover:text-base" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -157,7 +157,7 @@ export default function CurrencyCombobox({
       {/* Dropdown */}
       {showDropdown && (
         ReactDOM.createPortal(
-          <div className="absolute left-0 right-0 top-full mt-2 z-50" style={dropdownCoords}>
+          <div className="absolute left-0 right-0 top-full mt-1 z-50" style={dropdownCoords}>
             <div className="shadow bg-base-200 overflow-hidden">
               <ul className="max-h-60 overflow-y-auto overflow-x-hidden">
                 {(filteredCurrencies.length > 0 ? filteredCurrencies : currencies).map((currency) => (

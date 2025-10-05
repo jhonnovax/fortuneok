@@ -170,7 +170,6 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                   type="date"
                   className={`input input-bordered w-full ${errors.date ? 'input-error' : ''}`}
                   value={form.date}
-                  placeholder="Select date..."
                   onChange={(e) => setForm({ ...form, date: e.target.value })}
                   disabled={isSubmitting}
                 />
@@ -184,10 +183,10 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                   className={`select select-bordered w-full ${errors.category ? 'select-error' : ''}`}
                   value={form.category}
                   onChange={(e) => setForm({ ...form, category: e.target.value })}
-                  placeholder="Select category..."
+                  placeholder="Select category"
                   disabled={isSubmitting}
                 >
-                  <option disabled value="">Select category...</option>
+                  <option disabled value="">Select category</option>
                   {ASSET_CATEGORIES.map(cat => (
                     <option key={cat.value} value={cat.value}>{cat.label}</option>
                   ))}
@@ -216,7 +215,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                     value={form.symbol}
                     onChange={(selection) => setForm({ ...form, symbol: selection.symbol, description: selection.description })}
                     type={form.category}
-                    placeholder="Search for a symbol..."
+                    placeholder="Search for a symbol"
                     error={errors.symbol}
                     disabled={isSubmitting}
                   />
@@ -284,10 +283,10 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
               <div className="form-control md:col-span-2">
                 {renderLabel('Notes', false, false)}
                 <textarea 
-                  className="textarea textarea-bordered w-full text-md"
+                  className="textarea textarea-bordered w-full textarea-lg"
                   value={form.notes}
                   onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                  placeholder="Add any additional notes here..."
+                  placeholder="Add additional notes"
                   rows={3}
                   disabled={isSubmitting}
                 ></textarea>
