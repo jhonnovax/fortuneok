@@ -141,7 +141,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
           
           {/* Close button */}
           <button 
-            className="btn btn-sm btn-circle btn-ghost ml-auto"
+            className="btn btn-sm btn-tertiary btn-circle ml-auto"
             onClick={onClose}
             disabled={isSubmitting}
             title="Close Modal"

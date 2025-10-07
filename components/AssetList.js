@@ -109,7 +109,7 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
                         <div className="dropdown dropdown-end">
                           <label 
                             tabIndex={0} 
-                            className="btn btn-ghost btn-sm btn-circle"
+                            className="btn btn-tertiary btn-sm btn-circle"
                             title="More actions"
                         >
                           <svg width="18" height="18" strokeLinejoin="round" viewBox="0 0 16 16">

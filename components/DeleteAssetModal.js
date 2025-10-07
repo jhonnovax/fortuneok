@@ -22,20 +22,27 @@ export default function DeleteAssetModal({ isOpen, onClose, onConfirm, assetSymb
 
   return (
     <dialog className={`modal ${isOpen ? 'modal-open' : ''}`}>
-      <div className="modal-box relative">
-        {/* Add close button */}
-        <button 
-          onClick={onClose}
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-          title='Close'
-        >
-          ✕
-        </button>
-        <h3 className="font-bold text-lg">Remove Asset</h3>
-        <p className="py-4">
+      <div className="modal-box relative p-0">
+
+        <div className="flex justify-center items-center border-b border-base-content/20 p-4">
+          {/* Heading */}
+          <h3 className="font-bold text-lg">Remove Asset</h3>
+
+          {/* Close button */}
+          <button 
+            onClick={onClose}
+            className="btn btn-sm btn-tertiary btn-circle ml-auto"
+            title='Close'
+          >
+            ✕
+          </button>
+        </div>
+
+        <p className="p-4 pb-2">
           Are you sure you want to remove {assetSymbol} from your portfolio? This action cannot be undone.
         </p>
-        <div className="modal-action">
+
+        <div className="modal-action p-4 pt-0">
           <button className="btn btn-ghost" onClick={onClose}>
             Cancel
           </button>
@@ -52,10 +59,13 @@ export default function DeleteAssetModal({ isOpen, onClose, onConfirm, assetSymb
           )}
           {!session && <ButtonSignin extraStyle="btn-primary" />}
         </div>
+
       </div>
+
       <form method="dialog" className="modal-backdrop" onClick={onClose}>
         <button>close</button>
       </form>
+
     </dialog>
   );
 } 
