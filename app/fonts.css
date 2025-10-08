@@ -1,41 +1,27 @@
-/* Book (light-ish, 300) */
+/* fonts.css */
+
+/* FUTURA — body + UI text */
 @font-face {
   font-family: 'FuturaPT';
   src: url('/fonts/FuturaPT-Book.woff2') format('woff2');
   font-weight: 300;
   font-style: normal;
-}
-@font-face {
-  font-family: 'FuturaPT';
-  src: url('/fonts/FuturaPT-Book-Oblique.woff2') format('woff2');
-  font-weight: 300;
-  font-style: italic;
+  font-display: swap;
 }
 
-/* Demi (semi-bold, 600) */
 @font-face {
   font-family: 'FuturaPT';
   src: url('/fonts/FuturaPT-Demi.woff2') format('woff2');
   font-weight: 600;
   font-style: normal;
-}
-@font-face {
-  font-family: 'FuturaPT';
-  src: url('/fonts/FuturaPT-Demi-Oblique.woff2') format('woff2');
-  font-weight: 600;
-  font-style: italic;
+  font-display: swap;
 }
 
-/* Heavy (extra-bold, 800) */
+/* TIEMPOS — headlines */
 @font-face {
-  font-family: 'FuturaPT';
-  src: url('/fonts/FuturaPT-Heavy.woff2') format('woff2');
-  font-weight: 800;
+  font-family: 'TiemposHeadline';
+  src: url('/fonts/TiemposHeadline-Regular.woff2') format('woff2');
+  font-weight: 400;
   font-style: normal;
-}
-@font-face {
-  font-family: 'FuturaPT';
-  src: url('/fonts/FuturaPT-Heavy-Oblique.woff2') format('woff2');
-  font-weight: 800;
-  font-style: italic;
+  font-display: swap;
 }

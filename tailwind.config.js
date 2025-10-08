@@ -10,6 +10,7 @@ module.exports = {
     extend: {
       fontFamily: {
         futura: ['FuturaPT', 'sans-serif'],
+        tiempos: ['TiemposHeadline', 'serif'],
       }
     }
   },
