@@ -177,6 +177,16 @@ export default function Dashboard() {
       {/* Header */}
       <TopNavbar onAddAsset={handleNewAsset} />
 
+      {/* Desktop sidebar */}
+      <Sidebar 
+          isLoading={isLoading} 
+          assetData={filteredAssets}  
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+        >
+        <AssetListComponent />
+      </Sidebar>
+
       {/* Main content */}
       <div className="flex pt-16 min-h-screen">
         <main className="flex-1 lg:ml-[420px] xl:ml-[520px] p-4 md:p-6 space-y-4 md:space-y-6">
@@ -223,16 +233,6 @@ export default function Dashboard() {
           <Footer />
           
         </main>
-
-        {/* Desktop sidebar */}
-        <Sidebar 
-          isLoading={isLoading} 
-          assetData={filteredAssets}  
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-        >
-          <AssetListComponent />
-        </Sidebar>
 
         {/* Add Asset Modal */}
         <AssetEditionModal
