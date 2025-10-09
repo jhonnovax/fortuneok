@@ -4,7 +4,6 @@ import { useState, useEffect, useMemo } from 'react';
 import TopNavbar from "./TopNavbar";
 import Sidebar from "./Sidebar";
 import AssetList from "./AssetList";
-import AllocationChart from "./AllocationChart";
 import AssetEditionModal from "./AssetEditionModal";
 import SummaryCard from "./SummaryCard";
 import { useAssetStore } from '@/store/assetStore';
@@ -15,6 +14,9 @@ import { usePreferences } from '@/contexts/PreferencesContext';
 import { parseAssetCategoryFromAssetList, getAssetCategoryGroupName } from '@/services/assetService';
 import AssetTopBarNavigation from './AssetTopBarNavigation';
 import FloatingBtnAddAsset from './FloatingBtnAddAsset';
+import dynamic from 'next/dynamic';
+import AllocationChartSkeleton from './AllocationChartSkeleton';
+const AllocationChart = dynamic(() => import('./AllocationChart'), { ssr: false, loading: () => <AllocationChartSkeleton /> });
 
 export default function Dashboard() {
 
