@@ -16,6 +16,7 @@ const nextConfig = {
   },
   // Optimize bundle splitting
   experimental: {
+    optimizeCss: true, // Enable CSS extraction and optimization
     optimizePackageImports: ['recharts', '@headlessui/react', 'react-currency-input-field', 'react-hot-toast', 'zustand'],
   },
   // Enable tree shaking and optimize imports

@@ -2,8 +2,7 @@ module.exports = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./styles/globals.css", 
+    "./components/**/*.{js,ts,jsx,tsx,mdx}"
   ],
 
   plugins: [
@@ -27,6 +26,7 @@ module.exports = {
     ],
     lightTheme: "bumblebee",
     darkTheme: "dim",
+    logs: false,
   },
 
 };
