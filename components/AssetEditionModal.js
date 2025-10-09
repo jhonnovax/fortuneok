@@ -304,7 +304,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
         </form>
 
         {/* Action Buttons */}
-        <div className="mt-auto flex justify-end gap-4 p-4 border-t border-base-content/20">
+        <div className="mt-auto flex justify-end gap-2 p-4 border-t border-base-content/20">
           <button 
             type="button" 
             className="btn btn-tertiary"

@@ -49,7 +49,7 @@ export default function DeleteAssetModal({ isOpen, onClose, onConfirm, assetSymb
         </p>
 
         <div className="modal-action p-4 pt-0">
-          <button className="btn btn-ghost" onClick={onClose}>
+          <button className="btn btn-tertiary" onClick={onClose}>
             Cancel
           </button>
           {session && (

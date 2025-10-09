@@ -93,7 +93,7 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
                       )}
                     </div>
 
-                    <div className="flex items-center">
+                    <div className="flex flex-shrink-0 items-center">
                       { /* Show view details */}
                       {showViewDetails && (
                         <button className="btn btn-sm" onClick={() => onViewDetails(asset)}>
@@ -124,7 +124,7 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
                           </li>
                           <li>
                             <a 
-                              className="text-error"
+                              className="text-error hover:bg-error/20 hover:text-error duration-200"
                               onClick={() => setDeleteModal({ isOpen: true, assetId: asset.id })}
                             >
                               Remove Asset
