@@ -10,6 +10,11 @@ module.exports = {
   ],
 
   daisyui: {
+    styled: true,
+    base: true,
+    utils: true,
+    logs: false,
+    rtl: false,
     themes: [
       {
         bumblebee: {
@@ -25,8 +30,7 @@ module.exports = {
       }
     ],
     lightTheme: "bumblebee",
-    darkTheme: "dim",
-    logs: false,
+    darkTheme: "dim"
   },
 
 };
