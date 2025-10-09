@@ -2,7 +2,7 @@ export default function AddAssetFloatingButton({ onAddAsset }) {
 
   return (
     <button 
-      className="fixed bottom-3 right-0 md:bottom-3 md:right-3 btn btn-primary lg:btn-lg py-2 md:py-3 px-3 md:px-4 rounded-r-none md:rounded-full flex items-center gap-0 md:gap-2 hover:gap-2 group duration-300 z-99999 box-shadow-lg"
+      className="fixed bottom-3 right-0 md:bottom-4 md:right-6 btn btn-primary lg:btn-lg py-2 md:py-3 px-3 md:px-4 rounded-r-none md:rounded-full flex items-center gap-0 md:gap-2 hover:gap-2 group duration-300 z-99999 box-shadow-lg"
       title="Add Asset"
       onClick={onAddAsset}
     >

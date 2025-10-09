@@ -43,7 +43,7 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
         {/* Assets List */}
         {assetData.map((asset, assetIndex) => (
           <div key={asset.id} className="transition-colors">
-            <div className="px-2 py-4 pr-1">
+            <div className="px-0 py-4 pr-1">
               <div className="flex items-center gap-3">
                 <div className="flex-1">
                   <div className="flex items-center justify-between">

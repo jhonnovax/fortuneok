@@ -24,7 +24,7 @@ export default function TopNavbar({ onAddAsset }) {
 
     return (
       <nav className="fixed top-0 left-0 right-0 h-16 bg-base-100 border-b border-base-content/10 z-50">
-        <div className="h-full pl-4 md:pl-8 pr-4 md:pr-8 lg:pr-4 flex items-center justify-between">
+        <div className="h-full px-4 flex items-center justify-between">
 
           <Link href="/" className="flex items-center gap-2">
             <Image
