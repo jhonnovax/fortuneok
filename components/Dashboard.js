@@ -12,7 +12,7 @@ import Footer from './Footer';
 import { usePreferences } from '@/contexts/PreferencesContext';
 import { parseAssetCategoryFromAssetList, getAssetCategoryGroupName } from '@/services/assetService';
 import AssetTopBarNavigation from './AssetTopBarNavigation';
-import FloatingBtnAddAsset from './FloatingBtnAddAsset';
+import AddAssetFloatingButton from './AddAssetFloatingButton';
 import dynamic from 'next/dynamic';
 import AllocationChartSkeleton from './AllocationChartSkeleton';
 
@@ -245,7 +245,7 @@ export default function Dashboard() {
         />
 
         {/* Floating Add Asset Button */}
-        {!isLoading && <FloatingBtnAddAsset onAddAsset={handleNewAsset} />}
+        {!isLoading && <AddAssetFloatingButton onAddAsset={handleNewAsset} />}
 
       </div>
 
