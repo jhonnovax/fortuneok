@@ -2,7 +2,13 @@
 
 import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import ButtonSignin from '@/components/ButtonSignin';
+import dynamic from 'next/dynamic';
+
+// Dynamic import for ButtonSignin to reduce initial bundle size
+const ButtonSignin = dynamic(() => import('@/components/ButtonSignin'), {
+  ssr: false,
+  loading: () => <div className="btn btn-primary">Sign In</div>
+});
 
 export default function DeleteAssetModal({ isOpen, onClose, onConfirm, assetSymbol }) {
 

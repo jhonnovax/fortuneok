@@ -16,8 +16,7 @@ const nextConfig = {
   },
   // Optimize bundle splitting
   experimental: {
-    legacyBrowsers: false, // Serve modern JavaScript (ES2017+)
-    optimizePackageImports: ['recharts', '@headlessui/react', 'react-currency-input-field'],
+    optimizePackageImports: ['recharts', '@headlessui/react', 'react-currency-input-field', 'react-hot-toast', 'zustand'],
   },
   // Enable tree shaking and optimize imports
   compiler: {
@@ -26,18 +25,14 @@ const nextConfig = {
   // Additional optimizations
   swcMinify: true,
   poweredByHeader: false,
-  // CSS optimization
-  optimizeCss: true,
-  // Enable CSS extraction and optimization
-  cssModules: false,
   // Webpack optimizations
   webpack: (config, { isServer }) => {
     if (!isServer) {
       // More aggressive bundle splitting for better caching and smaller initial loads
       config.optimization.splitChunks = {
         chunks: 'all',
-        minSize: 15000, // 15KB
-        maxSize: 200000, // 200KB
+        minSize: 10000, // 10KB - reduced for better splitting
+        maxSize: 150000, // 150KB - reduced for smaller chunks
         cacheGroups: {
           // Separate recharts into its own chunk
           recharts: {
@@ -59,6 +54,22 @@ const nextConfig = {
           ui: {
             test: /[\\/]node_modules[\\/](@headlessui|react-currency-input-field)[\\/]/,
             name: 'ui',
+            chunks: 'all',
+            priority: 25,
+            enforce: true,
+          },
+          // Separate toast library
+          toast: {
+            test: /[\\/]node_modules[\\/]react-hot-toast[\\/]/,
+            name: 'toast',
+            chunks: 'all',
+            priority: 25,
+            enforce: true,
+          },
+          // Separate state management
+          state: {
+            test: /[\\/]node_modules[\\/]zustand[\\/]/,
+            name: 'state',
             chunks: 'all',
             priority: 25,
             enforce: true,
@@ -90,13 +101,11 @@ const nextConfig = {
         },
       };
 
-      // Enable tree shaking (removed usedExports due to Next.js caching conflict)
+      // Enable tree shaking and dead code elimination
       config.optimization.sideEffects = false;
       
       // Additional optimizations
       config.optimization.concatenateModules = true;
-      
-      // CSS optimization
       config.optimization.minimize = true;
       
       // Optimize CSS extraction

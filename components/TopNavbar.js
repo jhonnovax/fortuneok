@@ -2,8 +2,18 @@ import Image from "next/image";
 import logo from "@/app/icon.png";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import ButtonAccount from "@/components/ButtonAccount";
-import ButtonSignin from "@/components/ButtonSignin";
+import dynamic from 'next/dynamic';
+
+// Dynamic imports for auth components to reduce initial bundle size
+const ButtonAccount = dynamic(() => import("@/components/ButtonAccount"), {
+  ssr: false,
+  loading: () => <div className="skeleton h-8 w-32 md:w-52"></div>
+});
+
+const ButtonSignin = dynamic(() => import("@/components/ButtonSignin"), {
+  ssr: false,
+  loading: () => <div className="skeleton h-8 w-32 md:w-52"></div>
+});
 
 export default function TopNavbar({ onAddAsset }) {
 
