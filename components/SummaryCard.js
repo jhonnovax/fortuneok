@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { formatFullCurrency, maskValue } from '../services/intlService';
+import { maskValue, abbreviateSummaryTotalValue } from '../services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import CurrencySelection from './CurrencySelection';
 import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
@@ -37,9 +37,9 @@ export default function SummaryCard({ isLoading, error, baseCurrency, filteredAs
 
           {/* Portfolio Total Value */}
           {showTotalValue && (
-            <span className="text-2xl md:text-3xl font-bold">
+            <span className="text-2xl md:text-3xl font-bold" title={showValues ? abbreviateSummaryTotalValue(totalAssetsValue, baseCurrency, true) : 'Hidden Value'}>
               {showValues 
-                ? formatFullCurrency(totalAssetsValue)
+                ? abbreviateSummaryTotalValue(totalAssetsValue, baseCurrency)
                 : maskValue(totalAssetsValue)
               }
             </span>

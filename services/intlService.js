@@ -1,8 +1,43 @@
+const getNumberSuffix = (value, currency) => {
+  let valueFormatted = value;
+  let valueSuffix = '';
+  let valueSuffixText = '';
+
+  if (value >= 1_000_000_000_000) {
+    valueFormatted = value / 1_000_000_000_000;
+    valueSuffix = 'T';
+    valueSuffixText =  valueFormatted > 1 ? 'trillions' : 'trillion';
+  } else if (value >= 1_000_000_000) {
+    valueFormatted = value / 1_000_000_000;
+    valueSuffix = 'B';
+    valueSuffixText =  valueFormatted > 1 ? 'billions' : 'billion';
+  } else if (value >= 1_000_000) {
+    valueFormatted = value / 1_000_000;
+    valueSuffix = 'M';
+    valueSuffixText =  valueFormatted > 1 ? 'millions' : 'million';
+  } else {
+    valueSuffixText = currency;
+  }
+
+  return { valueFormatted, valueSuffix, valueSuffixText };
+}
+
 export function maskValue(value) {
   const valueString = value.toString().split('.')[0];
-  const maskedValue = '●'.repeat(valueString.length);
+  const maskedValue = '●'.repeat(valueString.length > 3 ? 3 : valueString.length);
 
   return `$${maskedValue}`;
+}
+
+export function abbreviateSummaryTotalValue(value, currency = 'USD', forScreenReader = false) {
+  const { valueFormatted, valueSuffix, valueSuffixText } = getNumberSuffix(value, currency);
+
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: valueSuffix === '' ? 0 : 2
+  }).format(valueFormatted) + (forScreenReader ? ` ${valueSuffixText}` : valueSuffix);
 }
 
 export function formatCurrency(value, decimals = 0, currency = 'USD') {
