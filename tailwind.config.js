@@ -6,15 +6,6 @@ module.exports = {
     "./styles/globals.css", 
   ],
 
-  theme: {
-    extend: {
-      fontFamily: {
-        futura: ['FuturaPT', 'sans-serif'],
-        tiempos: ['TiemposHeadline', 'serif'],
-      }
-    }
-  },
-
   plugins: [
     require("daisyui")
   ],

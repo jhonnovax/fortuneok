@@ -1,11 +1,10 @@
-@import './fonts.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 html,
 body {
-  font-family: 'FuturaPT', 'Montserrat', sans-serif;
+  font-family: 'Roboto', 'Montserrat', sans-serif;
   scroll-behavior: smooth !important;
   scrollbar-gutter: auto !important; /* This is needed since DaisyUI uses scrollbar-gutter: stable; when modal is open */
 }
