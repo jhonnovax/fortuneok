@@ -10,7 +10,9 @@ export default function Sidebar({ children, isLoading, assetData, selectedCatego
 
         <div className="border-b border-base-content/10 bg-base-100">
           {isLoading && (
-            <div className="skeleton h-6 w-full"></div>
+            <div className="p-4 lg:p-6">
+              <div className="skeleton h-6 w-full"></div>
+            </div>
           )}
 
           {!isLoading && (
