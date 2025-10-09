@@ -141,8 +141,9 @@ export default function CurrencyCombobox({
   // Close dropdown on resize or scroll
   useEffect(() => {
     function handleScroll(event) {
+      if (!showDropdown) return;
       const isScrollingSuggestions = event.target.classList.contains('suggestions-list');
-      if (!showDropdown || isScrollingSuggestions) return;
+      if (isScrollingSuggestions) return;
       closeDropdown();
     }
 
