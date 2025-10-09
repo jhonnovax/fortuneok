@@ -6,8 +6,8 @@ const CHART_COLORS_LIGHT_BG = [
   '#8c61b3', // Purple
   '#8c564b', // Brown
   '#a4558c', // Pink
-  '#17becf', // Cyan
-  '#7f7f7f', // Gray
+  '#0e828e', // Cyan
+  '#727272', // Gray
   '#bcbd22', // Yellow-green
 ];
 
