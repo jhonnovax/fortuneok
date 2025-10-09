@@ -217,7 +217,7 @@ export default function Dashboard() {
 
           {/* Mobile Assets List */}
           <div className="card bg-base-100 shadow-xl lg:hidden">
-            <div className="card-body p-4">
+            <div className="card-body p-0">
               {!isLoading && (
                 <AssetTopBarNavigation 
                   assetData={filteredAssets} 

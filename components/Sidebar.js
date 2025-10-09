@@ -8,7 +8,7 @@ export default function Sidebar({ children, isLoading, assetData, selectedCatego
     <aside className="hidden lg:block fixed left-0 top-16 w-[420px] xl:w-[520px] h-[calc(100vh-4rem)] bg-base-100 border-l border-base-content/10">
       <div className="flex flex-col h-full">
 
-        <div className="p-4 border-b border-base-content/10 bg-base-100">
+        <div className="border-b border-base-content/10 bg-base-100">
           {isLoading && (
             <div className="skeleton h-6 w-full"></div>
           )}
@@ -23,9 +23,7 @@ export default function Sidebar({ children, isLoading, assetData, selectedCatego
         </div>
 
         <div className="flex-1 overflow-y-auto">
-          <div className="p-4 pt-0">
-            {children}
-          </div>
+          {children}
         </div>
 
       </div>

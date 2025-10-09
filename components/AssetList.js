@@ -22,7 +22,7 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
     assetListUI = (
       <div className="flex w-full flex-col gap-4">
         {[...Array(3)].map((item, index) => (
-          <div key={index} className="flex flex-col gap-4 py-4">
+          <div key={index} className="flex flex-col gap-4 p-4 lg:p-6">
             <div className="skeleton h-4 w-28"></div>
             <div className="skeleton h-4 w-29"></div>
             <div className="skeleton h-4 w-full"></div>
@@ -43,7 +43,8 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
         {/* Assets List */}
         {assetData.map((asset, assetIndex) => (
           <div key={asset.id} className="transition-colors">
-            <div className="px-0 py-4 pr-1">
+            <div className="p-4 lg:p-6 shadow-sm">
+              {/* Asset Details */}
               <div className="flex items-center gap-3">
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
@@ -137,21 +138,21 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Progress Bar */}
-            <div className="flex items-center gap-2">  
               {/* Progress Bar */}
-              <progress 
-                className="progress w-100 custom-progress"
-                value={getAssetPercentage(asset, totalAssetsValue)} 
-                max="100"
-                style={{ "--progress‐fill": chartColors[assetIndex % chartColors.length] }}
-              >
-              </progress>
-              {/* Asset Percentage */}
-              <div className="flex items-center gap-2 text-xs font-bold" style={{ color: chartColors[assetIndex % chartColors.length] }}>
-                {formatPercentage(getAssetPercentage(asset, totalAssetsValue), 2)}
+              <div className="flex items-center gap-2 pt-2">  
+                {/* Progress Bar */}
+                <progress 
+                  className="progress w-100 custom-progress"
+                  value={getAssetPercentage(asset, totalAssetsValue)} 
+                  max="100"
+                  style={{ "--progress‐fill": chartColors[assetIndex % chartColors.length] }}
+                >
+                </progress>
+                {/* Asset Percentage */}
+                <div className="flex items-center gap-2 text-xs font-bold" style={{ color: chartColors[assetIndex % chartColors.length] }}>
+                  {formatPercentage(getAssetPercentage(asset, totalAssetsValue), 2)}
+                </div>
               </div>
             </div>
           </div>
