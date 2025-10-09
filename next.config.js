@@ -25,6 +25,10 @@ const nextConfig = {
   // Additional optimizations
   swcMinify: true,
   poweredByHeader: false,
+  // CSS optimization
+  optimizeCss: true,
+  // Enable CSS extraction and optimization
+  cssModules: false,
   // Webpack optimizations
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -90,6 +94,30 @@ const nextConfig = {
       
       // Additional optimizations
       config.optimization.concatenateModules = true;
+      
+      // CSS optimization
+      config.optimization.minimize = true;
+      
+      // Optimize CSS extraction
+      if (config.module && config.module.rules) {
+        config.module.rules.forEach(rule => {
+          if (rule.oneOf) {
+            rule.oneOf.forEach(oneOf => {
+              if (oneOf.use && Array.isArray(oneOf.use)) {
+                oneOf.use.forEach(use => {
+                  if (use.loader && use.loader.includes('css-loader')) {
+                    use.options = {
+                      ...use.options,
+                      modules: false,
+                      sourceMap: false,
+                    };
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
       
       // Optimize module resolution
       config.resolve.alias = {
