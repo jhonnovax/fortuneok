@@ -1,3 +1,7 @@
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 const nextConfig = {
   reactStrictMode: true,
   images: {
@@ -14,37 +18,83 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['recharts', '@headlessui/react', 'react-currency-input-field'],
   },
+  // Enable tree shaking and optimize imports
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  // Additional optimizations
+  swcMinify: true,
+  poweredByHeader: false,
   // Webpack optimizations
   webpack: (config, { isServer }) => {
     if (!isServer) {
-      // Split vendor chunks for better caching
+      // More aggressive bundle splitting for better caching and smaller initial loads
       config.optimization.splitChunks = {
         chunks: 'all',
+        minSize: 20000,
+        maxSize: 244000,
         cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
-          },
+          // Separate recharts into its own chunk
           recharts: {
             test: /[\\/]node_modules[\\/]recharts[\\/]/,
             name: 'recharts',
             chunks: 'all',
-            priority: 20,
+            priority: 30,
+            enforce: true,
           },
-          headlessui: {
-            test: /[\\/]node_modules[\\/]@headlessui[\\/]/,
-            name: 'headlessui',
+          // Separate auth-related libraries
+          auth: {
+            test: /[\\/]node_modules[\\/](next-auth|@auth)[\\/]/,
+            name: 'auth',
             chunks: 'all',
-            priority: 20,
+            priority: 25,
+            enforce: true,
           },
-          currencyInput: {
-            test: /[\\/]node_modules[\\/]react-currency-input-field[\\/]/,
-            name: 'currency-input',
+          // Separate UI libraries
+          ui: {
+            test: /[\\/]node_modules[\\/](@headlessui|react-currency-input-field)[\\/]/,
+            name: 'ui',
             chunks: 'all',
-            priority: 20,
+            priority: 25,
+            enforce: true,
+          },
+          // Separate database/API libraries
+          database: {
+            test: /[\\/]node_modules[\\/](mongoose|mongodb|ioredis)[\\/]/,
+            name: 'database',
+            chunks: 'all',
+            priority: 25,
+            enforce: true,
+          },
+          // Separate payment libraries
+          payments: {
+            test: /[\\/]node_modules[\\/]stripe[\\/]/,
+            name: 'payments',
+            chunks: 'all',
+            priority: 25,
+            enforce: true,
+          },
+          // Default vendor chunk for everything else
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+            priority: 10,
+            minChunks: 1,
           },
         },
+      };
+
+      // Enable tree shaking (removed usedExports due to Next.js caching conflict)
+      config.optimization.sideEffects = false;
+      
+      // Additional optimizations
+      config.optimization.concatenateModules = true;
+      
+      // Optimize module resolution
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        // Add any specific aliases if needed
       };
     }
     return config;
@@ -63,4 +113,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = withBundleAnalyzer(nextConfig);
