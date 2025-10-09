@@ -16,6 +16,7 @@ const nextConfig = {
   },
   // Optimize bundle splitting
   experimental: {
+    legacyBrowsers: false, // Serve modern JavaScript (ES2017+)
     optimizePackageImports: ['recharts', '@headlessui/react', 'react-currency-input-field'],
   },
   // Enable tree shaking and optimize imports
