@@ -31,8 +31,8 @@ const nextConfig = {
       // More aggressive bundle splitting for better caching and smaller initial loads
       config.optimization.splitChunks = {
         chunks: 'all',
-        minSize: 20000,
-        maxSize: 244000,
+        minSize: 15000, // 15KB
+        maxSize: 200000, // 200KB
         cacheGroups: {
           // Separate recharts into its own chunk
           recharts: {
