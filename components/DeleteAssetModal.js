@@ -21,7 +21,7 @@ export default function DeleteAssetModal({ isOpen, onClose, onConfirm, assetSymb
   }, [isOpen, onClose]);
 
   return (
-    <dialog className={`modal ${isOpen ? 'modal-open' : ''}`}>
+    <dialog className={`modal ${isOpen ? 'modal-open' : 'hidden'}`}>
       <div className="modal-box relative p-0">
 
         <div className="flex justify-center items-center border-b border-base-content/20 p-4">

@@ -132,7 +132,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
   );
 
   return (
-    <dialog className={`modal modal-bottom sm:modal-middle ${isOpen ? 'modal-open' : ''}`}>
+    <dialog className={`modal modal-bottom sm:modal-middle ${isOpen ? 'modal-open' : 'hidden'}`}>
       <div className="modal-box relative p-0 flex flex-col sm:max-w-2xl">
 
         <div className="flex justify-center items-center border-b border-base-content/20 p-4">
