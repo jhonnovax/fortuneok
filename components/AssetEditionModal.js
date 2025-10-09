@@ -1,12 +1,26 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import CurrencyInput from 'react-currency-input-field';
-import SymbolCombobox from './SymbolCombobox';
-import CurrencyCombobox from './CurrencyCombobox';
 import { ASSET_CATEGORIES } from '@/services/assetService';
 import { useSession } from 'next-auth/react';
 import ButtonSignin from '@/components/ButtonSignin';
+import dynamic from 'next/dynamic';
+
+// Dynamic imports for heavy components
+const CurrencyInput = dynamic(() => import('react-currency-input-field'), {
+  ssr: false,
+  loading: () => <div className="input input-bordered w-full animate-pulse bg-base-200 h-12"></div>
+});
+
+const SymbolCombobox = dynamic(() => import('./SymbolCombobox'), {
+  ssr: false,
+  loading: () => <div className="input input-bordered w-full animate-pulse bg-base-200 h-12"></div>
+});
+
+const CurrencyCombobox = dynamic(() => import('./CurrencyCombobox'), {
+  ssr: false,
+  loading: () => <div className="input input-bordered w-full animate-pulse bg-base-200 h-12"></div>
+});
 
 const TRADEABLE_CATEGORIES = [
   'stocks', 'bonds', 'cryptocurrencies', 'etf_funds', 'option', 'futures'

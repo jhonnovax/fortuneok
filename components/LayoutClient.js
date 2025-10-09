@@ -3,9 +3,15 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { SessionProvider } from "next-auth/react";
-import { Toaster } from "react-hot-toast";
 import { PreferencesProvider } from "@/contexts/PreferencesContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import dynamic from 'next/dynamic';
+
+// Dynamic import for react-hot-toast
+const Toaster = dynamic(() => import('react-hot-toast').then(mod => ({ default: mod.Toaster })), {
+  ssr: false,
+  loading: () => null
+});
 // All the client wrappers are here (they can't be in server components)
 // 1. SessionProvider: Allow the useSession from next-auth (find out if user is auth or not)
 // 2. Toaster: Show Success/Error messages anywhere from the app with toast()

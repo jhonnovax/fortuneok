@@ -4,7 +4,6 @@ import { useState, useEffect, useMemo } from 'react';
 import TopNavbar from "./TopNavbar";
 import Sidebar from "./Sidebar";
 import AssetList from "./AssetList";
-import AssetEditionModal from "./AssetEditionModal";
 import SummaryCard from "./SummaryCard";
 import { useAssetStore } from '@/store/assetStore';
 import { useCurrencyRatesStore } from '@/store/currencyRatesStore';
@@ -16,7 +15,16 @@ import AssetTopBarNavigation from './AssetTopBarNavigation';
 import FloatingBtnAddAsset from './FloatingBtnAddAsset';
 import dynamic from 'next/dynamic';
 import AllocationChartSkeleton from './AllocationChartSkeleton';
-const AllocationChart = dynamic(() => import('./AllocationChart'), { ssr: false, loading: () => <AllocationChartSkeleton /> });
+
+// Dynamic imports for heavy components
+const AllocationChart = dynamic(() => import('./AllocationChart'), { 
+  ssr: false, 
+  loading: () => <AllocationChartSkeleton /> 
+});
+
+const AssetEditionModal = dynamic(() => import('./AssetEditionModal'), {
+  ssr: false,
+});
 
 export default function Dashboard() {
 

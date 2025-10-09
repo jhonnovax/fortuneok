@@ -2,9 +2,19 @@ import { Inter } from "next/font/google";
 import { getSEOTags } from "@/libs/seo";
 import ClientLayout from "@/components/LayoutClient";
 import config from "@/config";
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css";
+import dynamic from 'next/dynamic';
+
+// Dynamic imports for analytics (only load in production)
+const Analytics = dynamic(() => import('@vercel/analytics/react').then(mod => ({ default: mod.Analytics })), {
+  ssr: false,
+  loading: () => null
+});
+
+const SpeedInsights = dynamic(() => import("@vercel/speed-insights/next").then(mod => ({ default: mod.SpeedInsights })), {
+  ssr: false,
+  loading: () => null
+});
 const font = Inter({ subsets: ["latin"] });
 
 export const viewport = {
