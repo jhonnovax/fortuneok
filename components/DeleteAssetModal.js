@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
-import ReactDOM from 'react-dom';
+import { createPortal } from 'react-dom';
 
 // Dynamic import for ButtonSignin to reduce initial bundle size
 const ButtonSignin = dynamic(() => import('@/components/ButtonSignin'), {
@@ -28,7 +28,7 @@ export default function DeleteAssetModal({ isOpen, onClose, onConfirm, assetSymb
   }, [isOpen, onClose]);
 
   return (
-    ReactDOM.createPortal(
+    createPortal(
       <dialog className={`modal ${isOpen ? 'modal-open' : 'hidden'}`}>
         <div className="modal-box relative p-0">
 

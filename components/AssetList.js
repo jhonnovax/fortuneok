@@ -7,10 +7,14 @@ import { getAssetCategoryGroupIcon, getAssetPercentage } from '@/services/assetS
 import { getChartColors } from '@/services/chartService';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
 import currencies from '@/public/currencies.json';
-import CurrencyBadge from './CurrencyBadge';
 import dynamic from 'next/dynamic';
 
-// Dynamic import for DeleteAssetModal to reduce initial bundle size
+// Dynamic imports for heavy components
+const CurrencyBadge = dynamic(() => import('./CurrencyBadge'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-base-200 h-6 w-12 rounded"></div>
+});
+
 const DeleteAssetModal = dynamic(() => import('./DeleteAssetModal'), {
   ssr: false,
 });

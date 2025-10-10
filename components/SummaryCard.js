@@ -3,10 +3,20 @@
 import { useState } from 'react';
 import { maskValue, abbreviateSummaryTotalValue } from '../services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
-import CurrencySelection from './CurrencySelection';
 import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
 import { BREAKPOINTS } from '@/services/breakpointService';
-import TotalAssetsByCurrency from './TotalAssetsByCurrency';
+import dynamic from 'next/dynamic';
+
+// Dynamic imports for heavy components
+const CurrencySelection = dynamic(() => import('./CurrencySelection'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-base-200 h-8 w-24 rounded"></div>
+});
+
+const TotalAssetsByCurrency = dynamic(() => import('./TotalAssetsByCurrency'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-base-200 h-8 w-full rounded"></div>
+});
 
 export default function SummaryCard({ isLoading, error, baseCurrency, filteredAssetData, totalAssetsValue, showValues, setShowValues }) {
   const [isEditingCurrency, setIsEditingCurrency] = useState(false);

@@ -7,7 +7,7 @@ import { PreferencesProvider } from "@/contexts/PreferencesContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import dynamic from 'next/dynamic';
 
-// Dynamic import for react-hot-toast
+// Dynamic import for react-hot-toast with lazy loading
 const Toaster = dynamic(() => import('react-hot-toast').then(mod => ({ default: mod.Toaster })), {
   ssr: false,
   loading: () => null

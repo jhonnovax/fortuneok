@@ -5,7 +5,7 @@ import { ASSET_CATEGORIES } from '@/services/assetService';
 import { useSession } from 'next-auth/react';
 import ButtonSignin from '@/components/ButtonSignin';
 import dynamic from 'next/dynamic';
-import ReactDOM from 'react-dom';
+import { createPortal } from 'react-dom';
 
 // Dynamic imports for heavy components
 const CurrencyInput = dynamic(() => import('react-currency-input-field'), {
@@ -147,7 +147,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
   );
 
   return (
-    ReactDOM.createPortal(
+    createPortal(
       <dialog className={`modal modal-bottom sm:modal-middle ${isOpen ? 'modal-open' : 'hidden'}`}>
         <div className="modal-box relative p-0 flex flex-col sm:max-w-2xl">
 

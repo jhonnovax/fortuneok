@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import currencies from '@/public/currencies.json';
-import ReactDOM from 'react-dom';
+import { createPortal } from 'react-dom';
 
 export default function CurrencyCombobox({ 
   autoFocus = false,
@@ -195,7 +195,7 @@ export default function CurrencyCombobox({
       
       {/* Dropdown */}
       {showDropdown && (
-        ReactDOM.createPortal(
+        createPortal(
           <div className="absolute left-0 right-0 top-full mt-1 z-50" style={dropdownCoords}>
             <div className="shadow bg-base-200 overflow-hidden">
               <ul className="max-h-60 overflow-y-auto overflow-x-hidden suggestions-list">

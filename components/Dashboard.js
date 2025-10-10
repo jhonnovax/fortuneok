@@ -8,11 +8,9 @@ import SummaryCard from "./SummaryCard";
 import { useAssetStore } from '@/store/assetStore';
 import { useCurrencyRatesStore } from '@/store/currencyRatesStore';
 import config from '@/config';
-import Footer from './Footer';
 import { usePreferences } from '@/contexts/PreferencesContext';
 import { parseAssetCategoryFromAssetList, getAssetCategoryGroupName } from '@/services/assetService';
 import AssetTopBarNavigation from './AssetTopBarNavigation';
-import AddAssetFloatingButton from './AddAssetFloatingButton';
 import dynamic from 'next/dynamic';
 import AllocationChartSkeleton from './AllocationChartSkeleton';
 
@@ -24,6 +22,17 @@ const AllocationChart = dynamic(() => import('./AllocationChart'), {
 
 const AssetEditionModal = dynamic(() => import('./AssetEditionModal'), {
   ssr: false,
+});
+
+// Dynamic imports for heavy components
+const Footer = dynamic(() => import('./Footer'), {
+  ssr: false,
+  loading: () => null
+});
+
+const AddAssetFloatingButton = dynamic(() => import('./AddAssetFloatingButton'), {
+  ssr: false,
+  loading: () => null
 });
 
 export default function Dashboard() {

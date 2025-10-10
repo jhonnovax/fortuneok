@@ -17,12 +17,16 @@ const nextConfig = {
   // Optimize bundle splitting
   experimental: {
     optimizeCss: true,
-    optimizePackageImports: ['recharts', '@headlessui/react', 'react-currency-input-field', 'react-hot-toast', 'zustand'],
+    optimizePackageImports: ['recharts', '@headlessui/react', 'react-currency-input-field', 'react-hot-toast', 'zustand', 'axios', 'next-auth'],
   },
   // Enable tree shaking and optimize imports
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
+  // Additional performance optimizations
+  output: 'standalone',
+  generateEtags: false,
+  compress: true,
   // Additional optimizations
   swcMinify: true,
   poweredByHeader: false,
@@ -32,14 +36,14 @@ const nextConfig = {
       // More aggressive bundle splitting for better caching and smaller initial loads
       config.optimization.splitChunks = {
         chunks: 'all',
-        minSize: 10000, // 10KB - reduced for better splitting
-        maxSize: 150000, // 150KB - reduced for smaller chunks
+        minSize: 5000, // 5KB - reduced for better splitting
+        maxSize: 100000, // 100KB - reduced for smaller chunks
         cacheGroups: {
-          // Separate recharts into its own chunk
+          // Separate recharts into its own chunk with lazy loading
           recharts: {
             test: /[\\/]node_modules[\\/]recharts[\\/]/,
             name: 'recharts',
-            chunks: 'all',
+            chunks: 'async', // Only load when needed
             priority: 30,
             enforce: true,
           },
@@ -51,19 +55,19 @@ const nextConfig = {
             priority: 25,
             enforce: true,
           },
-          // Separate UI libraries
+          // Separate UI libraries with lazy loading
           ui: {
             test: /[\\/]node_modules[\\/](@headlessui|react-currency-input-field)[\\/]/,
             name: 'ui',
-            chunks: 'all',
+            chunks: 'async', // Only load when needed
             priority: 25,
             enforce: true,
           },
-          // Separate toast library
+          // Separate toast library with lazy loading
           toast: {
             test: /[\\/]node_modules[\\/]react-hot-toast[\\/]/,
             name: 'toast',
-            chunks: 'all',
+            chunks: 'async', // Only load when needed
             priority: 25,
             enforce: true,
           },
