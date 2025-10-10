@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ASSET_CATEGORIES } from '@/services/assetService';
 import { useSession } from 'next-auth/react';
 import ButtonSignin from '@/components/ButtonSignin';
@@ -54,6 +54,7 @@ const TRADING_CATEGORIES = [
 ];
 
 export default function AssetEditionModal({ isOpen, isSubmitting, submitError, asset, onClose, onSave }) {
+  const closeButtonRef = useRef(null);
   const [form, setForm] = useState(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState({});
 
@@ -100,6 +101,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
     if (isOpen) {
       setForm(INITIAL_FORM_STATE);
       setErrors({});
+      closeButtonRef.current?.focus();
     }
   }, [isOpen]);
 
@@ -157,6 +159,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
             
             {/* Close button */}
             <button 
+              ref={closeButtonRef}
               className="btn btn-sm btn-tertiary btn-circle ml-auto"
               onClick={onClose}
               disabled={isSubmitting}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef, useLayoutEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { createPortal } from 'react-dom';
@@ -13,6 +13,7 @@ const ButtonSignin = dynamic(() => import('@/components/ButtonSignin'), {
 
 export default function DeleteAssetModal({ isOpen, onClose, onConfirm, assetSymbol }) {
 
+  const closeButtonRef = useRef(null);
   const { data: session } = useSession();
 
   // Handle Escape key press
@@ -27,6 +28,12 @@ export default function DeleteAssetModal({ isOpen, onClose, onConfirm, assetSymb
     return () => window.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
 
+  // Focus on close button when modal opens
+  useLayoutEffect(() => {
+    if (!isOpen) return;
+    closeButtonRef.current?.focus();
+  }, [isOpen]);
+
   return (
     createPortal(
       <dialog className={`modal ${isOpen ? 'modal-open' : 'hidden'}`}>
@@ -38,6 +45,7 @@ export default function DeleteAssetModal({ isOpen, onClose, onConfirm, assetSymb
 
             {/* Close button */}
             <button 
+              ref={closeButtonRef}
               onClick={onClose}
               className="btn btn-sm btn-tertiary btn-circle ml-auto"
               title='Close'
