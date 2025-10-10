@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import DeleteAssetModal from './DeleteAssetModal';
 import { formatDateToString, formatFullCurrency, formatNumber, formatPercentage, maskValue } from '@/services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import { getAssetCategoryGroupIcon, getAssetPercentage } from '@/services/assetService';
@@ -9,6 +8,13 @@ import { getChartColors } from '@/services/chartService';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
 import currencies from '@/public/currencies.json';
 import CurrencyBadge from './CurrencyBadge';
+import dynamic from 'next/dynamic';
+
+// Dynamic import for DeleteAssetModal to reduce initial bundle size
+const DeleteAssetModal = dynamic(() => import('./DeleteAssetModal'), {
+  ssr: false,
+});
+
 
 export default function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategory, totalAssetsValue, showMoreActions, showViewDetails, showValues, onEditAsset, onDeleteAsset, onViewDetails }) {
 
