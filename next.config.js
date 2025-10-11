@@ -17,7 +17,7 @@ const nextConfig = {
   // Optimize bundle splitting
   experimental: {
     optimizeCss: true,
-    optimizePackageImports: ['recharts', '@headlessui/react', 'react-currency-input-field', 'react-hot-toast', 'zustand', 'axios', 'next-auth'],
+    optimizePackageImports: ['recharts', 'react-currency-input-field', 'react-hot-toast', 'zustand', 'axios', 'next-auth'],
   },
   // Enable tree shaking and optimize imports
   compiler: {
@@ -57,7 +57,7 @@ const nextConfig = {
           },
           // Separate UI libraries with lazy loading
           ui: {
-            test: /[\\/]node_modules[\\/](@headlessui|react-currency-input-field)[\\/]/,
+            test: /[\\/]node_modules[\\/](react-currency-input-field)[\\/]/,
             name: 'ui',
             chunks: 'async', // Only load when needed
             priority: 25,

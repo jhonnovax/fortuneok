@@ -2,10 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { Popover, Transition } from "@headlessui/react";
 import { useSession, signOut } from "next-auth/react";
-import { useTailwindBreakpoint } from "@/hooks/useTailwindBreakpoint";
-import { BREAKPOINTS } from "@/services/breakpointService";
 import apiClient from "@/libs/api";
 
 // A button to show user some account actions
@@ -16,9 +13,7 @@ import apiClient from "@/libs/api";
 const ButtonAccount = ({ onAddAsset }) => {
   const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
-  const { breakpointInPixels } = useTailwindBreakpoint();
-
-  const isMobileOrLower = breakpointInPixels < BREAKPOINTS.MD;
+  const [openDropdown, setOpenDropdown] = useState(false);
 
   const handleSignOut = () => {
     signOut({ callbackUrl: "/" });
@@ -46,11 +41,9 @@ const ButtonAccount = ({ onAddAsset }) => {
   }
 
   return (
-    <Popover className="relative z-10">
-      {({ open }) => (
-        <>
-          <Popover.Button className="btn">
-            {session?.user?.image ? (
+    <div className="dropdown dropdown-end">
+      <button className="btn btn-tertiary" onClick={() => setOpenDropdown(!openDropdown)}>
+        {session?.user?.image ? (
               <img
                 src={session?.user?.image}
                 alt={session?.user?.name || "Account"}
@@ -70,15 +63,16 @@ const ButtonAccount = ({ onAddAsset }) => {
               <span className="hidden md:inline">{session?.user?.email || "Account"}</span>
             </span>
 
-            {isLoading ? (
+            {isLoading && (
               <span className="loading loading-spinner loading-xs"></span>
-            ) : (
+            )}
+            {!isLoading && (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
                 fill="currentColor"
                 className={`w-5 h-5 duration-200 ${
-                  open ? "transform rotate-180 " : ""
+                  openDropdown ? "transform rotate-180 " : ""
                 }`}
               >
                 <path
@@ -88,58 +82,47 @@ const ButtonAccount = ({ onAddAsset }) => {
                 />
               </svg>
             )}
-          </Popover.Button>
-          <Transition
-            enter="transition duration-100 ease-out"
-            enterFrom="transform scale-95 opacity-0"
-            enterTo="transform scale-100 opacity-100"
-            leave="transition duration-75 ease-out"
-            leaveFrom="transform scale-100 opacity-100"
-            leaveTo="transform scale-95 opacity-0"
+      </button>
+      <ul className={`dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-full min-w-40 mt-1 ${openDropdown ? 'block' : 'hidden'}`}>
+        <li>
+          <button
+            className="flex items-center gap-2 hover:bg-base-300 duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
+            onClick={onAddAsset}
           >
-            <Popover.Panel className={`absolute right-0 z-10 mt-3 w-screen ${isMobileOrLower ? "max-w-[9rem]" : "max-w-[16rem]"} transform`}>
-              <div className="overflow-hidden rounded-xl shadow-xl ring-1 ring-base-content ring-opacity-5 bg-base-100 p-1">
-                <div className="space-y-0.5 text-sm">
-                  <button
-                    className="flex items-center gap-2 hover:bg-base-300 duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
-                    onClick={onAddAsset}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
-                    Add Asset
-                  </button>
-                  <button
-                    className="flex items-center gap-2 hover:bg-error/20 hover:text-error duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
-                    onClick={handleSignOut}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M3 4.25A2.25 2.25 0 015.25 2h5.5A2.25 2.25 0 0113 4.25v2a.75.75 0 01-1.5 0v-2a.75.75 0 00-.75-.75h-5.5a.75.75 0 00-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 00.75-.75v-2a.75.75 0 011.5 0v2A2.25 2.25 0 0110.75 18h-5.5A2.25 2.25 0 013 15.75V4.25z"
-                        clipRule="evenodd"
-                      />
-                      <path
-                        fillRule="evenodd"
-                        d="M6 10a.75.75 0 01.75-.75h9.546l-1.048-.943a.75.75 0 111.004-1.114l2.5 2.25a.75.75 0 010 1.114l-2.5 2.25a.75.75 0 11-1.004-1.114l1.048-.943H6.75A.75.75 0 016 10z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    Logout
-                  </button>
-                </div>
-              </div>
-            </Popover.Panel>
-          </Transition>
-        </>
-      )}
-    </Popover>
-  );
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            Add Asset
+          </button>
+        </li>
+        <li>
+          <button
+            className="flex items-center gap-2 hover:bg-error/20 hover:text-error duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
+            onClick={handleSignOut}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                fillRule="evenodd"
+                d="M3 4.25A2.25 2.25 0 015.25 2h5.5A2.25 2.25 0 0113 4.25v2a.75.75 0 01-1.5 0v-2a.75.75 0 00-.75-.75h-5.5a.75.75 0 00-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 00.75-.75v-2a.75.75 0 011.5 0v2A2.25 2.25 0 0110.75 18h-5.5A2.25 2.25 0 013 15.75V4.25z"
+                clipRule="evenodd"
+              />
+              <path
+                fillRule="evenodd"
+                d="M6 10a.75.75 0 01.75-.75h9.546l-1.048-.943a.75.75 0 111.004-1.114l2.5 2.25a.75.75 0 010 1.114l-2.5 2.25a.75.75 0 11-1.004-1.114l1.048-.943H6.75A.75.75 0 016 10z"
+                clipRule="evenodd"
+              />
+            </svg>
+            Logout
+          </button>
+        </li>
+      </ul>
+    </div>
+  )
 };
 
 export default ButtonAccount;
