@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { formatDateToString, formatFullCurrency, formatNumber, formatPercentage, maskValue } from '@/services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import { getAssetCategoryGroupIcon, getAssetPercentage } from '@/services/assetService';
@@ -22,12 +22,36 @@ const DeleteAssetModal = dynamic(() => import('./DeleteAssetModal'), {
 
 export default function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategory, totalAssetsValue, showMoreActions, showViewDetails, showValues, onEditAsset, onDeleteAsset, onViewDetails }) {
 
+  const moreActionsDropdownRef = useRef(null);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, assetId: null });
   const [openMoreActionsDropdown, setOpenMoreActionsDropdown] = useState(null);
   const theme = useSystemTheme();
 
   const chartColors = getChartColors(theme);
   let assetListUI = null;
+
+  function handleClickOutside(e) {
+    // TODO: Fix this creating an isolated popover component
+    /* if (moreActionsDropdownRef.current && !moreActionsDropdownRef.current.contains(e.target)) { */
+    if (!e.target.closest('.dropdown')) {
+      setOpenMoreActionsDropdown(null);
+    }
+  }
+
+  function handleEditAsset(asset) {
+    setOpenMoreActionsDropdown(null);
+    onEditAsset(asset);
+  }
+
+  function handleDeleteAsset({ isOpen, assetId }) {
+    setOpenMoreActionsDropdown(null);
+    setDeleteModal({ isOpen, assetId });
+  }
+
+  useEffect(() => {    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   if (isLoading) {
     assetListUI = (
@@ -118,30 +142,31 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
 
                       {/* Show more actions */}
                       {showMoreActions && (
-                        <div className="dropdown dropdown-end">
+                        <div ref={(ref) => moreActionsDropdownRef.current = openMoreActionsDropdown === asset.id ? ref : null} className="dropdown dropdown-end">
                           <button 
                             type="button"
                             className="btn btn-tertiary btn-sm btn-circle"
                             title="More actions"
-                            onClick={() => setOpenMoreActionsDropdown(asset.id)}
+                            onClick={() => setOpenMoreActionsDropdown(openMoreActionsDropdown === asset.id ? null : asset.id)}
                           >
                             <svg width="18" height="18" strokeLinejoin="round" viewBox="0 0 16 16">
                               <path fillRule="evenodd" clipRule="evenodd" d="M4 8C4 8.82843 3.32843 9.5 2.5 9.5C1.67157 9.5 1 8.82843 1 8C1 7.17157 1.67157 6.5 2.5 6.5C3.32843 6.5 4 7.17157 4 8ZM9.5 8C9.5 8.82843 8.82843 9.5 8 9.5C7.17157 9.5 6.5 8.82843 6.5 8C6.5 7.17157 7.17157 6.5 8 6.5C8.82843 6.5 9.5 7.17157 9.5 8ZM13.5 9.5C14.3284 9.5 15 8.82843 15 8C15 7.17157 14.3284 6.5 13.5 6.5C12.6716 6.5 12 7.17157 12 8C12 8.82843 12.6716 9.5 13.5 9.5Z" fill="currentColor" />
                             </svg>
                           </button>
-                          <ul className={`dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-40 ${openMoreActionsDropdown === asset.id ? 'block' : 'hidden'}`}>
+                          <ul className={`absolute right-0 z-[1] menu p-2 shadow bg-base-100 rounded-box w-40 ${openMoreActionsDropdown === asset.id ? 'block' : 'hidden'}`}>
                             <li>
-                              <a onClick={() => onEditAsset(asset)}>
+                              <button type="button" onClick={() => handleEditAsset(asset)}>
                                 Edit Asset
-                              </a>
+                              </button>
                             </li>
                             <li>
-                              <a 
+                              <button 
+                                type="button"
                                 className="text-error hover:bg-error/20 hover:text-error duration-200"
-                                onClick={() => setDeleteModal({ isOpen: true, assetId: asset.id })}
+                                onClick={() => handleDeleteAsset({ isOpen: true, assetId: asset.id })}
                               >
                                 Remove Asset
-                              </a>
+                              </button>
                             </li>
                           </ul>
                         </div>

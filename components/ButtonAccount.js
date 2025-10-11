@@ -36,11 +36,6 @@ const ButtonAccount = ({ onAddAsset }) => {
     setIsLoading(false);
   }
 
-  function handleDropdown(e) {
-    e.stopPropagation(); // Stop DaisyUI's dropdown wrapper has built-in behavior
-    setOpenDropdown(!openDropdown);
-  }
-
   function handleAddAsset() {
     setOpenDropdown(false);
     onAddAsset();
@@ -59,8 +54,8 @@ const ButtonAccount = ({ onAddAsset }) => {
 
   // Handle click outside to close the dropdown
   useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
   // Don't show anything if not authenticated (we don't have any info about the user)
@@ -70,7 +65,7 @@ const ButtonAccount = ({ onAddAsset }) => {
 
   return (
     <div ref={dropdownRef} className="dropdown dropdown-end">
-      <button type="button" className="btn btn-tertiary" onClick={handleDropdown}>
+      <button type="button" className="btn btn-tertiary" onClick={() => setOpenDropdown(!openDropdown)}>
         {session?.user?.image ? (
               <img
                 src={session?.user?.image}
@@ -111,7 +106,7 @@ const ButtonAccount = ({ onAddAsset }) => {
               </svg>
             )}
       </button>
-      <ul className={`absolute right-0 z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-full min-w-40 mt-1 ${openDropdown ? 'block' : 'hidden'}`}>
+      <ul className={`absolute right-0 z-[1] menu p-2 shadow bg-base-100 rounded-box w-full min-w-40 mt-1 ${openDropdown ? 'block' : 'hidden'}`}>
         <li>
           <button
             className="flex items-center gap-2 hover:bg-base-300 duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
