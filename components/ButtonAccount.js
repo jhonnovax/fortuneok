@@ -41,8 +41,8 @@ const ButtonAccount = ({ onAddAsset }) => {
   }
 
   return (
-    <div className="dropdown dropdown-end">
-      <button className="btn btn-tertiary" onClick={() => setOpenDropdown(!openDropdown)}>
+    <div className="dropdown dropdown-end relative">
+      <button type="button" className="btn btn-tertiary" onClick={() => setOpenDropdown(!openDropdown)}>
         {session?.user?.image ? (
               <img
                 src={session?.user?.image}

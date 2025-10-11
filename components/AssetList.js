@@ -120,6 +120,7 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
                       {showMoreActions && (
                         <div className="dropdown dropdown-end">
                           <button 
+                            type="button"
                             className="btn btn-tertiary btn-sm btn-circle"
                             title="More actions"
                             onClick={() => setOpenMoreActionsDropdown(!openMoreActionsDropdown)}
