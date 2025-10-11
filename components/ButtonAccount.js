@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import apiClient from "@/libs/api";
 
@@ -11,6 +11,7 @@ import apiClient from "@/libs/api";
 //     This is only available if the customer has a customerId (they made a purchase previously)
 //  2. Logout: sign out and go back to homepage
 const ButtonAccount = ({ onAddAsset }) => {
+  const dropdownRef = useRef(null);
   const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(false);
@@ -19,7 +20,7 @@ const ButtonAccount = ({ onAddAsset }) => {
     signOut({ callbackUrl: "/" });
   };
 
-  const handleBilling = async () => {
+  async function handleBilling() {
     setIsLoading(true);
 
     try {
@@ -33,12 +34,34 @@ const ButtonAccount = ({ onAddAsset }) => {
     }
 
     setIsLoading(false);
-  };
+  }
 
   function handleDropdown(e) {
     e.stopPropagation(); // Stop DaisyUI's dropdown wrapper has built-in behavior
     setOpenDropdown(!openDropdown);
   }
+
+  function handleAddAsset() {
+    setOpenDropdown(false);
+    onAddAsset();
+  }
+
+  function handleLogout() {
+    setOpenDropdown(false);
+    handleSignOut();
+  }
+
+  function handleClickOutside(e) {
+    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      setOpenDropdown(false);
+    }
+  }
+
+  // Handle click outside to close the dropdown
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Don't show anything if not authenticated (we don't have any info about the user)
   if (status === "unauthenticated") {
@@ -46,7 +69,7 @@ const ButtonAccount = ({ onAddAsset }) => {
   }
 
   return (
-    <div className="dropdown dropdown-end">
+    <div ref={dropdownRef} className="dropdown dropdown-end">
       <button type="button" className="btn btn-tertiary" onClick={handleDropdown}>
         {session?.user?.image ? (
               <img
@@ -88,11 +111,11 @@ const ButtonAccount = ({ onAddAsset }) => {
               </svg>
             )}
       </button>
-      <ul className={`dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-full min-w-40 mt-1 ${openDropdown ? 'block' : 'hidden'}`}>
+      <ul className={`dropdown-content menu z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-full min-w-40 mt-1 ${openDropdown ? 'block' : 'hidden'}`}>
         <li>
           <button
             className="flex items-center gap-2 hover:bg-base-300 duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
-            onClick={onAddAsset}
+            onClick={handleAddAsset}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -103,7 +126,7 @@ const ButtonAccount = ({ onAddAsset }) => {
         <li>
           <button
             className="flex items-center gap-2 hover:bg-error/20 hover:text-error duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
-            onClick={handleSignOut}
+            onClick={handleLogout}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
