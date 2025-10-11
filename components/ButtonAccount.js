@@ -111,7 +111,7 @@ const ButtonAccount = ({ onAddAsset }) => {
               </svg>
             )}
       </button>
-      <ul className={`dropdown-content menu z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-full min-w-40 mt-1 ${openDropdown ? 'block' : 'hidden'}`}>
+      <ul className={`absolute right-0 z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-full min-w-40 mt-1 ${openDropdown ? 'block' : 'hidden'}`}>
         <li>
           <button
             className="flex items-center gap-2 hover:bg-base-300 duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
