@@ -2,9 +2,13 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { usePreferences } from '../contexts/PreferencesContext';
-import CurrencyCombobox from './CurrencyCombobox';
+import InputSuggestionList from './InputSuggestionList';
 import ClickOutside from './ClickOutside';
 import currencies from '@/public/currencies.json';
+const currenciesSuggestionList = currencies.map(currency => ({
+  ...currency,
+  value: currency.code
+}));
 
 export default function CurrencySelection({ onEditingCurrency }) {
 
@@ -44,9 +48,30 @@ export default function CurrencySelection({ onEditingCurrency }) {
   if (isEditingCurrency) {
     return (
       <ClickOutside className="inline-flex w-full 2xl:w-[400px] items-center" onClick={() => handleEditingCurrency(false)}>
-        <CurrencyCombobox
-          autoFocus={true}
+        <InputSuggestionList
+          autoFocus
+          suggestionList={currenciesSuggestionList}
           value={currency}
+          customInputValueRenderer={(selectedValue) => {
+            const selectedSuggestion = currenciesSuggestionList.find(item => item.value === selectedValue);
+            return selectedSuggestion
+              ? `${selectedSuggestion.flag} ${selectedSuggestion.value} - ${selectedSuggestion.label}`
+              : selectedValue;
+          }}
+          customSuggestionItemRenderer={(suggestion) => (
+            <div className="w-full flex items-center gap-1 p-3 text-left" title={suggestion.label}>
+              {/* Flag with border */}
+              <div className="w-8 h-6 flex-shrink-0 overflow-hidden rounded flex items-center justify-center">
+                <span className="text-xl">{suggestion.flag}</span>
+              </div>
+              {/* Currency code in pill */}
+              <div className="text-sm pr-1 py-1 rounded">
+                {suggestion.value}
+              </div>
+              {/* Currency name */}
+              <span className="text-base-content text-ellipsis overflow-hidden whitespace-nowrap">{suggestion.label}</span>
+            </div>
+          )}
           onChange={handleCurrencyChange}
         />
         <button 

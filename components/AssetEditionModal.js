@@ -6,6 +6,11 @@ import { useSession } from 'next-auth/react';
 import ButtonSignin from '@/components/ButtonSignin';
 import dynamic from 'next/dynamic';
 import { createPortal } from 'react-dom';
+import currencies from '@/public/currencies.json';
+const currenciesSuggestionList = currencies.map(currency => ({
+  ...currency,
+  value: currency.code
+}));
 
 // Dynamic imports for heavy components
 const CurrencyInput = dynamic(() => import('react-currency-input-field'), {
@@ -18,7 +23,7 @@ const SymbolCombobox = dynamic(() => import('./SymbolCombobox'), {
   loading: () => <div className="input input-bordered w-full animate-pulse bg-base-200 h-12"></div>
 });
 
-const CurrencyCombobox = dynamic(() => import('./CurrencyCombobox'), {
+const InputSuggestionList = dynamic(() => import('./InputSuggestionList'), {
   ssr: false,
   loading: () => <div className="input input-bordered w-full animate-pulse bg-base-200 h-12"></div>
 });
@@ -243,11 +248,32 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                     {/* Purchase Price Currency */}
                     <div className="form-control">
                       {renderLabel('Currency', true, errors.currentValuationCurrency)}
-                      <CurrencyCombobox
-                        value={form.currentValuation?.currency}
-                        onChange={(value) => setForm({ ...form, currentValuation: { ...form.currentValuation, currency: value } })}
-                        error={errors.currentValuationCurrency}
+                      <InputSuggestionList
                         disabled={isSubmitting}
+                        error={errors.currentValuationCurrency}
+                        suggestionList={currenciesSuggestionList}
+                        value={form.currentValuation?.currency}
+                        customInputValueRenderer={(selectedValue) => {
+                          const selectedSuggestion = currenciesSuggestionList.find(item => item.value === selectedValue);
+                          return selectedSuggestion
+                            ? `${selectedSuggestion.flag} ${selectedSuggestion.value} - ${selectedSuggestion.label}`
+                            : selectedValue;
+                        }}
+                        customSuggestionItemRenderer={(suggestion) => (
+                          <div className="w-full flex items-center gap-1 p-3 text-left" title={suggestion.label}>
+                            {/* Flag with border */}
+                            <div className="w-8 h-6 flex-shrink-0 overflow-hidden rounded flex items-center justify-center">
+                              <span className="text-xl">{suggestion.flag}</span>
+                            </div>
+                            {/* Currency code in pill */}
+                            <div className="text-sm pr-1 py-1 rounded">
+                              {suggestion.value}
+                            </div>
+                            {/* Currency name */}
+                            <span className="text-base-content text-ellipsis overflow-hidden whitespace-nowrap">{suggestion.label}</span>
+                          </div>
+                        )}
+                        onChange={(value) => setForm({ ...form, currentValuation: { ...form.currentValuation, currency: value } })}
                       />
                     </div>
 
