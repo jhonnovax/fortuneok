@@ -45,6 +45,14 @@ export default function InputSuggestionList({
     setFilteredSuggestions(filteredSuggestions);
     setShowDropdown(true);
   }
+
+  // Handle clear button
+  function handleClear() {
+    setSearchTerm('');
+    onChange('');
+    setShowDropdown(false);
+    inputRef.current?.focus?.();
+  }
   
   // Handle currency selection
   function handleSelect(suggestion) {
@@ -116,13 +124,15 @@ export default function InputSuggestionList({
     function handleKeyDown(event) {
       if (showDropdown && event.key === 'Escape') {
         event.stopPropagation();
+        const selectedSuggestion = suggestionList.find(item => item.value === searchTerm);
+        if (!selectedSuggestion) setSearchTerm('');
         closeDropdown();
       }
     }
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [showDropdown]);
+  }, [showDropdown, searchTerm, suggestionList]);
 
   // Close dropdown on resize or scroll
   useEffect(() => {
@@ -149,18 +159,34 @@ export default function InputSuggestionList({
   // Render the component
   return (
     <div ref={comboboxRef} className={`w-full relative ${className || ''}`}>
-      <input
-        ref={inputRef}
-        autoFocus={autoFocus}
-        autoComplete="off"
-        type="search"
-        className={`input input-bordered w-full ${error ? 'input-error' : ''}`}
-        disabled={disabled}
-        placeholder="Select currency"
-        value={customInputValueRenderer && value ? customInputValueRenderer(value) : searchTerm}
-        onFocus={handleFocus}
-        onChange={handleInputChange}
-      />
+
+      <div className="w-full">
+        <input
+          ref={inputRef}
+          autoFocus={autoFocus}
+          autoComplete="off"
+          type="text"
+          className={`input input-bordered w-full ${error ? 'input-error' : ''} ${(value || searchTerm) ? 'pr-8' : ''}`}
+          disabled={disabled}
+          placeholder="Select currency"
+          value={customInputValueRenderer && value ? customInputValueRenderer(value) : searchTerm}
+          onFocus={handleFocus}
+          onChange={handleInputChange}
+        />
+        {/* Clear button */}
+        {!disabled && (value || searchTerm) && (
+          <button
+            type="button"
+            className="absolute inset-y-0 right-0 top-0 flex items-center pr-3"
+            onClick={handleClear}
+            title="Clear"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 hover:text-base" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
+      </div>
       
       {/* Dropdown */}
       {showDropdown && (
