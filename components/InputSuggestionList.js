@@ -92,7 +92,10 @@ export default function InputSuggestionList({
   // Update dropdown coords on show dropdown
   useLayoutEffect(() => {
     if (!showDropdown) return;
-    updateDropdownCoords();
+    // Wait for viewport to stabilize (keyboard fully open in mobile ios/android)
+    setTimeout(() => {
+      updateDropdownCoords();
+    }, 250);
   }, [showDropdown]);
   
   // Handle outside clicks
@@ -134,12 +137,12 @@ export default function InputSuggestionList({
       if (!showDropdown) return;
       closeDropdown();
     }
-
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('scroll', handleScroll, true);
+    const visualViewport = window.visualViewport || window;
+    visualViewport.addEventListener('resize', handleResize);
+    visualViewport.addEventListener('scroll', handleScroll, true);
     return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('scroll', handleScroll, true);
+      visualViewport.removeEventListener('resize', handleResize);
+      visualViewport.removeEventListener('scroll', handleScroll, true);
     };
   }, [showDropdown]);
 
