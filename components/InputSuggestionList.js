@@ -157,7 +157,7 @@ export default function InputSuggestionList({
         className={`input input-bordered w-full ${error ? 'input-error' : ''}`}
         disabled={disabled}
         placeholder="Select currency"
-        value={customInputValueRenderer && value ? customInputValueRenderer(searchTerm) : searchTerm}
+        value={customInputValueRenderer && value ? customInputValueRenderer(value) : searchTerm}
         onFocus={handleFocus}
         onChange={handleInputChange}
       />
