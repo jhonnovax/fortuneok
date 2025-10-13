@@ -137,12 +137,12 @@ export default function InputSuggestionList({
       if (!showDropdown) return;
       closeDropdown();
     }
-    const visualViewport = window.visualViewport || window;
-    visualViewport.addEventListener('resize', handleResize);
-    visualViewport.addEventListener('scroll', handleScroll, true);
+    
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('scroll', handleScroll, true);
     return () => {
-      visualViewport.removeEventListener('resize', handleResize);
-      visualViewport.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleScroll, true);
     };
   }, [showDropdown]);
 
