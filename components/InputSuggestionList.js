@@ -93,9 +93,9 @@ export default function InputSuggestionList({
   useLayoutEffect(() => {
     if (!showDropdown) return;
     // Wait for viewport to stabilize (keyboard fully open in mobile ios/android)
-    setTimeout(() => {
-      updateDropdownCoords();
-    }, 250);
+    let timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(updateDropdownCoords, 250);
   }, [showDropdown]);
   
   // Handle outside clicks
