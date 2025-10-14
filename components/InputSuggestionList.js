@@ -13,6 +13,8 @@ export default function InputSuggestionList({
   placeholder,
   suggestionList,
   value,
+  onFocus,
+  onBlur,
   onChange
 }) {
 
@@ -68,19 +70,21 @@ export default function InputSuggestionList({
   }
   
   // Handle input focus
-  function handleFocus() {
+  function handleFocus(event) {
     const filteredSuggestions = value
       ? filterSuggestions('') // If value is set, return all the suggestions list
       : filterSuggestions(searchTerm); // If value is not set, return the suggestions list filtered by the search term
     setFilteredSuggestions(filteredSuggestions);
     setShowDropdown(true);
+    onFocus?.(event);
   }
 
   // Handle input blur
-  function handleBlur() {
+  function handleBlur(event) {
     const selectedSuggestion = suggestionList.find(item => item.value === searchTerm);
     if (!selectedSuggestion) setSearchTerm('');
     setShowDropdown(false);
+    onBlur?.(event);
   }
 
   // Close dropdown

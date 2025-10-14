@@ -3,7 +3,6 @@
 import { useEffect } from 'react';
 import { usePreferences } from '../contexts/PreferencesContext';
 import InputSuggestionList from './InputSuggestionList';
-import ClickOutside from './ClickOutside';
 import currencies from '@/public/currencies.json';
 const currenciesSuggestionList = currencies.map(currency => ({
   ...currency,
@@ -40,9 +39,10 @@ export default function CurrencySelection({ isEditingCurrency, onEditingCurrency
   // Render editing currency combobox mode
   if (isEditingCurrency) {
     return (
-      <ClickOutside className="inline-flex w-full 2xl:w-[400px] items-center" onClick={() => onEditingCurrency(false)}>
+      <>
         <InputSuggestionList
           autoFocus
+          className="inline-flex w-full 2xl:w-[400px] items-center"
           placeholder="Select currency"
           suggestionList={currenciesSuggestionList}
           customInputValueRenderer={(selectedValue) => {
@@ -65,6 +65,7 @@ export default function CurrencySelection({ isEditingCurrency, onEditingCurrency
               <span className="text-base-content text-ellipsis overflow-hidden whitespace-nowrap">{suggestion.label}</span>
             </div>
           )}
+          onBlur={() => onEditingCurrency(false)}
           onChange={handleCurrencyChange}
         />
         <button 
@@ -77,7 +78,7 @@ export default function CurrencySelection({ isEditingCurrency, onEditingCurrency
             <path fill="currentColor" d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"/>
           </svg>
         </button>
-      </ClickOutside>
+      </>
     );
   }
 
