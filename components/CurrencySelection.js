@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import { usePreferences } from '../contexts/PreferencesContext';
 import InputSuggestionList from './InputSuggestionList';
 import ClickOutside from './ClickOutside';
@@ -10,21 +10,14 @@ const currenciesSuggestionList = currencies.map(currency => ({
   value: currency.code
 }));
 
-export default function CurrencySelection({ onEditingCurrency }) {
+export default function CurrencySelection({ isEditingCurrency, onEditingCurrency }) {
 
-  const [isEditingCurrency, setIsEditingCurrency] = useState(false);
-  const { currency, setCurrency } = usePreferences();
-  const selectedCurrency = currencies.find(item => item.code === currency);
+  const { preferredCurrency, setPreferredCurrency } = usePreferences();
+  const preferredCurrencyDetails = currencies.find(item => item.code === preferredCurrency);
 
-  const handleEditingCurrency = useCallback((value) => {
-    setIsEditingCurrency(value);
-    onEditingCurrency(value);
-  }, [onEditingCurrency]);
-
-  function handleCurrencyChange(value) {
-    if (value) {
-      setCurrency(value);
-      setIsEditingCurrency(false);
+  function handleCurrencyChange(newCurrency) {
+    if (newCurrency) {
+      setPreferredCurrency(newCurrency);
       onEditingCurrency(false);
     }
   }
@@ -33,7 +26,7 @@ export default function CurrencySelection({ onEditingCurrency }) {
   useEffect(() => {
     function handleEscapeKey(event) {
       if (event.key === 'Escape' && isEditingCurrency) {
-        handleEditingCurrency(false);
+        onEditingCurrency(false);
       }
     }
 
@@ -42,16 +35,15 @@ export default function CurrencySelection({ onEditingCurrency }) {
     return () => {
       document.removeEventListener('keydown', handleEscapeKey);
     };
-  }, [isEditingCurrency, handleEditingCurrency]);
+  }, [isEditingCurrency, onEditingCurrency]);
 
   // Render editing currency combobox mode
   if (isEditingCurrency) {
     return (
-      <ClickOutside className="inline-flex w-full 2xl:w-[400px] items-center" onClick={() => handleEditingCurrency(false)}>
+      <ClickOutside className="inline-flex w-full 2xl:w-[400px] items-center" onClick={() => onEditingCurrency(false)}>
         <InputSuggestionList
           autoFocus
           suggestionList={currenciesSuggestionList}
-          value={currency}
           customInputValueRenderer={(selectedValue) => {
             const selectedSuggestion = currenciesSuggestionList.find(item => item.value === selectedValue);
             return selectedSuggestion
@@ -77,7 +69,7 @@ export default function CurrencySelection({ onEditingCurrency }) {
         <button 
           className="btn btn-default btn-sm lg:btn-md ml-2" 
           title="Go back"
-          onClick={() => handleEditingCurrency(false)}
+          onClick={() => onEditingCurrency(false)}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 1024 1024">
             <path fill="currentColor" d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"/>
@@ -93,9 +85,9 @@ export default function CurrencySelection({ onEditingCurrency }) {
     <button 
       className="btn btn-sm lg:btn-md gap-1"
       title="Edit currency"
-      onClick={() => handleEditingCurrency(true)}
+      onClick={() => onEditingCurrency(true)}
     >
-      {selectedCurrency?.flag} {currency}
+      {preferredCurrencyDetails?.flag} {preferredCurrency}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"

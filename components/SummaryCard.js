@@ -42,6 +42,7 @@ export default function SummaryCard({ isLoading, error, baseCurrency, filteredAs
         <div className="flex items-center gap-2 md:gap-4">
           {/* Currency Selection */}
           <CurrencySelection
+            isEditingCurrency={isEditingCurrency}
             onEditingCurrency={setIsEditingCurrency}
           />
 

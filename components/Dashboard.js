@@ -47,7 +47,7 @@ export default function Dashboard() {
   const [error, setError] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const { currency: baseCurrency } = usePreferences();
+  const { preferredCurrency: baseCurrency } = usePreferences();
 
   const getCurrencyRates = useCurrencyRatesStore((state) => state.getCurrencyRates);
   const getAssets = useAssetStore((state) => state.getAssets);

@@ -5,17 +5,17 @@ const PreferencesContext = createContext();
 
 // Provider component
 export const PreferencesProvider = ({ children }) => {
-  const [currency, setCurrency] = useState(typeof window !== 'undefined' ? localStorage.getItem('currency') || 'USD' : 'USD');
-  const [language, setLanguage] = useState('en');
+  const [preferredCurrency, setPreferredCurrency] = useState(typeof window !== 'undefined' ? localStorage.getItem('currency') || 'USD' : 'USD');
+  const [preferredLanguage, setPreferredLanguage] = useState('en');
 
   // Save preferences to localStorage
   useEffect(() => {
-    localStorage.setItem('currency', currency);
-    localStorage.setItem('language', language);
-  }, [currency, language]);
+    localStorage.setItem('currency', preferredCurrency);
+    localStorage.setItem('language', preferredLanguage);
+  }, [preferredCurrency, preferredLanguage]);
 
   return (
-    <PreferencesContext.Provider value={{ currency, setCurrency, language, setLanguage }}>
+    <PreferencesContext.Provider value={{ preferredCurrency, setPreferredCurrency, preferredLanguage, setPreferredLanguage }}>
       {children}
     </PreferencesContext.Provider>
   );
