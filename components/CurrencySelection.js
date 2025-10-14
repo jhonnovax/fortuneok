@@ -43,6 +43,7 @@ export default function CurrencySelection({ isEditingCurrency, onEditingCurrency
       <ClickOutside className="inline-flex w-full 2xl:w-[400px] items-center" onClick={() => onEditingCurrency(false)}>
         <InputSuggestionList
           autoFocus
+          placeholder="Select currency"
           suggestionList={currenciesSuggestionList}
           customInputValueRenderer={(selectedValue) => {
             const selectedSuggestion = currenciesSuggestionList.find(item => item.value === selectedValue);

@@ -6,11 +6,12 @@ import { createPortal } from 'react-dom';
 export default function InputSuggestionList({ 
   autoFocus,
   className,
-  disabled,
-  error,
-  suggestionList,
   customInputValueRenderer,
   customSuggestionItemRenderer,
+  disabled,
+  error,
+  placeholder,
+  suggestionList,
   value,
   onChange
 }) {
@@ -173,7 +174,7 @@ export default function InputSuggestionList({
           type="text"
           className={`input input-bordered w-full ${error ? 'input-error' : ''} ${(value || searchTerm) ? 'pr-8' : ''}`}
           disabled={disabled}
-          placeholder="Select currency"
+          placeholder={placeholder}
           value={customInputValueRenderer && value ? customInputValueRenderer(value) : searchTerm}
           onFocus={handleFocus}
           onChange={handleInputChange}

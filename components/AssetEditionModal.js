@@ -251,6 +251,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                       <InputSuggestionList
                         disabled={isSubmitting}
                         error={errors.currentValuationCurrency}
+                        placeholder="Select currency"
                         suggestionList={currenciesSuggestionList}
                         value={form.currentValuation?.currency}
                         customInputValueRenderer={(selectedValue) => {
