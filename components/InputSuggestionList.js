@@ -4,18 +4,17 @@ import { useState, useEffect, useRef, useLayoutEffect, useCallback } from 'react
 import { createPortal } from 'react-dom';
 
 export default function InputSuggestionList({ 
-  autoFocus,
   className,
   customInputValueRenderer,
   customSuggestionItemRenderer,
   disabled,
   error,
-  placeholder,
   suggestionList,
   value,
   onFocus,
   onBlur,
-  onChange
+  onChange,
+  ...inputProps
 }) {
 
   const inputRef = useRef(null);
@@ -207,13 +206,12 @@ export default function InputSuggestionList({
 
       <div className="w-full">
         <input
+          {...inputProps}
           ref={inputRef}
-          autoFocus={autoFocus}
           autoComplete="off"
           type="text"
           className={`input input-bordered w-full pr-8 ${error ? 'input-error' : ''}`}
           disabled={disabled}
-          placeholder={placeholder}
           value={customInputValueRenderer && value ? customInputValueRenderer(value) : searchTerm}
           onFocus={handleFocus}
           onBlur={handleBlur}
