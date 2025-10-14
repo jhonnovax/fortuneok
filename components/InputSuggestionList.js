@@ -130,7 +130,7 @@ export default function InputSuggestionList({
       if (!showDropdown) return;
       const isScrollingSuggestions = event.target.classList.contains('popover-suggestions');
       if (isScrollingSuggestions) return;
-      closeDropdown();
+      if (document.activeElement !== inputRef.current) closeDropdown(); // Close dropdown if the scroll is not happening on the input
     }
 
     function handleResize() {
