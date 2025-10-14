@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 
 export default function InputSuggestionList({ 
@@ -19,7 +19,8 @@ export default function InputSuggestionList({
 }) {
 
   const inputRef = useRef(null);
-  const comboboxRef = useRef(null);
+  const suggestionListRef = useRef(null);
+  const [highlightedSuggestionIndex, setHighlightedSuggestionIndex] = useState(-1);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -63,11 +64,11 @@ export default function InputSuggestionList({
   }
   
   // Handle currency selection
-  function handleSelect(suggestion) {
+  const handleSelect = useCallback((suggestion) => {
     setSearchTerm(''); // Clear search term after selection
     onChange(suggestion.value);
     setShowDropdown(false);
-  }
+  }, [onChange]);
   
   // Handle input focus
   function handleFocus(event) {
@@ -123,21 +124,6 @@ export default function InputSuggestionList({
     timeout = setTimeout(updateDropdownCoords, 250);
   }, [showDropdown]);
 
-  // Close dropdown on press esc key
-  useEffect(() => {
-    function handleKeyDown(event) {
-      if (showDropdown && event.key === 'Escape') {
-        event.stopPropagation();
-        const selectedSuggestion = suggestionList.find(item => item.value === searchTerm);
-        if (!selectedSuggestion) setSearchTerm('');
-        closeDropdown();
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [showDropdown, searchTerm, suggestionList]);
-
   // Close dropdown on resize or scroll
   useEffect(() => {
     function handleScroll(event) {
@@ -160,9 +146,64 @@ export default function InputSuggestionList({
     };
   }, [showDropdown]);
 
+  // Handle key down events
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (!showDropdown) return;
+  
+      if (event.key === 'Escape') {
+        event.stopPropagation();
+        closeDropdown();
+        return;
+      }
+  
+      if (filteredSuggestions.length === 0) return;
+
+      function scrollToItem(index) {
+        const container = suggestionListRef.current;
+        if (!container) return;
+        const item = container.querySelectorAll('li')[index];
+        if (item) item.scrollIntoView({ block: 'nearest' });
+      }
+  
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        setHighlightedSuggestionIndex(prev => {
+          const nextIndex = prev < filteredSuggestions.length - 1 ? prev + 1 : 0;
+          scrollToItem(nextIndex);
+          return nextIndex;
+        });
+      }
+  
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        setHighlightedSuggestionIndex(prev => {
+          const nextIndex = prev > 0 ? prev - 1 : filteredSuggestions.length - 1;
+          scrollToItem(nextIndex);
+          return nextIndex;
+        });
+      }
+  
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        if (highlightedSuggestionIndex >= 0 && highlightedSuggestionIndex < filteredSuggestions.length) {
+          handleSelect(filteredSuggestions[highlightedSuggestionIndex]);
+        }
+      }
+    }
+  
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [showDropdown, filteredSuggestions, highlightedSuggestionIndex, handleSelect]);
+
+  // Reset highlighted suggestion if suggestions list changes
+  useEffect(() => {
+    if (!showDropdown) setHighlightedSuggestionIndex(-1);
+  }, [showDropdown, filteredSuggestions]);
+
   // Render the component
   return (
-    <div ref={comboboxRef} className={`w-full relative ${className || ''}`}>
+    <div className={`w-full relative ${className || ''}`}>
 
       <div className="w-full">
         <input
@@ -182,7 +223,7 @@ export default function InputSuggestionList({
         {!disabled && (value || searchTerm) && (
           <button
             type="button"
-            className="absolute inset-y-0 right-0 top-0 flex items-center pr-3"
+            className="absolute inset-y-0 right-0 top-0 flex items-center px-2"
             onClick={handleClear}
             title="Clear"
           >
@@ -197,7 +238,7 @@ export default function InputSuggestionList({
       {showDropdown && (
         createPortal(
           <div className="popover-suggestions bg-base-100 border rounded-md border-base-content/10 shadow absolute mt-1 overflow-y-auto" style={dropdownCoords}>
-            <ul className="overflow-x-hidden">
+            <ul ref={suggestionListRef} className="overflow-x-hidden">
               {/* No results message */}
               {!filteredSuggestions.length && (
                 <li>
@@ -210,9 +251,13 @@ export default function InputSuggestionList({
                 </li>
               )}
               {/* Suggestions */}
-              {filteredSuggestions.map((suggestion) => (
+              {filteredSuggestions.map((suggestion, suggestionIndex) => (
                 <li key={suggestion.value} className="border-b border-base-content/10 last:border-b-0">
-                  <button className="w-full hover:bg-base-200 hover:cursor-pointer" type="button" onMouseDown={() => handleSelect(suggestion)}>
+                  <button 
+                    type="button" 
+                    className={`w-full hover:bg-base-200 hover:cursor-pointer ${suggestionIndex === highlightedSuggestionIndex ? 'bg-base-200' : ''}`} 
+                    onMouseDown={() => handleSelect(suggestion)}
+                  >
                     {customSuggestionItemRenderer ? customSuggestionItemRenderer(suggestion) : suggestion.label}
                   </button>
                 </li>
