@@ -62,7 +62,7 @@ export default function InputSuggestionList({
   
   // Handle currency selection
   function handleSelect(suggestion) {
-    setSearchTerm(suggestion.value);
+    setSearchTerm(''); // Clear search term after selection
     onChange(suggestion.value);
     setShowDropdown(false);
   }
@@ -74,6 +74,13 @@ export default function InputSuggestionList({
       : filterSuggestions(searchTerm); // If value is not set, return the suggestions list filtered by the search term
     setFilteredSuggestions(filteredSuggestions);
     setShowDropdown(true);
+  }
+
+  // Handle input blur
+  function handleBlur() {
+    const selectedSuggestion = suggestionList.find(item => item.value === searchTerm);
+    if (!selectedSuggestion) setSearchTerm('');
+    setShowDropdown(false);
   }
 
   // Close dropdown
@@ -111,19 +118,6 @@ export default function InputSuggestionList({
     clearTimeout(timeout);
     timeout = setTimeout(updateDropdownCoords, 250);
   }, [showDropdown]);
-  
-  // Handle outside clicks
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (comboboxRef.current && comboboxRef.current.contains(event.target)) return;
-      const selectedSuggestion = suggestionList.find(item => item.value === searchTerm);
-      if (!selectedSuggestion) setSearchTerm('');
-      closeDropdown();
-    }
-    
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [searchTerm, suggestionList]);
 
   // Close dropdown on press esc key
   useEffect(() => {
@@ -172,11 +166,12 @@ export default function InputSuggestionList({
           autoFocus={autoFocus}
           autoComplete="off"
           type="text"
-          className={`input input-bordered w-full ${error ? 'input-error' : ''} ${(value || searchTerm) ? 'pr-8' : ''}`}
+          className={`input input-bordered w-full pr-8 ${error ? 'input-error' : ''}`}
           disabled={disabled}
           placeholder={placeholder}
           value={customInputValueRenderer && value ? customInputValueRenderer(value) : searchTerm}
           onFocus={handleFocus}
+          onBlur={handleBlur}
           onChange={handleInputChange}
         />
         {/* Clear button */}
@@ -187,7 +182,7 @@ export default function InputSuggestionList({
             onClick={handleClear}
             title="Clear"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 hover:text-base" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
