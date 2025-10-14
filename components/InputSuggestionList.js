@@ -50,8 +50,13 @@ export default function InputSuggestionList({
   function handleClear() {
     setSearchTerm('');
     onChange('');
-    setShowDropdown(false);
-    inputRef.current?.focus?.();
+
+    const filteredSuggestions = filterSuggestions('');
+    setFilteredSuggestions(filteredSuggestions);
+
+    requestAnimationFrame(() => {
+      inputRef.current?.focus?.();
+    });
   }
   
   // Handle currency selection
@@ -63,10 +68,10 @@ export default function InputSuggestionList({
   
   // Handle input focus
   function handleFocus() {
-    if (!value) {
-      const filteredSuggestions = filterSuggestions(searchTerm);
-      setFilteredSuggestions(filteredSuggestions);
-    }
+    const filteredSuggestions = value
+      ? filterSuggestions('') // If value is set, return all the suggestions list
+      : filterSuggestions(searchTerm); // If value is not set, return the suggestions list filtered by the search term
+    setFilteredSuggestions(filteredSuggestions);
     setShowDropdown(true);
   }
 
@@ -193,7 +198,19 @@ export default function InputSuggestionList({
         createPortal(
           <div className="popover-suggestions bg-base-100 border rounded-md border-base-content/10 shadow absolute mt-1 overflow-y-auto" style={dropdownCoords}>
             <ul className="overflow-x-hidden">
-              {(filteredSuggestions.length > 0 ? filteredSuggestions : suggestionList).map((suggestion) => (
+              {/* No results message */}
+              {!filteredSuggestions.length && (
+                <li>
+                  <p className="flex items-center gap-2 p-3 text-base-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
+                      <path d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    No results found
+                  </p>
+                </li>
+              )}
+              {/* Suggestions */}
+              {filteredSuggestions.map((suggestion) => (
                 <li key={suggestion.value} className="border-b border-base-content/10 last:border-b-0">
                   <button className="w-full hover:bg-base-200 hover:cursor-pointer" type="button" onMouseDown={() => handleSelect(suggestion)}>
                     {customSuggestionItemRenderer ? customSuggestionItemRenderer(suggestion) : suggestion.label}
