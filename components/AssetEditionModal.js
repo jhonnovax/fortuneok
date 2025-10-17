@@ -18,7 +18,7 @@ const CurrencyInput = dynamic(() => import('react-currency-input-field'), {
   loading: () => <div className="input input-bordered w-full animate-pulse bg-base-200 h-12"></div>
 });
 
-const SymbolCombobox = dynamic(() => import('./SymbolCombobox'), {
+const InputStockSuggestions = dynamic(() => import('./InputStockSuggestions'), {
   ssr: false,
   loading: () => <div className="input input-bordered w-full animate-pulse bg-base-200 h-12"></div>
 });
@@ -232,13 +232,13 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                 ) : (
                   <div className="form-control">
                     {renderLabel('Symbol', true, errors.symbol)}
-                    <SymbolCombobox
-                      value={form.symbol}
-                      onChange={(selection) => setForm({ ...form, symbol: selection.symbol, description: selection.description })}
-                      type={form.category}
-                      placeholder="Search for a symbol"
-                      error={errors.symbol}
+                    <InputStockSuggestions
                       disabled={isSubmitting}
+                      error={errors.symbol}
+                      placeholder="Select symbol"
+                      type={form.category}
+                      value={form.symbol}
+                      onSelect={(value) => setForm({ ...form, symbol: value })}
                     />
                   </div>
                 )}
@@ -274,7 +274,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                             <span className="text-base-content text-ellipsis overflow-hidden whitespace-nowrap">{suggestion.label}</span>
                           </div>
                         )}
-                        onChange={(value) => setForm({ ...form, currentValuation: { ...form.currentValuation, currency: value } })}
+                        onSelect={(value) => setForm({ ...form, currentValuation: { ...form.currentValuation, currency: value } })}
                       />
                     </div>
 

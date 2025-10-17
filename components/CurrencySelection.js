@@ -14,7 +14,7 @@ export default function CurrencySelection({ isEditingCurrency, onEditingCurrency
   const { preferredCurrency, setPreferredCurrency } = usePreferences();
   const preferredCurrencyDetails = currencies.find(item => item.code === preferredCurrency);
 
-  function handleCurrencyChange(newCurrency) {
+  function handleCurrencySelection(newCurrency) {
     if (newCurrency) {
       setPreferredCurrency(newCurrency);
       onEditingCurrency(false);
@@ -66,7 +66,7 @@ export default function CurrencySelection({ isEditingCurrency, onEditingCurrency
             </div>
           )}
           onBlur={() => onEditingCurrency(false)}
-          onChange={handleCurrencyChange}
+          onSelect={handleCurrencySelection}
         />
         <button 
           className="btn btn-default btn-sm lg:btn-md ml-2" 

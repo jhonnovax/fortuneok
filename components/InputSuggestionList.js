@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useLayoutEffect, useCallback } from 'react
 import { createPortal } from 'react-dom';
 
 export default function InputSuggestionList({ 
+  isLoading,
   className,
   customInputValueRenderer,
   customSuggestionItemRenderer,
@@ -13,7 +14,9 @@ export default function InputSuggestionList({
   value,
   onFocus,
   onBlur,
+  onClear,
   onChange,
+  onSelect,
   ...inputProps
 }) {
 
@@ -26,23 +29,26 @@ export default function InputSuggestionList({
   const [dropdownCoords, setDropdownCoords] = useState({});
   
   // Filter suggestions based on input text
-  function filterSuggestions(searchTerm) {
+  const filterSuggestions = useCallback((searchTerm) => {
     if (!searchTerm.trim()) {
       return suggestionList;
     }
     
-    const lowercaseQuery = searchTerm.toLowerCase();
-    return suggestionList.filter(suggestion => 
-      suggestion.value.toLowerCase().includes(lowercaseQuery) || 
-      suggestion.label.toLowerCase().includes(lowercaseQuery)
-    );
-  }
+    const lowercaseQuery = searchTerm.toLowerCase().trim().split(' ')
+    return suggestionList.filter(suggestion => {
+      return (
+        lowercaseQuery.some(query => suggestion.value.toLowerCase().includes(query)) || 
+        lowercaseQuery.some(query => suggestion.label.toLowerCase().includes(query))
+      );
+    });
+  }, [suggestionList]);
   
   // Handle input change
-  function handleInputChange(e) {
-    const searchTerm = e.target.value;
+  function handleInputChange(event) {
+    const searchTerm = event.target.value;
     setSearchTerm(searchTerm);
-    onChange('');
+    onChange?.(searchTerm);
+    if (value) onSelect?.('');
     
     const filteredSuggestions = filterSuggestions(searchTerm);
     setFilteredSuggestions(filteredSuggestions);
@@ -52,8 +58,9 @@ export default function InputSuggestionList({
   // Handle clear button
   function handleClear() {
     setSearchTerm('');
-    onChange('');
-
+    onChange?.('');
+    onSelect?.('');
+    onClear?.();
     const filteredSuggestions = filterSuggestions('');
     setFilteredSuggestions(filteredSuggestions);
 
@@ -65,9 +72,10 @@ export default function InputSuggestionList({
   // Handle currency selection
   const handleSelect = useCallback((suggestion) => {
     setSearchTerm(''); // Clear search term after selection
-    onChange(suggestion.value);
+    onChange?.('');
+    onSelect?.(suggestion.value);
     setShowDropdown(false);
-  }, [onChange]);
+  }, [onChange, onSelect]);
   
   // Handle input focus
   function handleFocus(event) {
@@ -195,6 +203,13 @@ export default function InputSuggestionList({
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [showDropdown, filteredSuggestions, highlightedSuggestionIndex, handleSelect]);
 
+  // Update filtered suggestions if suggestions list changes
+  useEffect(() => {
+    if (isLoading || !showDropdown) return;
+    const filteredSuggestions = filterSuggestions(searchTerm);
+    setFilteredSuggestions(filteredSuggestions);
+  }, [isLoading, showDropdown, searchTerm, filterSuggestions]);
+
   // Reset highlighted suggestion if suggestions list changes
   useEffect(() => {
     if (!showDropdown) setHighlightedSuggestionIndex(-1);
@@ -217,8 +232,16 @@ export default function InputSuggestionList({
           onBlur={handleBlur}
           onChange={handleInputChange}
         />
+
+        {/* Loading spinner */}
+        {isLoading && (
+          <div className="absolute inset-y-0 right-0 top-0 flex items-center pr-3 pointer-events-none">
+            <span className="loading loading-spinner loading-sm text-primary"></span>
+          </div>
+        )}
+
         {/* Clear button */}
-        {!disabled && (value || searchTerm) && (
+        {!isLoading && !disabled && (value || searchTerm) && (
           <button
             type="button"
             className="absolute inset-y-0 right-0 top-0 flex items-center px-2"
@@ -233,7 +256,7 @@ export default function InputSuggestionList({
       </div>
       
       {/* Dropdown */}
-      {showDropdown && (
+      {!isLoading && showDropdown && suggestionList.length > 0 && (
         createPortal(
           <div className="popover-suggestions bg-base-100 border rounded-md border-base-content/10 shadow absolute mt-1 overflow-y-auto" style={dropdownCoords}>
             <ul ref={suggestionListRef} className="overflow-x-hidden">
