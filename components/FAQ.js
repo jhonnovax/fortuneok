@@ -1,0 +1,115 @@
+"use client";
+
+import { useRef, useState } from "react";
+
+// <FAQ> component is a lsit of <Item> component
+// Just import the FAQ & add your FAQ content to the const faqList
+
+const faqList = [
+  {
+    question: "Why do I need FortuneOK?",
+    answer: <div className="space-y-2 leading-relaxed">When do you have many kinds of investments, it&apos;s hard to keep track of them. FortuneOK is a tool that helps you keep track of your investments and manage all of them in one place.</div>,
+  },
+  {
+    question: "How does it update crypto and stock prices?",
+    answer: <div className="space-y-2 leading-relaxed">FortuneOK connects to financial APIs to fetch real-time market data, ensuring your investment values and profit percentages are always up to date.</div>,
+  },
+  {
+    question: "Does it support multiple currencies?",
+    answer: <div className="space-y-2 leading-relaxed">Yes! FortuneOK supports multiple currencies. You can add your investments in different currencies and FortuneOK will convert them to your base currency for you.</div>,
+  },
+  {
+    question: "How FortuneOK improve my investment decisions?",
+    answer: <div className="space-y-2 leading-relaxed">FortuneOK provides you with a comprehensive overview of your portfolio, including performance, allocation, and category trends. This information helps you make informed decisions about your investments.</div>,
+  },
+  {
+    question: 'It is secure?',
+    answer: <div className="space-y-2 leading-relaxed">Yes! We prioritize security and use encryption to keep your investment data safe. Your information is never shared or sold.</div>,
+  },
+  {
+    question: "Can I get a refund?",
+    answer: <p>Yes! You can request a refund within 7 days of your purchase. Reach out by email at <a className="text-primary hover:underline" href="mailto:support@fortuneok.com" target="_blank" rel="noopener noreferrer">support@fortuneok.com</a>.</p>,
+  }
+];
+
+const Item = ({ item }) => {
+  const accordion = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <li>
+      <button
+        className="relative flex gap-2 items-center w-full py-5 text-base font-semibold text-left border-t md:text-lg border-base-content/10"
+        onClick={(e) => {
+          e.preventDefault();
+          setIsOpen(!isOpen);
+        }}
+        aria-expanded={isOpen}
+      >
+        <span
+          className={`flex-1 ${isOpen ? "text-primary" : ""}`}
+        >
+          {item?.question}
+        </span>
+        <svg
+          className={`flex-shrink-0 w-4 h-4 ml-auto fill-current`}
+          viewBox="0 0 16 16"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            y="7"
+            width="16"
+            height="2"
+            rx="1"
+            className={`transform origin-center transition duration-200 ease-out ${
+              isOpen && "rotate-180"
+            }`}
+          />
+          <rect
+            y="7"
+            width="16"
+            height="2"
+            rx="1"
+            className={`transform origin-center rotate-90 transition duration-200 ease-out ${
+              isOpen && "rotate-180 hidden"
+            }`}
+          />
+        </svg>
+      </button>
+
+      <div
+        ref={accordion}
+        className={`transition-all duration-300 ease-in-out opacity-80 overflow-hidden`}
+        style={
+          isOpen
+            ? { maxHeight: accordion?.current?.scrollHeight, opacity: 1 }
+            : { maxHeight: 0, opacity: 0 }
+        }
+      >
+        <div className="pb-5 leading-relaxed">{item?.answer}</div>
+      </div>
+    </li>
+  );
+};
+
+const FAQ = () => {
+  return (
+    <section className="bg-neutral text-neutral-content" id="faq">
+      <div className="py-24 px-12 max-w-3xl mx-auto flex flex-col gap-12">
+        <div className="flex flex-col text-left basis-1/2">
+          <h2 className="sm:text-4xl text-3xl font-extrabold">
+            Frequently Asked Questions
+          </h2>
+        </div>
+
+        <ul className="basis-1/2">
+          {faqList.map((item, i) => (
+            <Item key={i} item={item} />
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+};
+
+export default FAQ;
