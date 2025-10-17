@@ -10,7 +10,7 @@ import config from "@/config";
 
 export const metadata = getSEOTags({
   title: `FortuneOK | ${config.appShortDescription}`,
-  canonicalUrlRelative: "/tos",
+  canonicalUrlRelative: "/",
 });
 
 export default function Home() {
