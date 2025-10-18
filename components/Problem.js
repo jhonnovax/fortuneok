@@ -42,12 +42,12 @@ const Step = ({ emoji, text }) => {
 const Problem = () => {
   return (
     <section className="bg-neutral text-neutral-content">
-      <div className="max-w-7xl mx-auto px-8 py-16 md:py-32 text-center">
+      <div className="max-w-7xl mx-auto px-8 py-16 md:py-24 text-center">
         <h2 className="max-w-3xl mx-auto font-extrabold text-4xl md:text-5xl tracking-tight mb-6 md:mb-8">
           Finance fails because people never track their investments.
         </h2>
         <p className="max-w-xl mx-auto text-lg opacity-90 leading-relaxed mb-12 md:mb-20">
-          Register your investments, get real-time updates, and make better decisions with your money.
+          Easily track all your investments in one place, see real-time insights, and make smarter financial decisions.
         </p>
 
         <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-6">
@@ -55,11 +55,11 @@ const Problem = () => {
 
           <Arrow extraStyle="max-md:-scale-x-100 md:-rotate-90" />
 
-          <Step emoji="📊" text="Visualize performance, allocation, and category trends" />
+          <Step emoji="📊" text="Get visual insights on performance, allocation, and diversification" />
 
           <Arrow extraStyle="md:-scale-x-100 md:-rotate-90" />
 
-          <Step emoji="💰" text="Do better decisions with your money" />
+          <Step emoji="💰" text="Make better decisions with your money" />
         </div>
       </div>
     </section>

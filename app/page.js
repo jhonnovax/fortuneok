@@ -10,6 +10,7 @@ import config from "@/config";
 
 export const metadata = getSEOTags({
   title: `FortuneOK | ${config.appShortDescription}`,
+  keywords: "investment portfolio tracker, asset management, finance app, portfolio analytics, investment management software",
   canonicalUrlRelative: "/",
 });
 

@@ -9,26 +9,23 @@ import { handlePayment, PLAN_BASIC } from "@/services/paymentService";
 const Footer = () => {
   return (
     <footer className="bg-base-200 md:text-lg">
-      <div className="max-w-7xl mx-auto px-8 py-24">
+      <div className="max-w-7xl mx-auto px-8 py-16 md:py-24 text-center">
 
-        <div className="mx-auto text-center">
-          <p className="flex flex-col gap-2 md:gap-4 md:flex-row justify-center items-center text-base-content/80">
-            <Link href="/privacy-policy" className="link link-hover">
-              🔒 Privacy policy
-            </Link>
-            <Link href="/tos" className="link link-hover">
-              📜 Terms of services
-            </Link>
-            <Link href="#" className="link link-hover order-first md:order-none" onClick={() => handlePayment(PLAN_BASIC)}>
-              ❤️ Create my portfolio
-            </Link>
-          </p>
+        <nav aria-label="Footer links" className="flex flex-col gap-2 md:gap-4 md:flex-row justify-center items-center text-base-content/80">
+          <Link href="/privacy-policy" className="link link-hover">
+            🔒 Privacy policy
+          </Link>
+          <Link href="/tos" className="link link-hover">
+            📜 Terms of services
+          </Link>
+          <Link href="#" className="link link-hover order-first md:order-none" onClick={() => handlePayment(PLAN_BASIC)}>
+            ❤️ Create my portfolio
+          </Link>
+        </nav>
 
-          <p className="mt-3 text-base-content/80">
-            Copyright © {new Date().getFullYear()} - All rights reserved
-          </p>
-
-        </div>
+        <p className="mt-3 text-base-content/80">
+          Copyright © {new Date().getFullYear()} - All rights reserved
+        </p>
         
       </div>
     </footer>
