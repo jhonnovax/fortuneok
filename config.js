@@ -25,15 +25,15 @@ const config = {
         // A friendly description of the plan, displayed on the pricing page. Tip: explain why this plan and not others
         description: "Perfect for beginners",
         // The price you want to display, the one user will be charged on Stripe.
-        price: 49,
+        price: 5,
         // If you have an anchor price (i.e. $29) that you want to display crossed out, put it here. Otherwise, leave it empty
-        priceAnchor: 99,
+        priceAnchor: 9,
         features: [
           { name: "Track unlimited assets" },
           { name: "Stocks, ETFs, Funds, Crypto & more" },
           { name: "Cash, real state, savings accounts & more" },
           { name: 'Multi-currency support' },
-          { name: "Automatic asset categorization & allocation" }
+          { name: "Automatic asset allocation & categorization" }
           
         ],
       }
