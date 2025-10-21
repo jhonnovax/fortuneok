@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { handlePayment, PLAN_BASIC } from "@/services/paymentService";
 
 // Add the Footer to the bottom of your landing page and more.
 // The support link is connected to the config.js file. If there's no config.resend.supportEmail, the link won't be displayed.
@@ -18,8 +17,8 @@ const Footer = () => {
           <Link href="/tos" className="link link-hover">
             📜 Terms of services
           </Link>
-          <Link href="#" className="link link-hover order-first md:order-none" onClick={() => handlePayment(PLAN_BASIC)}>
-            ❤️ Create my portfolio
+          <Link href="/dashboard" target="_blank" rel="noopener noreferrer" className="link link-hover order-first md:order-none">
+            🔗 Try our interactive demo
           </Link>
         </nav>
 

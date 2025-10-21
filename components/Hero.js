@@ -12,7 +12,7 @@ const Hero = () => {
       </h1>
 
       <p className="text-lg max-w-2xl mx-auto mb-8">
-        {config.appDescription}
+        Discover when your investments are profitable and make smarter financial decisions.
       </p>
 
       <div className="mx-auto max-w-sm text-left">
