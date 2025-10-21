@@ -27,12 +27,14 @@ const avatars = [
 function getLovedUsersCount() {
   const startYear = 2024;
   const startMonth = 0; // January (0-based)
+  const startDate = 1;
   const now = new Date();
-  let months =
-    (now.getFullYear() - startYear) * 12 +
-    (now.getMonth() - startMonth) +
-    1;
-  return Math.max(1, months) * 30;
+  const days =
+    (now.getFullYear() - startYear) * 365 +
+    (now.getMonth() - startMonth) * 30 +
+    (now.getDate() - startDate);
+
+  return Math.max(1, days);
 }
 
 const TestimonialsAvatars = ({ priority = false }) => {
