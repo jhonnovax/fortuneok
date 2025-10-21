@@ -140,6 +140,9 @@ const Pricing = () => {
                   )}
                   <div className="space-y-2">
                     <ButtonSignin text="Start 14 days free trial" extraStyle="btn-primary btn-block" />
+                    <p className="text-base-secondary mt-1 text-center text-sm">
+                      $0.00 due today. No credit card required.
+                    </p>
                   </div>
                 </div>
               </div>
