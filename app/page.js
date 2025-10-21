@@ -15,6 +15,21 @@ export const metadata = getSEOTags({
 });
 
 export default function Home() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": config.appName,
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Web",
+    "description": config.appDescription,
+    "url": `https://${config.domainName}`,
+    "image": `https://${config.domainName}/opengraph-image.png`,
+    "creator": {
+      "@type": "Organization",
+      "name": config.appName,
+    },
+  };
+
   return (
     <>
       <Suspense>
@@ -26,6 +41,10 @@ export default function Home() {
         <Pricing />
         <FAQ />
       </main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Footer />
     </>
   );
