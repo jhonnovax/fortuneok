@@ -2,6 +2,7 @@ import TestimonialsAvatars from "./TestimonialsAvatars";
 import Link from "next/link";
 import config from "@/config";
 import Image from "next/image";
+import ButtonSignin from "./ButtonSignin";
 
 const Hero = () => {
   return (
@@ -15,22 +16,8 @@ const Hero = () => {
         Discover when your investments are profitable and make smarter financial decisions.
       </p>
 
-      <div className="mx-auto max-w-sm text-left">
-        <Link href="/#pricing" className="btn btn-primary btn-block">
-          Start Now
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            className="w-7 h-7"
-          >
-            <path
-              fillRule="evenodd"
-              d="M5 10a.75.75 0 01.75-.75h6.638L10.23 7.29a.75.75 0 111.04-1.08l3.5 3.25a.75.75 0 010 1.08l-3.5 3.25a.75.75 0 11-1.04-1.08l2.158-1.96H5.75A.75.75 0 015 10z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </Link>
+      <div className="mx-auto max-w-sm">
+        <ButtonSignin text="Start 14 days free trial" extraStyle="btn-primary btn-block" />
       </div>
 
       <div className="w-full flex justify-center relative mt-12 md:mt-6">

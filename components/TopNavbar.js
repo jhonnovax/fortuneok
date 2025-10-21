@@ -20,7 +20,7 @@ export default function TopNavbar({ onAddAsset }) {
     const { data: session, status } = useSession();
     const ctaButton = session 
         ? <ButtonAccount onAddAsset={onAddAsset} /> 
-        : <ButtonSignin extraStyle="btn-primary" />
+        : <ButtonSignin text="Log in" extraStyle="btn-primary" />
 
     return (
       <nav className="fixed top-0 left-0 right-0 h-16 bg-base-100 border-b border-base-content/10 z-50">

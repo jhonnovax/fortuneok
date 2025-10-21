@@ -1,6 +1,5 @@
 import config from "@/config";
-import ButtonCheckout from "./ButtonCheckout";
-import ButtonLead from "./ButtonLead";
+import ButtonSignin from "./ButtonSignin";
 // <Pricing/> displays the pricing plans for your app
 // It's your Stripe config in config.js.stripe.plans[] that will be used to display the plans
 // <ButtonCheckout /> renders a button that will redirect the user to Stripe checkout called the /api/stripe/create-checkout API endpoint with the correct priceId
@@ -89,14 +88,7 @@ const Pricing = () => {
                     </ul>
                   )}
                   <div className="space-y-2">
-                    {process.env.NODE_ENV === "development" ? (
-                      <ButtonCheckout priceId={plan.priceId} />
-                    ) : (
-                      <ButtonLead extraStyle="!max-w-none !w-full" />
-                    )}
-                    <p className="flex items-center justify-center gap-2 text-sm text-center text-base-content/80 font-medium relative">
-                      One-time payment. Access for one year.
-                    </p>
+                    <ButtonSignin text="Start 14 days free trial" extraStyle="btn-primary btn-block" />
                   </div>
                 </div>
               </div>
