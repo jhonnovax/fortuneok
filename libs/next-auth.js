@@ -57,7 +57,8 @@ export const authOptions = {
     strategy: "jwt",
   },
   theme: {
-    brandColor: config.colors.main,
+    colorScheme: "auto",
+    brandColor: "#a9ff68",
     buttonText: '#000',
     // Add you own logo below. Recommended size is rectangle (i.e. 200x50px) and show your logo + name.
     // It will be used in the login flow to display your logo. If you don't add it, it will look faded.
