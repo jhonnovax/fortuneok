@@ -17,8 +17,8 @@ const Footer = () => {
           <Link href="/tos" className="link link-hover">
             📜 Terms of services
           </Link>
-          <Link href="/dashboard" target="_blank" rel="noopener noreferrer" className="link link-hover order-first md:order-none">
-            🔗 Try our interactive demo
+          <Link href="mailto:support@fortuneok.com" target="_blank" rel="noopener noreferrer" className="link link-hover order-first md:order-none">
+            💬 Support
           </Link>
         </nav>
 
