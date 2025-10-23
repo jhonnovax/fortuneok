@@ -67,7 +67,7 @@ const Pricing = () => {
                     <a role="relative tab" className={`flex select-none items-center justify-center gap-2 truncate rounded-lg py-2 text-sm font-medium ${subscriptionType === "yearly" ? "bg-base-100 shadow" : "cursor-pointer"}`} onClick={() => setSubscriptionType("yearly")}>
                         Yearly 
                         <span className="inline-flex rounded bg-base-100">
-                          <span className="inline-flex items-center whitespace-nowrap rounded bg-primary px-1.5 py-0.5 text-[0.7rem] text-xs font-medium text-base ring-1 ring-inset ring-primary/15">
+                          <span className="inline-flex items-center whitespace-nowrap rounded bg-primary px-1.5 py-0.5 text-[0.7rem] text-xs font-medium text-primary-content ring-1 ring-inset ring-primary/15">
                             2 months free
                           </span>
                         </span>
