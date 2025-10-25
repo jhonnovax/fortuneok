@@ -1,4 +1,5 @@
 import { Suspense } from 'react'
+import { redirect } from "next/navigation";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Problem from "@/components/Problem";
@@ -7,6 +8,8 @@ import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
 import { getSEOTags } from "@/libs/seo";
 import config from "@/config";
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/libs/next-auth"
 
 export const metadata = getSEOTags({
   title: `FortuneOK | ${config.appShortDescription}`,
@@ -15,6 +18,13 @@ export const metadata = getSEOTags({
 });
 
 export default function Home() {
+  const session = getServerSession(authOptions);
+
+  // If user already logged in, redirect before rendering
+  if (session) {
+    redirect("/dashboard")
+  }
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
