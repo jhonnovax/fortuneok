@@ -17,11 +17,12 @@ export const metadata = getSEOTags({
   canonicalUrlRelative: "/",
 });
 
-export default function Home() {
-  const session = getServerSession(authOptions);
+export default async function Home() {
+  const session = await getServerSession(authOptions);
 
   // If user already logged in, redirect before rendering
   if (session) {
+    console.log("Redirecting to dashboard", session);
     redirect("/dashboard")
   }
 
