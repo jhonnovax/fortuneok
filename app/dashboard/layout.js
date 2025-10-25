@@ -2,18 +2,6 @@ import "@/app/globals.css";
 import { getSEOTags } from "@/libs/seo";
 import ClientLayout from "@/components/LayoutClient";
 import config from "@/config";
-import dynamic from 'next/dynamic';
-
-// Dynamic imports for analytics (only load in production)
-const Analytics = dynamic(() => import('@vercel/analytics/react').then(mod => ({ default: mod.Analytics })), {
-  ssr: false,
-  loading: () => null
-});
-
-const SpeedInsights = dynamic(() => import("@vercel/speed-insights/next").then(mod => ({ default: mod.SpeedInsights })), {
-  ssr: false,
-  loading: () => null
-});
 
 export const viewport = {
 	// Will use the primary color of your theme to show a nice theme color in the URL bar of supported browsers
@@ -37,13 +25,6 @@ export default function RootLayout({ children }) {
 				<ClientLayout>
 					{children}
 				</ClientLayout>
-
-				{process.env.NODE_ENV === 'production' && (
-					<>
-						<Analytics />
-						<SpeedInsights />
-					</>
-				)}
 			</body>
 		</html>
 	);

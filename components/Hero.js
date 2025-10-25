@@ -39,11 +39,10 @@ const Hero = () => {
         <Image
           src="/demo.png"
           alt="FortuneOK Demo"
-          className="object-contain"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 700px"
+          className="object-contain w-full h-full"
           priority
-          width={1000}
-          height={1000}
+          width={700}
+          height={400}
         />
       </div>
 
