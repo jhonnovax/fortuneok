@@ -2,9 +2,9 @@ const config = {
   // REQUIRED
   appName: "FortuneOK",
   // Short description used for title and heading
-  appShortDescription: " Simplify Your Investments and Manage Assets Easily",
+  appShortDescription: "Grow and simplify your investments",
   // Long description of your app for SEO tags (can be overwritten)
-  appDescription: "Effortlessly manage your assets in one place. Say goodbye to spreadsheets and scattered records. Stay organized, track your portfolio, and make smarter financial decisions with ease.",
+  appDescription: "Effortlessly manage your assets in one place. Say goodbye to spreadsheets and scattered records. Stay organized, track your portfolio, grow your wealth and make smarter financial decisions with ease.",
   // (no https://, not trialing slash at the end, just the naked domain)
   domainName: "fortuneok.com",
   ownership: {
