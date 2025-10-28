@@ -48,7 +48,7 @@ const Pricing = () => {
                   ></div>
                 )}
 
-                <div className="relative flex flex-col h-full gap-5 lg:gap-8 z-10 bg-base-100 p-8 rounded-xl">
+                <div className="relative flex flex-col h-full gap-5 lg:gap-8 z-10 bg-base-100 p-4 sm:p-8 rounded-xl">
                   <div className="flex justify-between items-center gap-4 sr-only">
                     <div>
                       <p className="text-lg lg:text-xl font-bold">{plan.name}</p>
@@ -61,17 +61,12 @@ const Pricing = () => {
                   </div>
 
                   <div className="-m-1 grid grid-cols-2 rounded-xl bg-neutral/5 p-1 shadow-inner dark:bg-neutral/50">
-                    <a role="relative tab" className={`flex select-none items-center justify-center gap-2 truncate rounded-lg py-2 text-sm font-medium ${subscriptionType === "monthly" ? "bg-base-100 shadow" : "cursor-pointer"}`} onClick={() => setSubscriptionType("monthly")}>
+                    <a role="relative tab" className={`flex select-none items-center justify-center gap-2 truncate rounded-lg py-2 font-medium ${subscriptionType === "monthly" ? "bg-base-100 shadow" : "cursor-pointer"}`} onClick={() => setSubscriptionType("monthly")}>
                       Monthly 
                     </a>
-                    <a role="relative tab" className={`flex select-none items-center justify-center gap-2 truncate rounded-lg py-2 text-sm font-medium ${subscriptionType === "yearly" ? "bg-base-100 shadow" : "cursor-pointer"}`} onClick={() => setSubscriptionType("yearly")}>
-                        Yearly 
-                        <span className="inline-flex rounded bg-base-100">
-                          <span className="inline-flex items-center whitespace-nowrap rounded bg-primary px-1.5 py-0.5 text-[0.7rem] text-xs font-medium text-primary-content ring-1 ring-inset ring-primary/15">
-                            2 months free
-                          </span>
-                        </span>
-                      </a>
+                    <a role="relative tab" className={`flex select-none items-center justify-center gap-2 truncate rounded-lg py-2 font-medium ${subscriptionType === "yearly" ? "bg-base-100 shadow" : "cursor-pointer"}`} onClick={() => setSubscriptionType("yearly")}>
+                      Yearly 
+                    </a>
                   </div>
 
                   <div className="flex gap-2">
@@ -89,7 +84,7 @@ const Pricing = () => {
                       ${subscriptionType === "monthly" ? plan.price : Math.round((plan.price * 10) / 12)}
                       {subscriptionType === "yearly" && <span className="ml-0.5 align-top text-xl font-bold">.{getPriceDecimals((plan.price * 10) / 12)}</span>}
                     </p>
-                    <div className="flex flex-col justify-end mb-[4px]">
+                    <div className="mb-[4px] flex flex-col justify-end ">
                       <p className="text-sm text-base-content/60 font-semibold">
                         <span className="mr-1">/month</span>
                         {subscriptionType === "yearly" && <span className="text-base-content/60 font-semibold">billed as ${plan.price * 10} per year</span>}
@@ -101,21 +96,20 @@ const Pricing = () => {
                     <ul className="space-y-2.5 leading-relaxed text-base flex-1">
                       
                       {subscriptionType === "yearly" && (
-                        <li className="flex items-center gap-2 text-green-600 font-bold">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            className="w-[18px] h-[18px] shrink-0"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                          <span>Saved ${plan.price * 2}</span>
-                        </li>
+                        <>
+                          <li className="flex items-center gap-2 text-green-600 font-bold">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="currentColor">
+                              <path d="M160-80v-440H80v-240h208q-5-9-6.5-19t-1.5-21q0-50 35-85t85-35q23 0 43 8.5t37 23.5q17-16 37-24t43-8q50 0 85 35t35 85q0 11-2 20.5t-6 19.5h208v240h-80v440H160Zm400-760q-17 0-28.5 11.5T520-800q0 17 11.5 28.5T560-760q17 0 28.5-11.5T600-800q0-17-11.5-28.5T560-840Zm-200 40q0 17 11.5 28.5T400-760q17 0 28.5-11.5T440-800q0-17-11.5-28.5T400-840q-17 0-28.5 11.5T360-800ZM160-680v80h280v-80H160Zm280 520v-360H240v360h200Zm80 0h200v-360H520v360Zm280-440v-80H520v80h280Z"/>
+                            </svg>
+                            <span>Saved ${plan.price * 2}</span>
+                          </li>
+                          <li className="flex items-center gap-2 text-green-600 font-bold">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="currentColor">
+                              <path d="M160-80v-440H80v-240h208q-5-9-6.5-19t-1.5-21q0-50 35-85t85-35q23 0 43 8.5t37 23.5q17-16 37-24t43-8q50 0 85 35t35 85q0 11-2 20.5t-6 19.5h208v240h-80v440H160Zm400-760q-17 0-28.5 11.5T520-800q0 17 11.5 28.5T560-760q17 0 28.5-11.5T600-800q0-17-11.5-28.5T560-840Zm-200 40q0 17 11.5 28.5T400-760q17 0 28.5-11.5T440-800q0-17-11.5-28.5T400-840q-17 0-28.5 11.5T360-800ZM160-680v80h280v-80H160Zm280 520v-360H240v360h200Zm80 0h200v-360H520v360Zm280-440v-80H520v80h280Z"/>
+                            </svg>
+                            <span>2 months free</span>
+                          </li>
+                        </>
                       )}
 
                       {plan.features.map((feature, i) => (
@@ -141,7 +135,7 @@ const Pricing = () => {
                   <div className="space-y-2">
                     <Link href="/api/auth/signin" className="btn btn-primary btn-block">Start 14 days free trial</Link>
                     <p className="text-base-secondary mt-1 text-center text-sm">
-                      $0.00 due today. No credit card required.
+                      No credit card required.
                     </p>
                   </div>
                 </div>
