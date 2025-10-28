@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getSEOTags } from "@/libs/seo";
 import config from "@/config";
 import Header from "@/components/Header";
@@ -35,7 +36,9 @@ export const metadata = getSEOTags({
 const TOS = () => {
   return (
     <>
-      <Header />
+      <Suspense fallback={null}>
+        <Header />
+      </Suspense>
       <main className="max-w-3xl mx-auto px-4 py-12">
         <h1 className="text-3xl font-extrabold pb-6">
           Terms and Conditions for {config.appName}
