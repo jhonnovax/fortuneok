@@ -24,12 +24,6 @@ const AssetEditionModal = dynamic(() => import('./AssetEditionModal'), {
   ssr: false,
 });
 
-// Dynamic imports for heavy components
-const Footer = dynamic(() => import('./Footer'), {
-  ssr: false,
-  loading: () => null
-});
-
 const AddAssetFloatingButton = dynamic(() => import('./AddAssetFloatingButton'), {
   ssr: false,
   loading: () => null
@@ -238,9 +232,6 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Footer */}  
-          <Footer />
-          
         </main>
 
         {/* Add Asset Modal */}

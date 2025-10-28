@@ -1,6 +1,9 @@
-import Link from "next/link";
+import { Suspense } from "react";
 import { getSEOTags } from "@/libs/seo";
 import config from "@/config";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import QuestionsAboutDocs from "@/components/QuestionsAboutDocs";
 
 // CHATGPT PROMPT TO GENERATE YOUR PRIVACY POLICY — replace with your own data 👇
 
@@ -32,23 +35,11 @@ export const metadata = getSEOTags({
 
 const PrivacyPolicy = () => {
   return (
-    <main className="mx-auto">
-      <div className="p-5">
-        <Link href="/" className="btn btn-ghost">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            className="w-5 h-5"
-          >
-            <path
-              fillRule="evenodd"
-              d="M15 10a.75.75 0 01-.75.75H7.612l2.158 1.96a.75.75 0 11-1.04 1.08l-3.5-3.25a.75.75 0 010-1.08l3.5-3.25a.75.75 0 111.04 1.08L7.612 9.25h6.638A.75.75 0 0115 10z"
-              clipRule="evenodd"
-            />
-          </svg>{" "}
-          Back
-        </Link>
+    <>
+      <Suspense fallback={null}>
+        <Header />
+      </Suspense>
+      <main className="max-w-3xl mx-auto px-4 py-12">
         <h1 className="text-3xl font-extrabold pb-6">
           Privacy Policy for {config.appName}
         </h1>
@@ -76,13 +67,12 @@ We do not share your personal data with third parties.
 We do not collect or process data from children under 13.
 
 5. Updates to This Policy
-We may update this Privacy Policy from time to time. Users will be notified via email of any changes.
-
-6. Contact Us
-If you have any questions, please contact us at support@fortuneok.com.`}
-        </pre>
-      </div>
-    </main>
+We may update this Privacy Policy from time to time. Users will be notified via email of any changes.`}
+          </pre>
+        <QuestionsAboutDocs documentName="privacy policy" />
+      </main>
+      <Footer />
+    </>
   );
 };
 

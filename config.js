@@ -2,7 +2,7 @@ const config = {
   // REQUIRED
   appName: "FortuneOK",
   // Short description used for title and heading
-  appShortDescription: "Your Investment Portfolio Tracker for All Assets",
+  appShortDescription: " Simplify Your Investments and Manage Assets Easily",
   // Long description of your app for SEO tags (can be overwritten)
   appDescription: "Effortlessly manage your assets in one place. Say goodbye to spreadsheets and scattered records. Stay organized, track your portfolio, and make smarter financial decisions with ease.",
   // (no https://, not trialing slash at the end, just the naked domain)
@@ -25,15 +25,15 @@ const config = {
         // A friendly description of the plan, displayed on the pricing page. Tip: explain why this plan and not others
         description: "Perfect for beginners",
         // The price you want to display, the one user will be charged on Stripe.
-        price: 49,
+        price: 5,
         // If you have an anchor price (i.e. $29) that you want to display crossed out, put it here. Otherwise, leave it empty
-        priceAnchor: 99,
+        priceAnchor: 9,
         features: [
-          { name: "Unlimited Assets" },
-          { name: 'Multi-Currency Support' },
-          { name: "Stocks, ETFs, Funds, Crypto and more" },
-          { name: "Cash, Real Estate, Savings Accounts and more" },
-          { name: "Charts for Category and Position Allocation" }
+          { name: "Track unlimited assets" },
+          { name: "Stocks, ETFs, Funds, Crypto & more" },
+          { name: "Cash, real state, savings accounts & more" },
+          { name: 'Multi-currency support' },
+          { name: "Automatic asset allocation & categorization" }
           
         ],
       }
@@ -64,7 +64,7 @@ const config = {
     // REQUIRED — the path to log in users. It's use to protect private routes (like /dashboard). It's used in apiClient (/libs/api.js) upon 401 errors from our API
     loginUrl: "/api/auth/signin",
     // REQUIRED — the path you want to redirect users after successfull login (i.e. /dashboard, /private). This is normally a private page for users to manage their accounts. It's used in apiClient (/libs/api.js) upon 401 errors from our API & in ButtonSignin.js
-    callbackUrl: "/",
+    callbackUrl: "/dashboard",
   },
 };
 

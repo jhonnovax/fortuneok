@@ -1,6 +1,9 @@
-import Link from "next/link";
+import { Suspense } from "react";
 import { getSEOTags } from "@/libs/seo";
 import config from "@/config";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import QuestionsAboutDocs from "@/components/QuestionsAboutDocs";
 
 // CHATGPT PROMPT TO GENERATE YOUR TERMS & SERVICES — replace with your own data 👇
 
@@ -32,23 +35,11 @@ export const metadata = getSEOTags({
 
 const TOS = () => {
   return (
-    <main className="mx-auto">
-      <div className="p-5">
-        <Link href="/" className="btn btn-ghost">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            className="w-5 h-5"
-          >
-            <path
-              fillRule="evenodd"
-              d="M15 10a.75.75 0 01-.75.75H7.612l2.158 1.96a.75.75 0 11-1.04 1.08l-3.5-3.25a.75.75 0 010-1.08l3.5-3.25a.75.75 0 111.04 1.08L7.612 9.25h6.638A.75.75 0 0115 10z"
-              clipRule="evenodd"
-            />
-          </svg>
-          Back
-        </Link>
+    <>
+      <Suspense fallback={null}>
+        <Header />
+      </Suspense>
+      <main className="max-w-3xl mx-auto px-4 py-12">
         <h1 className="text-3xl font-extrabold pb-6">
           Terms and Conditions for {config.appName}
         </h1>
@@ -74,9 +65,7 @@ Users who purchase a package can request a full refund within 7 days of purchase
 We collect the following personal data:
 
 Name
-
 Email
-
 Payment information
 
 Additionally, we collect non-personal data through web cookies. For more details, please review our Privacy Policy at https://fortuneok.com/privacy-policy.
@@ -93,14 +82,12 @@ These Terms & Services are governed by the laws of the United States.
 
 We may update these Terms from time to time. Users will be notified of changes via email.
 
-7. Contact Information
-
-For any questions regarding these Terms, please contact us at support@fortuneok.com.
-
 By using FortuneOK, you acknowledge that you have read and agree to these Terms & Services.`}
         </pre>
-      </div>
-    </main>
+        <QuestionsAboutDocs documentName="terms and conditions" />
+      </main>
+      <Footer />
+    </>
   );
 };
 

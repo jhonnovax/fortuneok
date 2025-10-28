@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 // Add the Footer to the bottom of your landing page and more.
@@ -5,30 +7,28 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer className="bg-base-200 border-t border-base-content/10 max-w-7xl mx-auto pt-4 md:pt-6">
+    <footer className="bg-base-200 md:text-lg">
+      <div className="max-w-7xl mx-auto px-8 py-16 md:py-24 text-center">
 
-      <div className="mx-auto text-center">
-        <p className="flex flex-col gap-2 md:gap-4 md:flex-row justify-center items-center text-sm text-base-content/80">
+        <nav aria-label="Footer links" className="flex flex-col gap-2 md:gap-4 md:flex-row justify-center items-center text-base-content/80">
           <Link href="/privacy-policy" className="link link-hover">
             🔒 Privacy policy
           </Link>
           <Link href="/tos" className="link link-hover">
             📜 Terms of services
           </Link>
-          <Link href="https://donate.stripe.com/4gwdUI9W4dOZaac7ss" className="link link-hover order-first md:order-none">
-            ❤️ Support Us
+          <Link href="mailto:support@fortuneok.com" target="_blank" rel="noopener noreferrer" className="link link-hover order-first md:order-none">
+            💬 Support
           </Link>
-        </p>
+        </nav>
 
-        <p className="mt-3 text-sm text-base-content/80">
+        <p className="mt-3 text-base-content/80">
           Copyright © {new Date().getFullYear()} - All rights reserved
         </p>
-
+        
       </div>
-      
     </footer>
   );
-
 };
 
 export default Footer;
