@@ -8,8 +8,6 @@ import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
 import { getSEOTags } from "@/libs/seo";
 import config from "@/config";
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/libs/next-auth"
 
 export const metadata = getSEOTags({
   title: `FortuneOK | ${config.appShortDescription}`,
@@ -18,13 +16,6 @@ export const metadata = getSEOTags({
 });
 
 export default async function Home() {
-  const session = await getServerSession(authOptions);
-
-  // If user already logged in, redirect before rendering
-  if (session) {
-    console.log("Redirecting to dashboard", session);
-    redirect("/dashboard")
-  }
 
   const jsonLd = {
     "@context": "https://schema.org",

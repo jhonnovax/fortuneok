@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import config from "@/config";
-import ButtonSignin from "./ButtonSignin";
+import Link from "next/link";
 // <Pricing/> displays the pricing plans for your app
 // It's your Stripe config in config.js.stripe.plans[] that will be used to display the plans
 // <ButtonCheckout /> renders a button that will redirect the user to Stripe checkout called the /api/stripe/create-checkout API endpoint with the correct priceId
@@ -139,7 +139,7 @@ const Pricing = () => {
                     </ul>
                   )}
                   <div className="space-y-2">
-                    <ButtonSignin text="Start 14 days free trial" extraStyle="btn-primary btn-block" />
+                    <Link href="/api/auth/signin" className="btn btn-primary btn-block">Start 14 days free trial</Link>
                     <p className="text-base-secondary mt-1 text-center text-sm">
                       $0.00 due today. No credit card required.
                     </p>

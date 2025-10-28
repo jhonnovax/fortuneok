@@ -1,7 +1,6 @@
 import TestimonialsAvatars from "./TestimonialsAvatars";
 import Link from "next/link";
 import Image from "next/image";
-import ButtonSignin from "./ButtonSignin";
 
 const Hero = () => {
   return (
@@ -16,7 +15,7 @@ const Hero = () => {
       </p>
 
       <div className="mx-auto max-w-sm">
-        <ButtonSignin text="Start 14 days free trial" extraStyle="btn-primary btn-block" />
+        <Link href="/api/auth/signin" className="btn btn-primary btn-block">Start 14 days free trial</Link>
       </div>
 
       <div className="w-full flex justify-center relative mt-12 md:mt-6">
