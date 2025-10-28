@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { SessionProvider } from "next-auth/react";
 import { PreferencesProvider } from "@/contexts/PreferencesContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import ScrollTop from "@/components/ScrollTop";
 import dynamic from 'next/dynamic';
 
 // Dynamic import for react-hot-toast with lazy loading
@@ -39,6 +40,9 @@ const ClientLayout = ({ children }) => {
               duration: 3000,
             }}
           />
+
+          {/* Scroll to top button */}
+          <ScrollTop />
           
         </ThemeProvider>
       </PreferencesProvider>
