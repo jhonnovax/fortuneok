@@ -8,9 +8,7 @@ import Footer from "@/components/Footer";
 import { getSEOTags } from "@/libs/seo";
 import config from "@/config";
 
-export const dynamic = "force-static";
-
-export const revalidate = 0;
+export const dynamic = "force-dynamic";
 
 export const metadata = getSEOTags({
   title: `FortuneOK | ${config.appShortDescription}`,
