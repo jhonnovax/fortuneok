@@ -33,7 +33,7 @@ const Hero = () => {
               </clipPath>
             </defs>
           </svg>
-          <Link href="/dashboard" className="text-base-secondary text-sm" target="_blank" rel="noopener noreferrer">Try our interactive demo</Link>
+          <Link href="/dashboard" className="text-base-secondary text-sm">Try our interactive demo</Link>
         </aside>
 
         <Image
