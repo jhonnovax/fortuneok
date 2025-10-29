@@ -8,10 +8,8 @@ import Footer from "@/components/Footer";
 import { getSEOTags } from "@/libs/seo";
 import config from "@/config";
 
-export const dynamic = "force-dynamic";
-
 export const metadata = getSEOTags({
-  title: `FortuneOK | ${config.appShortDescription}`,
+  title: `${config.appName} | ${config.appShortDescription}`,
   keywords: "investment portfolio tracker, asset management, finance app, portfolio analytics, investment management software",
   canonicalUrlRelative: "/",
 });
