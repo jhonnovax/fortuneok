@@ -7,6 +7,9 @@ import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
 import { getSEOTags } from "@/libs/seo";
 import config from "@/config";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/libs/next-auth";
+import { redirect } from "next/navigation";
 
 export const metadata = getSEOTags({
   title: `${config.appName} | ${config.appShortDescription}`,
@@ -15,6 +18,13 @@ export const metadata = getSEOTags({
 });
 
 export default async function Home() {
+
+  const session = await getServerSession(authOptions);
+
+  // If user already logged in, redirect to auth callback url
+  if (session) {
+    redirect(config.auth.callbackUrl);
+  }
 
   const jsonLd = {
     "@context": "https://schema.org",
