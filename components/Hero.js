@@ -11,7 +11,7 @@ const Hero = () => {
         Track Your Investments with {config.appName}
       </h1>
 
-      <p class="sr-only">
+      <p className="sr-only">
         FortuneOK is an investment tracking tool designed to help you monitor and optimize your financial portfolio in real time.
       </p>
 
