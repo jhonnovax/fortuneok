@@ -13,7 +13,7 @@ import { redirect } from "next/navigation";
 
 export const metadata = getSEOTags({
   title: `${config.appName} | ${config.appShortDescription}`,
-  keywords: "investment portfolio tracker, asset management, finance app, portfolio analytics, investment management software",
+  keywords: "personal finance dashboard, investment tracking tool, financial portfolio app",
   canonicalUrlRelative: "/",
 });
 

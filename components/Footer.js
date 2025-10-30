@@ -7,10 +7,10 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer className="bg-base-200 md:text-lg">
+    <footer className="bg-base-200 md:text-lg" role="contentinfo">
       <div className="max-w-7xl mx-auto px-8 py-16 md:py-24 text-center">
 
-        <nav aria-label="Footer links" className="flex flex-col gap-2 md:gap-4 md:flex-row justify-center items-center text-base-content/80">
+        <nav aria-label="Footer links" role="navigation" className="flex flex-col gap-2 md:gap-4 md:flex-row justify-center items-center text-base-content/80">
           <Link href="/privacy-policy" className="link link-hover">
             🔒 Privacy policy
           </Link>

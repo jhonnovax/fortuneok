@@ -37,7 +37,8 @@ const Header = () => {
     <header className="bg-base-100 border-b border-base-content/5">
       <nav
         className="container flex items-center justify-between px-8 py-4 mx-auto"
-        aria-label="Global"
+        aria-label="Main navigation"
+        role="navigation"
       >
         {/* Your logo/name on large screens */}
         <div className="flex lg:flex-1">
@@ -75,6 +76,7 @@ const Header = () => {
               stroke="currentColor"
               className="w-6 h-6 text-base-content"
             >
+              <title>Open main menu</title>
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
