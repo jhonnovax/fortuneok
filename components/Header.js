@@ -11,10 +11,12 @@ const links = [
   {
     href: "/#pricing",
     label: "Pricing",
+    ariaLabel: "View Pricing section",
   },
   {
     href: "/#faq",
     label: "FAQ",
+    ariaLabel: "View Frequently Asked Questions section",
   },
 ];
 
@@ -42,7 +44,7 @@ const Header = () => {
           <Link
             className="flex items-center gap-2 shrink-0 "
             href="/"
-            title={`${config.appName} hompage`}
+            title={`${config.appName} homepage`}
           >
             <Image
               src={logo}
@@ -60,6 +62,8 @@ const Header = () => {
           <button
             type="button"
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5"
+            ariaExpanded={isOpen}
+            ariaControls="mobile-menu"
             onClick={() => setIsOpen(true)}
           >
             <span className="sr-only">Open main menu</span>
@@ -87,7 +91,7 @@ const Header = () => {
               href={link.href}
               key={link.href}
               className="link link-hover"
-              title={link.label}
+              title={link.ariaLabel}
             >
               {link.label}
             </Link>
@@ -152,7 +156,7 @@ const Header = () => {
                     href={link.href}
                     key={link.href}
                     className="link link-hover"
-                    title={link.label}
+                    title={link.ariaLabel}
                   >
                     {link.label}
                   </Link>

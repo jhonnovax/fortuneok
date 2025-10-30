@@ -38,7 +38,7 @@ const Hero = () => {
 
         <Image
           src="/demo.png"
-          alt="FortuneOK Demo"
+          alt="Dashboard screenshot showing investment portfolio tracking interface"
           className="object-contain w-full h-full"
           priority
           width={700}
