@@ -8,7 +8,7 @@ const Hero = () => {
     <section aria-labelledby="hero-title" className="max-w-7xl mx-auto bg-base-100 px-8 py-8 md:py-16 text-center relative">
 
       <h1 id="hero-title" className="font-extrabold text-4xl lg:text-6xl tracking-tight mb-6 md:mb-8">
-        {config.appShortDescription}
+        Track Your Investments with {config.appName}
       </h1>
 
       <p className="text-lg max-w-2xl mx-auto mb-8">

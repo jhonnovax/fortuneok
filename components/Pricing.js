@@ -22,7 +22,7 @@ const Pricing = () => {
       <div className="py-16 md:py-24 px-8 max-w-5xl mx-auto">
         <div className="flex flex-col text-center w-full mb-6 md:mb-8">
           <h2 className="font-bold text-3xl lg:text-5xl tracking-tight">
-            Grow and Invest Smarter today!
+            Stay Organized and Grow Confidently
           </h2>
         </div>
 
