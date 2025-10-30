@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import TopNavbar from "./TopNavbar";
+import HeaderDashboard from "./HeaderDashboard";
 import Sidebar from "./Sidebar";
 import AssetList from "./AssetList";
 import SummaryCard from "./SummaryCard";
@@ -178,7 +178,7 @@ export default function Dashboard() {
     <div className="min-h-screen flex flex-col bg-base-200">
 
       {/* Header */}
-      <TopNavbar onAddAsset={handleNewAsset} />
+      <HeaderDashboard onAddAsset={handleNewAsset} />
 
       {/* Desktop sidebar */}
       <Sidebar 
