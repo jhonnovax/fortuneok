@@ -84,9 +84,9 @@ const Pricing = () => {
                       {subscriptionType === "yearly" && <span className="ml-0.5 align-top text-xl font-bold">.{getPriceDecimals((plan.price * 10) / 12)}</span>}
                     </p>
                     <div className="mb-[4px] flex flex-col justify-end ">
-                      <p className="text-sm text-base-content/60 font-semibold">
+                      <p className="text-sm font-semibold">
                         <span className="mr-1">/month</span>
-                        {subscriptionType === "yearly" && <span className="text-base-content/60 font-semibold">billed as ${plan.price * 10} per year</span>}
+                        {subscriptionType === "yearly" && <span className="font-semibold">billed as ${plan.price * 10} per year</span>}
                       </p>
                     </div>
                   </div>

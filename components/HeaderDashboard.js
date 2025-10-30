@@ -30,7 +30,7 @@ export default function HeaderDashboard({ onAddAsset }) {
           <Link href={session ? '/dashboard' : '/'} className="flex items-center gap-2">
             <Image
               src={logo}
-              alt={`${config.appName} logo`}
+              alt={session ? `${config.appName} dashboard` : `${config.appName} homepage`}
               className="w-8"
               priority={true}
               width={32}
