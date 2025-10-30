@@ -31,7 +31,7 @@ export default async function Home() {
       <Suspense>
         <Header />
       </Suspense>
-      <main>
+      <main role="main">
         <Hero />
         <Problem />
         <Pricing />
