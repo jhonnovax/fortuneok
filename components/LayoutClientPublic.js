@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import ScrollTop from "@/components/ScrollTop";
 
 const LayoutClientPublic = ({ children }) => {
   const pathname = usePathname();
@@ -18,9 +17,6 @@ const LayoutClientPublic = ({ children }) => {
     <>
       {/* Content inside app/page.js files  */}
       {children}
-
-      {/* Scroll to top button */}
-      <ScrollTop />
     </>
   );
 };

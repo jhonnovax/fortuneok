@@ -10,6 +10,7 @@ import config from "@/config";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/libs/next-auth";
 import { redirect } from "next/navigation";
+import ScrollTop from "@/components/ScrollTop";
 
 export const metadata = getSEOTags({
   title: `${config.appName} | ${config.appShortDescription}`,
@@ -38,6 +39,7 @@ export default async function Home() {
         <FAQ />
       </main>
       <Footer />
+      <ScrollTop />
       {renderSchemaTags()}
     </>
   );
