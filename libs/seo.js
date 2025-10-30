@@ -8,6 +8,7 @@ export const getSEOTags = ({
   title,
   description,
   keywords,
+  robots,
   openGraph,
   canonicalUrlRelative,
   extraTags,
@@ -17,9 +18,24 @@ export const getSEOTags = ({
     title: title || config.appName,
     // up to 160 characters (how does your app help the user?)
     description: description || config.appDescription,
+    // Application Name
+    applicationName: config.appName,
     // some keywords separated by commas. by default it will be your app name
     keywords: keywords || [config.appName],
-    applicationName: config.appName,
+    // Robots, Indexing and Crawling
+    robots: robots || {
+      index: true,
+      follow: true,
+      nocache: false,
+      googleBot: {
+        index: true,
+        follow: true,
+        noimageindex: false,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
     // set a base URL prefix for other fields that require a fully qualified URL (.e.g og:image: og:image: 'https://yourdomain.com/share.png' => '/share.png')
     metadataBase: new URL(
       process.env.NODE_ENV === "development"
@@ -82,11 +98,11 @@ export const renderSchemaTags = () => {
           image: `https://${config.domainName}/icon.png`,
           url: `https://${config.domainName}/`,
           author: {
-            "@type": "Person",
+            "@type": "Organization",
             name: config.ownership.name
           },
-          datePublished: "2023-08-01",
-          applicationCategory: "EducationalApplication",
+          datePublished: "2025-01-01",
+          applicationCategory: "FinanceApplication",
           aggregateRating: {
             "@type": "AggregateRating",
             ratingValue: "4.8",
@@ -95,7 +111,7 @@ export const renderSchemaTags = () => {
           offers: [
             {
               "@type": "Offer",
-              price: "9.00",
+              price: "5.00",
               priceCurrency: "USD",
             },
           ],

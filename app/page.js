@@ -5,7 +5,7 @@ import Problem from "@/components/Problem";
 import Pricing from "@/components/Pricing";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
-import { getSEOTags } from "@/libs/seo";
+import { getSEOTags, renderSchemaTags } from "@/libs/seo";
 import config from "@/config";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/libs/next-auth";
@@ -26,21 +26,6 @@ export default async function Home() {
     redirect(config.auth.callbackUrl);
   }
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": config.appName,
-    "applicationCategory": "FinanceApplication",
-    "operatingSystem": "Web",
-    "description": config.appDescription,
-    "url": `https://${config.domainName}`,
-    "image": `https://${config.domainName}/opengraph-image.png`,
-    "creator": {
-      "@type": "Organization",
-      "name": config.appName,
-    },
-  };
-
   return (
     <>
       <Suspense>
@@ -52,11 +37,8 @@ export default async function Home() {
         <Pricing />
         <FAQ />
       </main>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
       <Footer />
+      {renderSchemaTags()}
     </>
   );
 }
