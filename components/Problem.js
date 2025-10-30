@@ -46,6 +46,7 @@ const Problem = () => {
         <h2 className="max-w-3xl mx-auto font-extrabold text-4xl md:text-5xl tracking-tight mb-6 md:mb-8">
           Make Better Financial Decisions
         </h2>
+
         <p className="max-w-xl mx-auto text-lg opacity-90 leading-relaxed mb-12 md:mb-20">
           Easily track all your investments in one place, see real-time insights, and make smarter financial decisions.
         </p>
@@ -61,6 +62,7 @@ const Problem = () => {
 
           <Step emoji="💰" text="Make better decisions with your money" />
         </div>
+        
       </div>
     </section>
   );

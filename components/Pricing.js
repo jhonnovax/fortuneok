@@ -20,11 +20,10 @@ const Pricing = () => {
   return (
     <section className="bg-base-200 overflow-hidden" id="pricing">
       <div className="py-16 md:py-24 px-8 max-w-5xl mx-auto">
-        <div className="flex flex-col text-center w-full mb-6 md:mb-8">
-          <h2 className="font-bold text-3xl lg:text-5xl tracking-tight">
-            Stay Organized and Grow Confidently
-          </h2>
-        </div>
+        
+        <h2 className="font-bold text-3xl lg:text-5xl tracking-tight">
+          Stay Organized and Grow Confidently
+        </h2>
 
         <div className="relative flex justify-center flex-col lg:flex-row items-center lg:items-stretch gap-6">
 
