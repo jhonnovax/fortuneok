@@ -62,8 +62,8 @@ const Header = () => {
           <button
             type="button"
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5"
-            ariaExpanded={isOpen}
-            ariaControls="mobile-menu"
+            aria-expanded={isOpen}
+            aria-controls="mobile-menu"
             onClick={() => setIsOpen(true)}
           >
             <span className="sr-only">Open main menu</span>
