@@ -1,4 +1,4 @@
-import "./globals.css";
+import "@/styles/globals.css";
 import { getSEOTags } from "@/libs/seo";
 import config from "@/config";
 import dynamic from 'next/dynamic';

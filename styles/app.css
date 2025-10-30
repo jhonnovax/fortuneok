@@ -1,13 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-html,
-body {
-  scroll-behavior: smooth !important;
-  scrollbar-gutter: auto !important; /* This is needed since DaisyUI uses scrollbar-gutter: stable; when modal is open */
-}
-
 /* Custom progress bar animation and style */
 progress::-webkit-progress-value {
   transition: 0.6s width ease-out;
