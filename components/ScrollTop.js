@@ -20,7 +20,7 @@ export default function ScrollTop() {
   return (
     <button
         onClick={scrollToTop}
-        className={`fixed bottom-3 right-3 md:bottom-6 md:right-6 flex items-center justify-center btn btn-circle btn-primary btn-md shadow-lg tooltip tooltip-left transition-opacity duration-300 ${
+        className={`fixed z-20 bottom-3 right-3 md:bottom-6 md:right-6 flex items-center justify-center btn btn-circle btn-primary btn-md shadow-lg tooltip tooltip-left transition-opacity duration-300 ${
         showScrollTop ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         title="Scroll to top"
