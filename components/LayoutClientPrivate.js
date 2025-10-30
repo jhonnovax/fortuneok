@@ -13,10 +13,11 @@ const Toaster = dynamic(() => import('react-hot-toast').then(mod => ({ default: 
   ssr: false,
   loading: () => null
 });
+
 // All the client wrappers are here (they can't be in server components)
 // 1. SessionProvider: Allow the useSession from next-auth (find out if user is auth or not)
 // 2. Toaster: Show Success/Error messages anywhere from the app with toast()
-const ClientLayout = ({ children }) => {
+const LayoutClientPrivate = ({ children }) => {
   const pathname = usePathname();
 
   // Add scroll restoration
@@ -50,4 +51,4 @@ const ClientLayout = ({ children }) => {
   );
 };
 
-export default ClientLayout;
+export default LayoutClientPrivate;
