@@ -96,7 +96,7 @@ const FAQ = () => {
   return (
     <section className="bg-neutral text-neutral-content" id="faq">
       <div className="py-16 md:py-24 px-12 max-w-3xl mx-auto flex flex-col gap-12">
-        <h2 className="text-3xl lg:text-5xl font-extrabold">
+        <h2 className="text-3xl lg:text-5xl font-extrabold text-center">
           Frequently Asked Questions
         </h2>
 

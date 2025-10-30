@@ -19,9 +19,9 @@ const Pricing = () => {
 
   return (
     <section className="bg-base-200 overflow-hidden" id="pricing">
-      <div className="py-16 md:py-24 px-8 max-w-5xl mx-auto">
+      <div className="py-16 md:py-24 px-8 max-w-5xl mx-auto flex flex-col gap-12">
         
-        <h2 className="font-bold text-3xl lg:text-5xl tracking-tight">
+        <h2 className="font-bold text-3xl lg:text-5xl tracking-tight text-center">
           Stay Organized and Grow Confidently
         </h2>
 

@@ -43,7 +43,7 @@ const Problem = () => {
   return (
     <section className="bg-neutral text-neutral-content">
       <div className="max-w-7xl mx-auto px-8 py-16 md:py-24 text-center">
-        <h2 className="max-w-3xl mx-auto font-extrabold text-4xl md:text-5xl tracking-tight mb-6 md:mb-8">
+        <h2 className="max-w-3xl mx-auto font-extrabold text-4xl md:text-5xl tracking-tight mb-6 md:mb-8 text-center">
           Make Better Financial Decisions
         </h2>
 
