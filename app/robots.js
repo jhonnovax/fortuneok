@@ -8,6 +8,7 @@ export default function robots() {
       allow: "/",
       disallow: ["/api/", "/dashboard/"],
     },
+    host: `https://${config.domainName}`,
     sitemap: `https://${config.domainName}/sitemap.xml`,
   };
 
