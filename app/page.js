@@ -14,7 +14,7 @@ import ScrollTop from "@/components/ScrollTop";
 
 export const metadata = getSEOTags({
   title: `${config.appName} | ${config.appShortDescription}`,
-  keywords: "personal finance dashboard, investment tracking tool, financial portfolio app",
+  keywords: "investment tracker, portfolio tracker, personal finance app, wealth management, asset allocation, financial dashboard",
   canonicalUrlRelative: "/",
 });
 
