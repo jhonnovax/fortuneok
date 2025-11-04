@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import logo from "@/app/icon.png";
 import Link from "next/link";
