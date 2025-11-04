@@ -108,17 +108,19 @@ const ButtonAccount = ({ onAddAsset }) => {
             )}
       </button>
       <ul className={`absolute right-0 z-[1] menu p-2 shadow bg-base-100 rounded-box w-full min-w-40 mt-1 ${openDropdown ? 'block' : 'hidden'}`}>
-        <li>
-          <button
-            className="flex items-center gap-2 hover:bg-base-300 duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
-            onClick={handleAddAsset}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            Add Asset
-          </button>
-        </li>
+        {onAddAsset && (
+          <li>
+            <button
+              className="flex items-center gap-2 hover:bg-base-300 duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
+              onClick={handleAddAsset}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              Add Asset
+            </button>
+          </li>
+        )} 
         <li>
           <Link href="/dashboard/billing" className="flex items-center gap-2 hover:bg-base-300 duration-200 py-1.5 px-4 w-full rounded-lg font-medium">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
