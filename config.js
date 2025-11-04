@@ -19,7 +19,7 @@ const config = {
         priceMonthlyId:
           process.env.NODE_ENV === "development"
             ? "price_1SPYDnDvX2TSHq7d5pBAnAQh"
-            : "price_1SPY99DvX2TSHq7dvjX1JuHf",
+            : "price_1SPZ6gDvX2TSHq7dZceqgh7X",
         priceYearlyId:
           process.env.NODE_ENV === "development"
             ? "price_1SPYWeDvX2TSHq7d4hFfvPeS"
