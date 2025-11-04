@@ -31,7 +31,7 @@ export const createCheckout = async ({
 
   const stripeSession = await stripe.checkout.sessions.create({
     mode,
-    allow_promotion_codes: true,
+    allow_promotion_codes: false,
     client_reference_id: clientReferenceId,
     line_items: [
       {

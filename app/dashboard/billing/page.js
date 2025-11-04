@@ -30,7 +30,7 @@ export default function BillingPage() {
           </Link>
           <h1 className="font-bold text-2xl lg:text-3xl">Billing</h1>
         </section>
-        <Pricing className="bg-transparent" showHeader={false} />
+        <Pricing className="bg-transparent" showHeader={false} isFreeTrialAvailable={false} />
       </main>
     </>
   );

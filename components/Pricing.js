@@ -3,11 +3,12 @@
 import { useState } from "react";
 import config from "@/config";
 import Link from "next/link";
+import ButtonCheckout from "./ButtonCheckout";
 // <Pricing/> displays the pricing plans for your app
 // It's your Stripe config in config.js.stripe.plans[] that will be used to display the plans
 // <ButtonCheckout /> renders a button that will redirect the user to Stripe checkout called the /api/stripe/create-checkout API endpoint with the correct priceId
 
-const Pricing = ({ className = "", showHeader = true }) => {
+const Pricing = ({ className = "", showHeader = true, isFreeTrialAvailable = true }) => {
   const [subscriptionType, setSubscriptionType] = useState("monthly");
 
   function getPriceDecimals(value) {
@@ -150,7 +151,11 @@ const Pricing = ({ className = "", showHeader = true }) => {
                     </ul>
                   )}
                   <div className="space-y-2">
-                    <Link href="/api/auth/signin" className="btn btn-primary btn-block">Start 14 days free trial</Link>
+                    {
+                      isFreeTrialAvailable 
+                        ? <Link href="/api/auth/signin" className="btn btn-primary btn-block">Start 14 days free trial</Link>
+                        : <ButtonCheckout priceId={subscriptionType === "monthly" ? plan.priceMonthlyId : plan.priceYearlyId} mode="subscription" />
+                    }
                     <p className="text-base-secondary mt-1 text-center text-sm">
                       No credit card required.
                     </p>

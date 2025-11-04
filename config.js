@@ -16,13 +16,13 @@ const config = {
     plans: [
       {
         // REQUIRED — we use this to find the plan in the webhook (for instance if you want to update the user's credits based on the plan)
-        priceIdMonthly:
+        priceMonthlyId:
           process.env.NODE_ENV === "development"
             ? "price_1SPYDnDvX2TSHq7d5pBAnAQh"
             : "price_1SPY99DvX2TSHq7dvjX1JuHf",
-        priceIdYearly:
+        priceYearlyId:
           process.env.NODE_ENV === "development"
-            ? "price_1SPYEGDvX2TSHq7dIOPJnDj0"
+            ? "price_1SPYWeDvX2TSHq7d4hFfvPeS"
             : "price_1SPYAsDvX2TSHq7dKBZjeJQG",
         //  REQUIRED - Name of the plan, displayed on the pricing page
         name: "Starter",
