@@ -61,7 +61,23 @@ const Pricing = ({ className = "", showHeader = true }) => {
                     </div>
                   </div>
 
-                  <div className="-m-1 grid grid-cols-2 rounded-xl bg-neutral/5 p-1 shadow-inner dark:bg-neutral/50">
+                  <div className="-m-1 grid grid-cols-2 rounded-xl bg-neutral/5 p-1 shadow-inner dark:bg-neutral/50 relative">
+                    
+                    <aside className="absolute -top-6 md:-top-2 right-0 flex -translate-y-full animate-pulse items-center gap-2 text-green-700 dark:text-primary">
+                      <svg className="fill-base-secondary mt-2 w-8 -rotate-[24deg] opacity-60" viewBox="0 0 219 41" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <g clipPath="url(#clip0_3_248)">
+                          <path d="M21.489 29.4305C36.9333 31.3498 51.3198 33.0559 65.7063 34.9753C66.7641 35.1885 67.6104 36.4681 69.9376 38.3875C63.1675 39.2406 57.8783 40.3069 52.5892 40.5201C38.6259 40.9467 24.8741 40.9467 10.9107 40.9467C9.21821 40.9467 7.5257 41.1599 5.83317 40.7334C0.332466 39.6671 -1.57164 36.0416 1.39028 31.1365C2.87124 28.7906 4.56377 26.658 6.46786 24.7386C13.6611 17.4876 21.0659 10.4499 28.4707 3.41224C29.7401 2.13265 31.6442 1.49285 34.183 0C34.6061 10.8765 23.8162 13.8622 21.489 22.3927C23.3931 21.9662 25.0856 21.7529 26.5666 21.3264C83.6894 5.54486 140.601 7.25099 197.3 22.606C203.224 24.0988 208.936 26.4447 214.649 28.5773C217.61 29.6437 220.149 31.9896 218.457 35.6151C216.976 39.2406 214.014 39.2406 210.629 37.7477C172.759 20.6866 132.561 18.7672 91.9404 19.407C70.7838 19.6203 50.0504 21.9662 29.5285 26.8713C26.9897 27.5111 24.4509 28.3641 21.489 29.4305Z">
+                          </path>
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_3_248">
+                            <rect width="219" height="41"></rect>
+                          </clipPath>
+                        </defs>
+                      </svg>
+                      <Link href="/dashboard" className="text-green-700 dark:text-primary text-sm">2 months free</Link>
+                    </aside>
+
                     <a role="relative tab" className={`flex select-none items-center justify-center gap-2 truncate rounded-lg py-2 font-medium ${subscriptionType === "monthly" ? "bg-base-100 shadow" : "cursor-pointer"}`} onClick={() => setSubscriptionType("monthly")}>
                       Monthly 
                     </a>
@@ -98,13 +114,13 @@ const Pricing = ({ className = "", showHeader = true }) => {
                       
                       {subscriptionType === "yearly" && (
                         <>
-                          <li className="flex items-center gap-2 text-primary font-bold">
+                          <li className="flex items-center gap-2 text-green-700 dark:text-primary">
                             <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="currentColor">
                               <path d="M160-80v-440H80v-240h208q-5-9-6.5-19t-1.5-21q0-50 35-85t85-35q23 0 43 8.5t37 23.5q17-16 37-24t43-8q50 0 85 35t35 85q0 11-2 20.5t-6 19.5h208v240h-80v440H160Zm400-760q-17 0-28.5 11.5T520-800q0 17 11.5 28.5T560-760q17 0 28.5-11.5T600-800q0-17-11.5-28.5T560-840Zm-200 40q0 17 11.5 28.5T400-760q17 0 28.5-11.5T440-800q0-17-11.5-28.5T400-840q-17 0-28.5 11.5T360-800ZM160-680v80h280v-80H160Zm280 520v-360H240v360h200Zm80 0h200v-360H520v360Zm280-440v-80H520v80h280Z"/>
                             </svg>
                             <span>Saved ${plan.price * 2}</span>
                           </li>
-                          <li className="flex items-center gap-2 text-primary font-bold">
+                          <li className="flex items-center gap-2 text-green-700 dark:text-primary">
                             <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="currentColor">
                               <path d="M160-80v-440H80v-240h208q-5-9-6.5-19t-1.5-21q0-50 35-85t85-35q23 0 43 8.5t37 23.5q17-16 37-24t43-8q50 0 85 35t35 85q0 11-2 20.5t-6 19.5h208v240h-80v440H160Zm400-760q-17 0-28.5 11.5T520-800q0 17 11.5 28.5T560-760q17 0 28.5-11.5T600-800q0-17-11.5-28.5T560-840Zm-200 40q0 17 11.5 28.5T400-760q17 0 28.5-11.5T440-800q0-17-11.5-28.5T400-840q-17 0-28.5 11.5T360-800ZM160-680v80h280v-80H160Zm280 520v-360H240v360h200Zm80 0h200v-360H520v360Zm280-440v-80H520v80h280Z"/>
                             </svg>
