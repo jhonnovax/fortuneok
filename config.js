@@ -1,3 +1,11 @@
+const planFeatures = [
+  { name: "Track unlimited assets" },
+  { name: "Stocks, ETFs, Funds, Crypto & more" },
+  { name: "Cash, real state, savings accounts & more" },
+  { name: 'Multi-currency support' },
+  { name: "Automatic asset allocation & categorization" }
+];
+
 const config = {
   // REQUIRED
   appName: "FortuneOK",
@@ -16,30 +24,34 @@ const config = {
     plans: [
       {
         // REQUIRED — we use this to find the plan in the webhook (for instance if you want to update the user's credits based on the plan)
-        priceMonthlyId:
+        priceId:
           process.env.NODE_ENV === "development"
             ? "price_1SPYDnDvX2TSHq7d5pBAnAQh"
             : "price_1SPZ6gDvX2TSHq7dZceqgh7X",
-        priceYearlyId:
-          process.env.NODE_ENV === "development"
-            ? "price_1SPYWeDvX2TSHq7d4hFfvPeS"
-            : "price_1SPYAsDvX2TSHq7dKBZjeJQG",
         //  REQUIRED - Name of the plan, displayed on the pricing page
-        name: "Starter",
+        name: "Monthly",
         // A friendly description of the plan, displayed on the pricing page. Tip: explain why this plan and not others
-        description: "Perfect for beginners",
+        description: "Perfect for investors",
         // The price you want to display, the one user will be charged on Stripe.
         price: 5,
         // If you have an anchor price (i.e. $29) that you want to display crossed out, put it here. Otherwise, leave it empty
         priceAnchor: 9,
+        features: planFeatures
+      },
+      {
+        priceId:
+          process.env.NODE_ENV === "development"
+            ? "price_1SPYWeDvX2TSHq7d4hFfvPeS"
+            : "price_1SPYAsDvX2TSHq7dKBZjeJQG",
+        name: "Yearly",
+        description: "Perfect for investors",
+        price: 50,
+        priceAnchor: 99,
         features: [
-          { name: "Track unlimited assets" },
-          { name: "Stocks, ETFs, Funds, Crypto & more" },
-          { name: "Cash, real state, savings accounts & more" },
-          { name: 'Multi-currency support' },
-          { name: "Automatic asset allocation & categorization" }
-          
-        ],
+          { name: "Saved $10", isFeatured: true },
+          { name: "2 months free", isFeatured: true },
+          ...planFeatures
+        ]
       }
     ],
   },
