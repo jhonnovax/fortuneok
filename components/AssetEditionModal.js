@@ -65,7 +65,6 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
 
   const showShares = TRADEABLE_CATEGORIES.includes(form.category);
   const showSymbol = TRADING_CATEGORIES.includes(form.category);
-  const showDescription = !TRADING_CATEGORIES.includes(form.category);
   const showCurrentValuation = !TRADING_CATEGORIES.includes(form.category);
 
   const { data: session } = useSession();
@@ -216,32 +215,18 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                   </select>
                 </div>
 
-                {/* Description or Symbol based on category */}
-                {showDescription ? (
-                  <div className="form-control">
-                    {renderLabel('Description', true, errors.description)}
-                    <input 
-                      type="text"
-                      className={`input input-bordered w-full ${errors.description ? 'input-error' : ''}`}
-                      value={form.description}
-                      onChange={(e) => setForm({ ...form, description: e.target.value })}
-                      placeholder="Enter asset description"
-                      disabled={isSubmitting}
-                    />
-                  </div>
-                ) : (
-                  <div className="form-control">
-                    {renderLabel('Symbol', true, errors.symbol)}
-                    <InputStockSuggestions
-                      disabled={isSubmitting}
-                      error={errors.symbol}
-                      placeholder="Select symbol"
-                      type={form.category}
-                      value={form.symbol}
-                      onSelect={(value) => setForm({ ...form, symbol: value })}
-                    />
-                  </div>
-                )}
+                {/* Description or Broker name based on category */}
+                <div className="form-control">
+                  {renderLabel(TRADING_CATEGORIES.includes(form.category) ? 'Broker Name' : 'Description', true, errors.description)}
+                  <input 
+                    type="text"
+                    className={`input input-bordered w-full ${errors.description ? 'input-error' : ''}`}
+                    value={form.description}
+                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    placeholder={TRADING_CATEGORIES.includes(form.category) ? 'Enter broker name' : 'Enter asset description'}
+                    disabled={isSubmitting}
+                  />
+                </div>
 
                 {showCurrentValuation && (
                   <>
@@ -298,10 +283,21 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                   </>
                 )}
 
-                {/* Shares */}
+                {/* Symbol and Shares */}
                 {showShares && (
                     <>
-                      <div className="form-control md:col-span-2">
+                      <div className="form-control">
+                        {renderLabel('Symbol', true, errors.symbol)}
+                        <InputStockSuggestions
+                          disabled={isSubmitting}
+                          error={errors.symbol}
+                          placeholder="Select symbol"
+                          type={form.category}
+                          value={form.symbol}
+                          onSelect={(value) => setForm({ ...form, symbol: value })}
+                        />
+                      </div>
+                      <div className="form-control">
                         {renderLabel('Shares', true, errors.shares)}
                         <CurrencyInput
                           id="shares-input"

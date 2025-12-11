@@ -70,7 +70,7 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
     assetListUI = <ErrorLoadingData error={error} />;
   }
   else if (assetData.length === 0) {
-    assetListUI = (<p className="text-lg text-center text-gray-500">No assets found. Add your first asset to get started.</p>);
+    assetListUI = (<p className="p4 lg:p-6 text-md text-center text-base-content/60">No assets found. Add your first asset to get started.</p>);
   }
   else {
     assetListUI = (
