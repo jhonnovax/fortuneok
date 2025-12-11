@@ -60,7 +60,7 @@ export async function GET(request) {
     const results = await Promise.all(
       endpoints.map(async (endpoint) => {
         try {
-          const url = `https://financialmodelingprep.com/api/v3/${endpoint}?query=${encodeURIComponent(query)}&apikey=${process.env.FMP_API_KEY}`;
+          const url = `https://financialmodelingprep.com/stable/search-symbol?query=${encodeURIComponent(query)}&apikey=${process.env.FMP_API_KEY}`;
           const response = await fetch(url);
           
           if (!response.ok) {
@@ -117,7 +117,9 @@ export async function GET(request) {
     
     // Try to cache the results (wrapped in try/catch to handle Redis errors)
     try {
-      await setCache(cacheKey, resultsWithImages, CACHE_REDIS_DURATION);
+      if (resultsWithImages.length > 0) {
+        await setCache(cacheKey, resultsWithImages, CACHE_REDIS_DURATION);
+      }
     } catch (cacheError) {
       console.error('Redis cache set error:', cacheError);
       // Continue without caching if there's an error
