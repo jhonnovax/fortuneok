@@ -21,7 +21,10 @@ const assetSchema = mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
+      trim: true,
+    },
+    brokerName: {
+      type: String,
       trim: true,
     },
     symbol: {

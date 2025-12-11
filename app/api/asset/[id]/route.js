@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import connectMongo from "@/libs/mongoose";
 import Asset from "@/models/Asset";
 import { authOptions } from "@/libs/next-auth";
+import { validateAssetData } from "@/services/assetService";
 
 // Helper function to validate MongoDB ObjectId
 const isValidObjectId = (id) => {
@@ -61,6 +62,15 @@ export async function PATCH(req, { params }) {
     await connectMongo();
     
     const body = await req.json();
+
+    // Validate asset data
+    const assetErrors = validateAssetData(body);
+    if (Object.keys(assetErrors).length > 0) {
+      return NextResponse.json(
+        { error: assetErrors },
+        { status: 400 }
+      );
+    }
     
     // Prevent updating userId
     delete body.userId;

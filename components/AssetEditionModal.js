@@ -7,6 +7,7 @@ import ButtonSignin from '@/components/ButtonSignin';
 import dynamic from 'next/dynamic';
 import { createPortal } from 'react-dom';
 import currencies from '@/public/currencies.json';
+import { validateAssetData, TRADING_CATEGORIES } from '@/services/assetService';
 const currenciesSuggestionList = currencies.map(currency => ({
   ...currency,
   value: currency.code
@@ -40,6 +41,7 @@ const INITIAL_FORM_STATE = {
   date: '',
   category: '',
   description: '',
+  brokerName: '',
   symbol: '',
   currentValuation: {
     currency: '',
@@ -49,45 +51,18 @@ const INITIAL_FORM_STATE = {
   notes: ''
 };
 
-const TRADING_CATEGORIES = [
-  'stocks', 
-  'bonds', 
-  'cryptocurrencies', 
-  'etf_funds', 
-  'option', 
-  'futures'
-];
-
 export default function AssetEditionModal({ isOpen, isSubmitting, submitError, asset, onClose, onSave }) {
   const closeButtonRef = useRef(null);
   const [form, setForm] = useState(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState({});
 
   const showShares = TRADEABLE_CATEGORIES.includes(form.category);
-  const showSymbol = TRADING_CATEGORIES.includes(form.category);
   const showCurrentValuation = !TRADING_CATEGORIES.includes(form.category);
 
   const { data: session } = useSession();
 
   const validateForm = () => {
-    const newErrors = {};
-    
-    // Required field validation
-    if (!form.date) newErrors.date = 'Date is required';
-    if (!form.category) newErrors.category = 'Category is required';
-    if (!form.description) newErrors.description = 'Description is required';
-    if (showSymbol && !form.symbol) newErrors.symbol = 'Symbol is required';
-    if (showShares && !form.shares) newErrors.shares = 'Shares is required';
-    if (showCurrentValuation && !form.currentValuation?.currency) newErrors.currentValuationCurrency = 'Currency is required';
-    if (showCurrentValuation && !form.currentValuation?.amount) newErrors.currentValuation = 'Amount is required';
-    
-    if (showShares && isNaN(Number(form.shares))) {
-      newErrors.shares = 'Enter a valid number';
-    }
-    
-    if (showCurrentValuation && isNaN(Number(form.currentValuation.amount))) {
-      newErrors.currentValuation = 'Enter a valid number';
-    }
+    const newErrors = validateAssetData(form);
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -135,6 +110,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
         date: asset.date?.toISOString?.()?.split('T')?.[0] || '',
         category: asset.category,
         description: asset.description,
+        brokerName: asset.brokerName,
         symbol: asset.symbol,
         shares: asset.shares,
         currentValuation: asset.currentValuation,
@@ -216,17 +192,33 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                 </div>
 
                 {/* Description or Broker name based on category */}
-                <div className="form-control">
-                  {renderLabel(TRADING_CATEGORIES.includes(form.category) ? 'Broker Name' : 'Description', true, errors.description)}
-                  <input 
-                    type="text"
-                    className={`input input-bordered w-full ${errors.description ? 'input-error' : ''}`}
-                    value={form.description}
-                    onChange={(e) => setForm({ ...form, description: e.target.value })}
-                    placeholder={TRADING_CATEGORIES.includes(form.category) ? 'Enter broker name' : 'Enter asset description'}
-                    disabled={isSubmitting}
-                  />
-                </div>
+                {
+                  TRADING_CATEGORIES.includes(form.category) ? (
+                    <div className="form-control">
+                      {renderLabel('Broker Name', true, errors.brokerName)}
+                      <input 
+                        type="text"
+                        className={`input input-bordered w-full ${errors.brokerName ? 'input-error' : ''}`}
+                        value={form.brokerName}
+                        onChange={(e) => setForm({ ...form, brokerName: e.target.value })}
+                        placeholder="Enter broker name"
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                  ) : (
+                    <div className="form-control">
+                      {renderLabel('Description', true, errors.description)}
+                      <input 
+                        type="text"
+                        className={`input input-bordered w-full ${errors.description ? 'input-error' : ''}`}
+                        value={form.description}
+                        onChange={(e) => setForm({ ...form, description: e.target.value })}
+                        placeholder="Enter asset description"
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                  )
+                }
 
                 {showCurrentValuation && (
                   <>

@@ -5,7 +5,7 @@ import Asset from "@/models/Asset";
 import { authOptions } from "@/libs/next-auth";
 import { dummyData } from "./dummy-data";
 import { getStockPrices } from "@/services/symbolService";
-import { parseCurrentValuationOfAsset } from "@/services/assetService";
+import { parseCurrentValuationOfAsset, validateAssetData } from "@/services/assetService";
 
 // GET - Retrieve all assets for the current user
 export async function GET() {
@@ -47,10 +47,11 @@ export async function POST(req) {
     
     const body = await req.json();
     
-    // Validate required fields
-    if (!body.category || !body.description) {
+    // Validate asset data
+    const assetErrors = validateAssetData(body);
+    if (Object.keys(assetErrors).length > 0) {
       return NextResponse.json(
-        { error: "Category and description are required" },
+        { error: assetErrors },
         { status: 400 }
       );
     }

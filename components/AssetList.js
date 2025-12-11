@@ -19,6 +19,15 @@ const DeleteAssetModal = dynamic(() => import('./DeleteAssetModal'), {
   ssr: false,
 });
 
+const TRADING_CATEGORIES = [
+  'stocks', 
+  'bonds', 
+  'cryptocurrencies', 
+  'etf_funds', 
+  'option', 
+  'futures'
+];
+
 
 export default function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategory, totalAssetsValue, showMoreActions, showViewDetails, showValues, onEditAsset, onDeleteAsset, onViewDetails }) {
 
@@ -87,6 +96,12 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
                       <h3 className="font-bold text-sm">
                         {selectedCategory === 'all' && getAssetCategoryGroupIcon(asset.category)} {asset.description}
                       </h3>
+
+                      {TRADING_CATEGORIES.includes(asset.category) && (
+                        <p className="text-sm text-gray-200 dark:text-gray-300">
+                          {asset.brokerName}
+                        </p>
+                      )}
 
                       <div className="text-sm">
                         {currencies.find(currency => currency.code === baseCurrency)?.flag} 

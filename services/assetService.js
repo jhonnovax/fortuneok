@@ -18,6 +18,15 @@ export const ASSET_CATEGORIES = [
   { group: 'other', label: '🔷 Other custom assets', value: 'other', icon: '🔷' }
 ];
 
+export const TRADING_CATEGORIES = [
+  'stocks', 
+  'bonds', 
+  'cryptocurrencies', 
+  'etf_funds', 
+  'option', 
+  'futures'
+];
+
 export function convertFromBaseCurrency(baseCurrency = 'USD', amount = 0, rates = {}) {
   const amountInBaseCurrency = amount / (rates[baseCurrency.toLowerCase()] || 1);
 
@@ -188,4 +197,30 @@ export function getAssetCategoryGroupName(assetCategory) {
       return 'other';
   }
 
+}
+
+export function validateAssetData(assetData) {
+  const assetErrors  = {};
+
+  const isTradingCategory = TRADING_CATEGORIES.includes(assetData.category);
+    
+  // Required field validation
+  if (!assetData.date) assetErrors.date = 'Date is required';
+  if (!assetData.category) assetErrors.category = 'Category is required';
+  if (isTradingCategory && !assetData.brokerName) assetErrors.brokerName = 'Broker name is required';
+  if (!isTradingCategory && !assetData.description) assetErrors.description = 'Description is required';
+  if (isTradingCategory && !assetData.symbol) assetErrors.symbol = 'Symbol is required';
+  if (isTradingCategory && !assetData.shares) assetErrors.shares = 'Shares is required';
+  if (!isTradingCategory && !assetData.currentValuation?.currency) assetErrors.currentValuationCurrency = 'Currency is required';
+  if (!isTradingCategory && !assetData.currentValuation?.amount) assetErrors.currentValuation = 'Amount is required';
+  
+  if (isTradingCategory && isNaN(Number(assetData.shares))) {
+    assetErrors.shares = 'Enter a valid number';
+  }
+  
+  if (!isTradingCategory && isNaN(Number(assetData.currentValuation.amount))) {
+    assetErrors.currentValuation = 'Enter a valid number';
+  }
+
+  return assetErrors;
 }
