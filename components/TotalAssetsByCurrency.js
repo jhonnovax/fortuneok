@@ -6,7 +6,7 @@ import { useMemo } from 'react';
 export default function TotalAssetsByCurrency({ baseCurrency, className, filteredAssetData, totalAssetsValue, showValues }) {
 
   const assetsValuesByCurrency = useMemo(() => {
-    const isCategory = filteredAssetData.some(asset => asset.assets?.length > 1);
+    const isCategory = filteredAssetData.some(asset => asset.assets?.length > 0);
     const assetsInCategories = isCategory ? filteredAssetData.flatMap(asset => asset.assets) : filteredAssetData;
 
     return Object.groupBy(assetsInCategories, asset => asset.currentValuation?.currency);
