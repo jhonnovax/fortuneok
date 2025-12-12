@@ -192,34 +192,34 @@ export default function UsersPage() {
       <HeaderDashboard />
       
       <div className="flex pt-16 min-h-screen">
-        <main className="flex-1 p-3 sm:p-4 md:p-6 space-y-4 md:space-y-6">
-          <div className="card bg-base-100 shadow-xl">
-            <div className="card-body">
+        <main className="flex-1 w-full p-3 sm:p-4 md:p-6 space-y-4 md:space-y-6 overflow-x-hidden">
+          <div className="card bg-base-100 shadow-xl w-full">
+            <div className="card-body p-3 sm:p-4 md:p-6 overflow-visible">
               <h1 className="card-title text-xl sm:text-2xl mb-4">Users</h1>
 
               {/* Filters Section */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
                 {/* Search Input */}
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text">Search</span>
+                <div className="form-control w-full">
+                  <label className="label py-1 sm:py-2">
+                    <span className="label-text text-xs sm:text-sm">Search</span>
                   </label>
                   <input
                     type="search"
                     placeholder="Search by ID, name, email, or customerId"
-                    className="input input-bordered w-full"
+                    className="input input-bordered w-full input-sm sm:input-md"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                   />
                 </div>
 
                 {/* Email Verified Toggle */}
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text">Email Verified</span>
+                <div className="form-control w-full">
+                  <label className="label py-1 sm:py-2">
+                    <span className="label-text text-xs sm:text-sm">Email Verified</span>
                   </label>
                   <select
-                    className="select select-bordered w-full"
+                    className="select select-bordered w-full select-sm sm:select-md"
                     value={emailVerified}
                     onChange={(e) => setEmailVerified(e.target.value)}
                   >
@@ -230,12 +230,12 @@ export default function UsersPage() {
                 </div>
 
                 {/* Has Access Toggle */}
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text">Has Access</span>
+                <div className="form-control w-full">
+                  <label className="label py-1 sm:py-2">
+                    <span className="label-text text-xs sm:text-sm">Has Access</span>
                   </label>
                   <select
-                    className="select select-bordered w-full"
+                    className="select select-bordered w-full select-sm sm:select-md"
                     value={hasAccess}
                     onChange={(e) => setHasAccess(e.target.value)}
                   >
@@ -247,8 +247,8 @@ export default function UsersPage() {
               </div>
 
               {/* Results Count */}
-              <div className="mb-4">
-                <p className="text-sm text-base-content/70">
+              <div className="mb-3 sm:mb-4">
+                <p className="text-xs sm:text-sm text-base-content/70">
                   Showing {users.length} of {total} users
                 </p>
               </div>
@@ -269,8 +269,8 @@ export default function UsersPage() {
 
               {/* Users Table */}
               {!isLoading && !error && (
-                <div className="overflow-x-auto">
-                  <table className="table table-zebra w-full">
+                <div className="overflow-x-auto -mx-3 sm:-mx-4 md:-mx-6 px-3 sm:px-4 md:px-6">
+                  <table className="table table-zebra w-full min-w-[800px]">
                     <thead>
                       <tr>
                         <th 
@@ -298,15 +298,6 @@ export default function UsersPage() {
                           <div className="flex items-center">
                             Email
                             <SortIcon field="Email" />
-                          </div>
-                        </th>
-                        <th 
-                          className="cursor-pointer hover:bg-base-200 select-none"
-                          onClick={() => handleSort('emailVerified')}
-                        >
-                          <div className="flex items-center">
-                            Email Verified
-                            <SortIcon field="Email Verified" />
                           </div>
                         </th>
                         <th 
@@ -350,14 +341,14 @@ export default function UsersPage() {
                         users.map((user) => (
                           <tr key={user.id}>
                             <td className="font-mono text-xs">{user.id}</td>
-                            <td>{user.name || '❌'}</td>
+                            <td>{user.name || '-'}</td>
                             <td>
                               <div className="flex items-center gap-2">
                                 {user.providers && user.providers.length > 0 ? (
                                   user.providers.map((provider, index) => (
                                     <span key={index}>
                                       {provider === 'google' && (
-                                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <svg title="Google" className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                                           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
                                           <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
@@ -365,7 +356,7 @@ export default function UsersPage() {
                                         </svg>
                                       )}
                                       {provider === 'email' && (
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <svg title="Email" className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                         </svg>
                                       )}
@@ -376,13 +367,10 @@ export default function UsersPage() {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                   </svg>
                                 )}
-                                <span>{user.email || 'N/A'}</span>
+                                <span> {user.email || 'N/A'}</span>
                               </div>
                             </td>
-                            <td>
-                              {user.emailVerified ? '✅' : '❌'}
-                            </td>
-                            <td className="font-mono text-xs">
+                            <td className="font-mono text-xs cursor-default" title={user.hasAccess ? 'Premium User' : 'Free User'}>
                               {user.hasAccess ? '✅' : '❌'} {user.customerId || ''}
                             </td>
                             <td>
@@ -391,17 +379,18 @@ export default function UsersPage() {
                                 onClick={() => handleViewAssets(user)}
                                 disabled={!user.assetStats || user.assetStats.totalAssets === 0}
                               >
-                                {user.assetStats ? (
-                                  <span className="text-sm">
-                                    {user.assetStats.totalCategories} categories, {user.assetStats.totalAssets} assets
-                                  </span>
-                                ) : (
-                                  '0 categories, 0 assets'
-                                )}
+                                <span className="hidden xl:inline text-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                                  {user.assetStats ? (
+                                    `${user.assetStats.totalCategories} categories, ${user.assetStats.totalAssets} assets`
+                                  ) : (
+                                    '0 categories, 0 assets'
+                                  )}
+                                </span>
+                                <span className="xl:hidden text-sm">Assets</span>
                               </button>
                             </td>
-                            <td className="text-sm">{user.createdAt ? formatDate(user.createdAt) : '❌'}</td>
-                            <td className="text-sm">{user.lastAccessAt ? formatDate(user.lastAccessAt) : '❌'}</td>
+                            <td className="text-sm">{user.createdAt ? formatDate(user.createdAt) : '-'}</td>
+                            <td className="text-sm">{user.lastAccessAt ? formatDate(user.lastAccessAt) : '-'}</td>
                           </tr>
                         ))
                       )}
@@ -412,21 +401,21 @@ export default function UsersPage() {
 
               {/* Pagination */}
               {!isLoading && !error && totalPages > 1 && (
-                <div className="flex justify-center mt-6">
+                <div className="flex justify-center mt-4 sm:mt-6">
                   <div className="join">
                     <button
-                      className="join-item btn btn-sm sm:btn-md"
+                      className="join-item btn btn-xs sm:btn-sm md:btn-md"
                       onClick={() => setPage((p) => Math.max(1, p - 1))}
                       disabled={page === 1}
                     >
                       «
                     </button>
-                    <button className="join-item btn btn-sm sm:btn-md" disabled>
+                    <button className="join-item btn btn-xs sm:btn-sm md:btn-md" disabled>
                       <span className="hidden sm:inline">Page </span>
                       {page} <span className="hidden sm:inline">of {totalPages}</span>
                     </button>
                     <button
-                      className="join-item btn btn-sm sm:btn-md"
+                      className="join-item btn btn-xs sm:btn-sm md:btn-md"
                       onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                       disabled={page === totalPages}
                     >
