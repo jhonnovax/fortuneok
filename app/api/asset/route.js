@@ -62,7 +62,18 @@ export async function POST(req) {
       userId: session.user.id,
     });
     
-    return NextResponse.json(asset, { status: 201 });
+    // Convert to plain object and add id field
+    const assetObj = asset.toObject();
+    const formattedAsset = { ...assetObj, id: assetObj._id.toString() };
+    
+    // Fetch stock prices and calculate current valuation if symbol exists
+    if (formattedAsset.symbol) {
+      const stocksData = await getStockPrices([formattedAsset.symbol]);
+      const assetWithValuation = parseCurrentValuationOfAsset(formattedAsset, stocksData);
+      return NextResponse.json(assetWithValuation, { status: 201 });
+    }
+    
+    return NextResponse.json(formattedAsset, { status: 201 });
 
   } catch (error) {
     console.error("Error creating asset:", error);

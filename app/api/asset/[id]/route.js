@@ -4,7 +4,8 @@ import mongoose from "mongoose";
 import connectMongo from "@/libs/mongoose";
 import Asset from "@/models/Asset";
 import { authOptions } from "@/libs/next-auth";
-import { validateAssetData } from "@/services/assetService";
+import { validateAssetData, parseCurrentValuationOfAsset } from "@/services/assetService";
+import { getStockPrices } from "@/services/symbolService";
 
 // Helper function to validate MongoDB ObjectId
 const isValidObjectId = (id) => {
@@ -31,13 +32,23 @@ export async function GET(req, { params }) {
     const asset = await Asset.findOne({
       _id: id,
       userId: session.user.id,
-    });
+    }).lean();
     
     if (!asset) {
       return NextResponse.json({ error: "Asset not found" }, { status: 404 });
     }
     
-    return NextResponse.json(asset);
+    // Convert to plain object and add id field
+    const formattedAsset = { ...asset, id: asset._id.toString() };
+    
+    // Fetch stock prices and calculate current valuation if symbol exists
+    if (formattedAsset.symbol) {
+      const stocksData = await getStockPrices([formattedAsset.symbol]);
+      const assetWithValuation = parseCurrentValuationOfAsset(formattedAsset, stocksData);
+      return NextResponse.json(assetWithValuation);
+    }
+    
+    return NextResponse.json(formattedAsset);
   } catch (error) {
     console.error("Error fetching asset:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -80,13 +91,23 @@ export async function PATCH(req, { params }) {
       { _id: id, userId: session.user.id },
       { $set: body },
       { new: true, runValidators: true }
-    );
+    ).lean();
     
     if (!asset) {
       return NextResponse.json({ error: "Asset not found" }, { status: 404 });
     }
     
-    return NextResponse.json(asset);
+    // Convert to plain object and add id field
+    const formattedAsset = { ...asset, id: asset._id.toString() };
+    
+    // Fetch stock prices and calculate current valuation if symbol exists
+    if (formattedAsset.symbol) {
+      const stocksData = await getStockPrices([formattedAsset.symbol]);
+      const assetWithValuation = parseCurrentValuationOfAsset(formattedAsset, stocksData);
+      return NextResponse.json(assetWithValuation);
+    }
+    
+    return NextResponse.json(formattedAsset);
   } catch (error) {
     console.error("Error updating asset:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
