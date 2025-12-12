@@ -55,6 +55,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
   const closeButtonRef = useRef(null);
   const [form, setForm] = useState(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState({});
+  const hasInteractedRef = useRef(false);
 
   const showShares = TRADEABLE_CATEGORIES.includes(form.category);
   const showCurrentValuation = !TRADING_CATEGORIES.includes(form.category);
@@ -74,12 +75,26 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
     onSave(form);
   };
 
+  // Helper function to update form and trigger validation
+  const updateForm = (updates) => {
+    hasInteractedRef.current = true;
+    setForm(prevForm => ({ ...prevForm, ...updates }));
+  };
+
+  // Validate form whenever it changes (after user interaction)
+  useEffect(() => {
+    if (hasInteractedRef.current) {
+      const newErrors = validateAssetData(form);
+      setErrors(newErrors);
+    }
+  }, [form]);
 
   // Reset form when modal opens
   useEffect(() => {
     if (isOpen) {
       setForm(INITIAL_FORM_STATE);
       setErrors({});
+      hasInteractedRef.current = false;
       closeButtonRef.current?.focus();
     }
   }, [isOpen]);
@@ -151,7 +166,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
             </button>
           </div>
 
-          <form className="flex-1 overflow-y-auto" onSubmit={(e) => e.preventDefault()}>
+          <form className="flex-1 overflow-y-auto" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
               {/* Error message */}
               {submitError && (
                 <div className="alert alert-error mb-4">
@@ -169,7 +184,12 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                     type="date"
                     className={`input input-bordered w-full ${errors.date ? 'input-error' : ''}`}
                     value={form.date}
-                    onChange={(e) => setForm({ ...form, date: e.target.value })}
+                    onChange={(e) => updateForm({ date: e.target.value })}
+                    onClick={(e) => {
+                      if (e.target.showPicker) {
+                        e.target.showPicker();
+                      }
+                    }}
                     disabled={isSubmitting}
                   />
                 </div>
@@ -180,7 +200,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                   <select 
                     className={`select select-bordered w-full ${errors.category ? 'select-error' : ''}`}
                     value={form.category}
-                    onChange={(e) => setForm({ ...form, category: e.target.value })}
+                    onChange={(e) => updateForm({ category: e.target.value })}
                     placeholder="Select category"
                     disabled={isSubmitting}
                   >
@@ -200,7 +220,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                         type="text"
                         className={`input input-bordered w-full ${errors.brokerName ? 'input-error' : ''}`}
                         value={form.brokerName}
-                        onChange={(e) => setForm({ ...form, brokerName: e.target.value })}
+                        onChange={(e) => updateForm({ brokerName: e.target.value })}
                         placeholder="Enter broker name"
                         disabled={isSubmitting}
                       />
@@ -212,7 +232,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                         type="text"
                         className={`input input-bordered w-full ${errors.description ? 'input-error' : ''}`}
                         value={form.description}
-                        onChange={(e) => setForm({ ...form, description: e.target.value })}
+                        onChange={(e) => updateForm({ description: e.target.value })}
                         placeholder="Enter asset description"
                         disabled={isSubmitting}
                       />
@@ -251,7 +271,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                             <span className="text-base-content text-ellipsis overflow-hidden whitespace-nowrap">{suggestion.label}</span>
                           </div>
                         )}
-                        onSelect={(value) => setForm({ ...form, currentValuation: { ...form.currentValuation, currency: value } })}
+                        onSelect={(value) => updateForm({ currentValuation: { ...form.currentValuation, currency: value } })}
                       />
                     </div>
 
@@ -265,7 +285,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                         className={`input input-bordered w-full ${errors.currentValuation ? 'input-error' : ''}`}
                         value={form.currentValuation?.amount}
                         decimalsLimit={2}
-                        onValueChange={(value) => setForm({ ...form, currentValuation: { ...form.currentValuation, amount: value } })}
+                        onValueChange={(value) => updateForm({ currentValuation: { ...form.currentValuation, amount: value } })}
                         disabled={isSubmitting}
                         allowNegativeValue={false}
                         decimalSeparator="."
@@ -286,7 +306,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                           placeholder="Select symbol"
                           type={form.category}
                           value={form.symbol}
-                          onSelect={(value) => setForm({ ...form, symbol: value })}
+                          onSelect={(value) => updateForm({ symbol: value })}
                         />
                       </div>
                       <div className="form-control">
@@ -298,7 +318,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                           className={`input input-bordered w-full ${errors.shares ? 'input-error' : ''}`}
                           value={form.shares}
                           decimalsLimit={6}
-                          onValueChange={(value) => setForm({ ...form, shares: value })}
+                          onValueChange={(value) => updateForm({ shares: value })}
                           disabled={isSubmitting}
                           allowNegativeValue={false}
                           disableGroupSeparators={true}
@@ -314,12 +334,15 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                   <textarea 
                     className="textarea textarea-bordered w-full textarea-lg"
                     value={form.notes}
-                    onChange={(e) => setForm({ ...form, notes: e.target.value })}
+                    onChange={(e) => updateForm({ notes: e.target.value })}
                     placeholder="Add additional notes"
                     rows={3}
                     disabled={isSubmitting}
                   ></textarea>
                 </div>
+
+                {/* button hidden to trigger the submit */}
+                <button type="submit" className="hidden"></button>
               </div>   
           </form>
 
