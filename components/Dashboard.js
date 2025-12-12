@@ -13,6 +13,8 @@ import { parseAssetCategoryFromAssetList, getAssetCategoryGroupName } from '@/se
 import AssetTopBarNavigation from './AssetTopBarNavigation';
 import dynamic from 'next/dynamic';
 import AllocationChartSkeleton from './AllocationChartSkeleton';
+import Toast from './Toast';
+import ConfettiEffect from './Confetti';
 
 // Dynamic imports for heavy components
 const AllocationChart = dynamic(() => import('./AllocationChart'), { 
@@ -42,6 +44,8 @@ export default function Dashboard() {
   const [error, setError] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' });
+  const [showConfetti, setShowConfetti] = useState(false);
   const { preferredCurrency: baseCurrency } = usePreferences();
 
   const getCurrencyRates = useCurrencyRatesStore((state) => state.getCurrencyRates);
@@ -113,13 +117,30 @@ export default function Dashboard() {
       if (id) {
         // Update existing asset
         await updateAsset(id, assetData);
+        setToast({ 
+          isVisible: true, 
+          message: 'Asset updated successfully! 🎉', 
+          type: 'success' 
+        });
       } else {
         // Create new asset
         await addAsset(assetData);
+        setToast({ 
+          isVisible: true, 
+          message: 'Asset added successfully! 🚀', 
+          type: 'success' 
+        });
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 3000);
       }
     } catch (err) {
       console.error('Failed to save asset:', err);
       setSubmitAssetError(err.message);
+      setToast({ 
+        isVisible: true, 
+        message: err.message || 'Failed to save asset', 
+        type: 'error' 
+      });
     } finally {
       setIsSavingAsset(false);
       setIsAddModalOpen(false);
@@ -130,8 +151,18 @@ export default function Dashboard() {
     try {
       setIsDeletingAsset(true);
       await deleteAsset(assetId);
+      setToast({ 
+        isVisible: true, 
+        message: 'Asset deleted successfully! ✅', 
+        type: 'success' 
+      });
     } catch (err) {
       console.error('Failed to delete asset:', err);
+      setToast({ 
+        isVisible: true, 
+        message: err.message || 'Failed to delete asset', 
+        type: 'error' 
+      });
     } finally {
       setIsDeletingAsset(false);
     }
@@ -251,6 +282,17 @@ export default function Dashboard() {
 
         {/* Floating Add Asset Button */}
         {!isLoading && <AddAssetFloatingButton onAddAsset={handleNewAsset} />}
+
+        {/* Toast Notification */}
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          isVisible={toast.isVisible}
+          onClose={() => setToast({ ...toast, isVisible: false })}
+        />
+
+        {/* Confetti Effect */}
+        <ConfettiEffect trigger={showConfetti} />
 
       </div>
 

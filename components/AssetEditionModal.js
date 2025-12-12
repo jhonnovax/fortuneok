@@ -237,8 +237,17 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
 
   return (
     createPortal(
-      <dialog className={`modal modal-bottom sm:modal-middle ${isOpen ? 'modal-open' : 'hidden'}`}>
-        <div className="modal-box relative p-0 flex flex-col sm:max-w-2xl">
+      <dialog 
+        className={`modal modal-bottom sm:modal-middle ${isOpen ? 'modal-open' : ''}`}
+        style={{
+          animation: isOpen ? 'fadeIn 0.2s ease-out' : 'none'
+        }}
+      >
+        <div 
+          className={`modal-box relative p-0 flex flex-col sm:max-w-2xl transition-all duration-300 ${
+            isOpen ? 'animate-scale-in opacity-100' : 'opacity-0 scale-95'
+          }`}
+        >
 
           <div className="flex justify-center items-center border-b border-base-content/20 p-4">
             {/* Heading */}
@@ -442,7 +451,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
           <div className="mt-auto flex justify-end gap-2 p-4 border-t border-base-content/20">
             <button 
               type="button" 
-              className="btn btn-tertiary"
+              className="btn btn-tertiary transition-all duration-200 hover:scale-105 active:scale-95"
               onClick={onClose}
               disabled={isSubmitting}
             >
@@ -452,7 +461,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
             {session 
               ? <button 
                   type="button" 
-                  className="btn btn-primary"
+                  className="btn btn-primary transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-lg"
                   onClick={handleSubmit}
                   disabled={isSubmitting}
                 >

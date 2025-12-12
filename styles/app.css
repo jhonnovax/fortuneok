@@ -10,3 +10,42 @@ progress::-webkit-progress-value {
 .custom-progress::-moz-progress-bar {
   background-color: var(--progress‐fill);
 }
+
+/* Modal backdrop animation */
+.modal-backdrop {
+  transition: opacity 0.3s ease-out;
+}
+
+.modal-open .modal-backdrop {
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Smooth transitions for asset items */
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.asset-item-enter {
+  animation: slideInFromBottom 0.4s ease-out;
+}
+
+/* Button pulse animation for attention */
+@keyframes pulse-attention {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.pulse-attention {
+  animation: pulse-attention 2s ease-in-out infinite;
+}

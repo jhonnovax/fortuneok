@@ -97,8 +97,15 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
       <>
         {/* Assets List */}
         {assetData.map((asset, assetIndex) => (
-          <div key={asset.id} className="transition-colors">
-            <div className="p-4 lg:p-6 shadow-sm">
+          <div 
+            key={asset.id} 
+            className="transition-all duration-300 ease-out animate-fade-in-up"
+            style={{ 
+              animationDelay: `${assetIndex * 50}ms`,
+              animationFillMode: 'both'
+            }}
+          >
+            <div className="p-4 lg:p-6 shadow-sm hover:shadow-md transition-shadow duration-200 rounded-lg hover:scale-[1.01]">
               {/* Asset Details */}
               <div className="flex items-center gap-3">
                 <div className="flex-1">
