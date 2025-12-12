@@ -37,12 +37,12 @@ const Hero = () => {
               </clipPath>
             </defs>
           </svg>
-          <Link href="/dashboard" className="text-base-secondary text-sm">Try our interactive demo</Link>
+          <Link href="/demo" className="text-base-secondary text-sm">Try our interactive demo</Link>
         </aside>
 
         <Image
           src="/demo.png"
-          alt="FortuneOK dashboard showing portfolio performance charts and asset allocation"
+          alt="FortuneOK dashboard demo showing portfolio performance charts and asset allocation"
           className="object-contain w-full h-full"
           priority
           width={700}
