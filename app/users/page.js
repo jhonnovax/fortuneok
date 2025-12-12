@@ -274,7 +274,7 @@ export default function UsersPage() {
                     <thead>
                       <tr>
                         <th 
-                          className="cursor-pointer hover:bg-base-200 select-none"
+                          className="hidden lg:table-cell cursor-pointer hover:bg-base-200 select-none"
                           onClick={() => handleSort('_id')}
                         >
                           <div className="flex items-center">
@@ -283,7 +283,7 @@ export default function UsersPage() {
                           </div>
                         </th>
                         <th 
-                          className="cursor-pointer hover:bg-base-200 select-none"
+                          className="hidden lg:table-cell cursor-pointer hover:bg-base-200 select-none"
                           onClick={() => handleSort('name')}
                         >
                           <div className="flex items-center">
@@ -340,8 +340,8 @@ export default function UsersPage() {
                       ) : (
                         users.map((user) => (
                           <tr key={user.id}>
-                            <td className="font-mono text-xs">{user.id}</td>
-                            <td>{user.name || '-'}</td>
+                            <td className="hidden lg:table-cell font-mono text-xs">{user.id}</td>
+                            <td className="hidden lg:table-cell">{user.name || '-'}</td>
                             <td>
                               <div className="flex items-center gap-2">
                                 {user.providers && user.providers.length > 0 ? (
