@@ -102,7 +102,7 @@ export async function POST(req) {
       }
 
       case "customer.subscription.deleted": {
-        // The customer subscription stopped
+        // The customer subscription stopped, It could be immediately or at the end of the billing cycle
         // ❌ Revoke access to the product
         // The customer might have changed the plan (higher or lower plan, cancel soon etc...)
         const subscription = await stripe.subscriptions.retrieve(
