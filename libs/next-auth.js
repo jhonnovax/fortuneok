@@ -3,6 +3,8 @@ import EmailProvider from "next-auth/providers/email";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import config from "@/config";
 import connectMongo from "./mongo";
+import connectMongoose from "./mongoose";
+import User from "@/models/User";
 
 export const authOptions = {
   // Set any random key in .env.local
@@ -46,6 +48,21 @@ export const authOptions = {
   ...(connectMongo && { adapter: MongoDBAdapter(connectMongo) }),
 
   callbacks: {
+    signIn: async ({ user }) => {
+      try {
+        // Update lastAccessAt when user signs in or registers
+        await connectMongoose();
+        await User.findOneAndUpdate(
+          { email: user.email },
+          { lastAccessAt: new Date() },
+          { upsert: false }
+        );
+      } catch (error) {
+        console.error("Error updating lastAccessAt:", error);
+        // Don't block sign-in if update fails
+      }
+      return true;
+    },
     session: async ({ session, token }) => {
       if (session?.user) {
         session.user.id = token.sub;

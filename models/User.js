@@ -36,6 +36,10 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    // Tracks the last time the user logged in or registered
+    lastAccessAt: {
+      type: Date,
+    },
   },
   {
     timestamps: true,
