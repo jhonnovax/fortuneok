@@ -98,7 +98,7 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
                       </h3>
 
                       {TRADING_CATEGORIES.includes(asset.category) && (
-                        <p className="text-sm text-gray-200 dark:text-gray-300">
+                        <p className="text-sm text-body">
                           {asset.brokerName}
                         </p>
                       )}
