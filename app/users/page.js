@@ -380,11 +380,7 @@ export default function UsersPage() {
                               </div>
                             </td>
                             <td>
-                              {user.emailVerified !== undefined ? (
-                                user.emailVerified ? '✅' : '❌'
-                              ) : (
-                                'N/A'
-                              )}
+                              {user.emailVerified ? '✅' : '❌'}
                             </td>
                             <td className="font-mono text-xs">
                               {user.hasAccess ? '✅' : '❌'} {user.customerId || ''}
