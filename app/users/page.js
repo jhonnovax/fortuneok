@@ -160,7 +160,7 @@ export default function UsersPage() {
                     <span className="label-text">Search</span>
                   </label>
                   <input
-                    type="text"
+                    type="search"
                     placeholder="Search by ID, name, email, or customerId"
                     className="input input-bordered w-full"
                     value={search}
