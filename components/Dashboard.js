@@ -34,6 +34,7 @@ export default function Dashboard() {
   const { appName, appShortDescription, appDescription } = config;
 
   const [isSavingAsset, setIsSavingAsset] = useState(false);
+  const [isDeletingAsset, setIsDeletingAsset] = useState(false);
   const [submitAssetError, setSubmitAssetError] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -127,10 +128,12 @@ export default function Dashboard() {
 
   async function handleDeleteAsset(assetId) {
     try {
-      const response = await deleteAsset(assetId);
-      console.log('Deleted asset:', response);
+      setIsDeletingAsset(true);
+      await deleteAsset(assetId);
     } catch (err) {
       console.error('Failed to delete asset:', err);
+    } finally {
+      setIsDeletingAsset(false);
     }
   }
 
