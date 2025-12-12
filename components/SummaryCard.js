@@ -60,7 +60,7 @@ export default function SummaryCard({ isLoading, error, baseCurrency, filteredAs
           {showTotalValue && (
             <button 
               className="btn btn-circle btn-default btn-sm lg:btn-md"
-              title={showValues ? 'Hide portfolio value' : 'Show portfolio value'}
+              title={showValues ? 'Hide values' : 'Show values'}
               onClick={() => setShowValues(!showValues)}
             >
               {showValues ? (
