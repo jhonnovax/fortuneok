@@ -390,7 +390,18 @@ export default function UsersPage() {
                               </button>
                             </td>
                             <td className="text-sm">{user.createdAt ? formatDate(user.createdAt) : '-'}</td>
-                            <td className="text-sm">{user.lastAccessAt ? formatDate(user.lastAccessAt) : '-'}</td>
+                            <td
+                              className={`text-sm ${
+                                user.lastAccessAt &&
+                                user.createdAt &&
+                                new Date(user.lastAccessAt).toISOString().slice(0, 10) !==
+                                  new Date(user.createdAt).toISOString().slice(0, 10)
+                                  ? 'text-green-600 font-bold'
+                                  : ''
+                              }`}
+                            >
+                              {user.lastAccessAt ? formatDate(user.lastAccessAt) : '-'}
+                            </td>
                           </tr>
                         ))
                       )}
