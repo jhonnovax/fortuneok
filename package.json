@@ -24,6 +24,7 @@
     "next-auth": "^4.24.7",
     "next-sitemap": "^4.2.3",
     "react": "18.2.0",
+    "react-confetti": "^6.4.0",
     "react-currency-input-field": "^3.10.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.1",
