@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import apiClient from '@/libs/api';
 import HeaderDashboard from '@/components/HeaderDashboard';
+import { ASSET_CATEGORIES } from '@/services/assetService';
 
 export default function UsersPage() {
   const { status } = useSession();
@@ -18,8 +19,52 @@ export default function UsersPage() {
   const [hasAccess, setHasAccess] = useState('');
   const [sortField, setSortField] = useState('lastAccessAt');
   const [sortDirection, setSortDirection] = useState('desc');
+  const [selectedUserAssets, setSelectedUserAssets] = useState(null);
+  const [isAssetsModalOpen, setIsAssetsModalOpen] = useState(false);
+  const [isLoadingAssets, setIsLoadingAssets] = useState(false);
+
+  // Handle Escape key to close modal
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && isAssetsModalOpen) {
+        setIsAssetsModalOpen(false);
+        setSelectedUserAssets(null);
+      }
+    };
+
+    if (isAssetsModalOpen) {
+      window.addEventListener('keydown', handleEscape);
+      return () => window.removeEventListener('keydown', handleEscape);
+    }
+  }, [isAssetsModalOpen]);
 
   // Note: Authentication check is handled server-side in layout.js to prevent flash
+
+  // Get category label from value
+  const getCategoryLabel = (categoryValue) => {
+    const category = ASSET_CATEGORIES.find(cat => cat.value === categoryValue);
+    return category ? category.label : categoryValue;
+  };
+
+  // Handle viewing user assets
+  const handleViewAssets = async (user) => {
+    setIsAssetsModalOpen(true);
+    setIsLoadingAssets(true);
+    setSelectedUserAssets(null);
+    
+    try {
+      const response = await apiClient.get(`/users/${user.id}/assets`);
+      setSelectedUserAssets({
+        ...response,
+        userName: user.name || user.email || 'Unknown User'
+      });
+    } catch (err) {
+      console.error('Failed to fetch user assets:', err);
+      setError(err.message || 'Failed to load assets');
+    } finally {
+      setIsLoadingAssets(false);
+    }
+  };
 
   // Fetch users
   useEffect(() => {
@@ -282,6 +327,7 @@ export default function UsersPage() {
                             <SortIcon field="Customer ID" />
                           </div>
                         </th>
+                        <th>Assets</th>
                         <th 
                           className="cursor-pointer hover:bg-base-200 select-none"
                           onClick={() => handleSort('createdAt')}
@@ -305,7 +351,7 @@ export default function UsersPage() {
                     <tbody>
                       {users.length === 0 ? (
                         <tr>
-                          <td colSpan="8" className="text-center py-8">
+                          <td colSpan="9" className="text-center py-8">
                             No users found
                           </td>
                         </tr>
@@ -326,6 +372,21 @@ export default function UsersPage() {
                               {user.hasAccess ? '✅' : '❌'}
                             </td>
                             <td className="font-mono text-xs">{user.customerId || '❌'}</td>
+                            <td>
+                              <button
+                                className="btn btn-sm btn-primary"
+                                onClick={() => handleViewAssets(user)}
+                                disabled={!user.assetStats || user.assetStats.totalAssets === 0}
+                              >
+                                {user.assetStats ? (
+                                  <span className="text-sm">
+                                    {user.assetStats.totalCategories} categories, {user.assetStats.totalAssets} assets
+                                  </span>
+                                ) : (
+                                  '0 categories, 0 assets'
+                                )}
+                              </button>
+                            </td>
                             <td className="text-sm">{user.createdAt ? formatDate(user.createdAt) : '❌'}</td>
                             <td className="text-sm">{user.lastAccessAt ? formatDate(user.lastAccessAt) : '❌'}</td>
                           </tr>
@@ -365,6 +426,143 @@ export default function UsersPage() {
           </div>
         </main>
       </div>
+
+      {/* Assets Modal */}
+      {isAssetsModalOpen && (
+        <div className="modal modal-open">
+          <div className="modal-box max-w-4xl max-h-[90vh] p-0 flex flex-col">
+            {/* Fixed Header */}
+            <div className="flex items-center justify-between p-6 border-b border-base-300">
+              <h3 className="font-bold text-lg">
+                Assets for {selectedUserAssets?.userName || 'User'}
+              </h3>
+              <button
+                className="btn btn-sm btn-circle btn-ghost"
+                onClick={() => {
+                  setIsAssetsModalOpen(false);
+                  setSelectedUserAssets(null);
+                }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            {/* Scrollable Body */}
+            <div className="flex-1 overflow-y-auto p-6">
+              {isLoadingAssets ? (
+                <div className="flex justify-center py-8">
+                  <span className="loading loading-spinner loading-lg"></span>
+                </div>
+              ) : selectedUserAssets ? (
+                <div className="space-y-6">
+                  <div className="stats border shadow-md">
+                    <div className="stat">
+                      <div className="stat-title text-base-content">Total Categories</div>
+                      <div className="stat-value text-green-600">{selectedUserAssets.totalCategories}</div>
+                    </div>
+                    <div className="stat">
+                      <div className="stat-title text-base-content">Total Assets</div>
+                      <div className="stat-value text-green-600">{selectedUserAssets.totalAssets}</div>
+                    </div>
+                  </div>
+
+                  {selectedUserAssets.categories && selectedUserAssets.categories.length > 0 ? (
+                    <div className="space-y-4">
+                      {selectedUserAssets.categories.map((categoryData) => (
+                        <div key={categoryData.category} className="card bg-base-200 shadow">
+                          <div className="card-body p-4">
+                            <h4 className="card-title text-base mb-0">
+                              {getCategoryLabel(categoryData.category)} ({categoryData.count} {categoryData.count === 1 ? 'asset' : 'assets'})
+                            </h4>
+                            <div className="space-y-3">
+                              {categoryData.assets.map((asset) => {
+                                // Format date without time
+                                const formatDateOnly = (dateString) => {
+                                  if (!dateString) return null;
+                                  try {
+                                    const date = new Date(dateString);
+                                    const day = date.getDate();
+                                    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                                    const month = monthNames[date.getMonth()];
+                                    const year = date.getFullYear();
+                                    return `${day}/${month}/${year}`;
+                                  } catch {
+                                    return null;
+                                  }
+                                };
+
+                                const dateOnly = formatDateOnly(asset.date);
+                                const valuation = asset.currentValuation?.amount 
+                                  ? `${asset.currentValuation.currency} ${asset.currentValuation.amount.toLocaleString()}`
+                                  : null;
+                                
+                                return (
+                                  <div key={asset.id} className="flex items-start gap-3 py-2 border-b border-base-300 last:border-b-0">
+                                    <div className="flex-1">
+                                      {/* First line: Asset Description - larger, darker, title case */}
+                                      <div className="text-base font-medium text-base-content mb-1">
+                                        {asset.description || 'N/A'}
+                                      </div>
+                                      
+                                      {/* Second line: Date without time - smaller, lighter grey */}
+                                      {dateOnly && (
+                                        <div className="text-xs text-base-content/60 mb-1">
+                                          {dateOnly}
+                                        </div>
+                                      )}
+                                      
+                                      {/* Third line: Valuation - smaller, lighter grey */}
+                                      {valuation && (
+                                        <div className="text-xs text-base-content/60 mb-1">
+                                          {valuation}
+                                        </div>
+                                      )}
+                                      
+                                      {/* Fourth line: Shares (if exists) - smaller, lighter grey */}
+                                      {asset.shares && (
+                                        <div className="text-xs text-base-content/60 mb-1">
+                                          {asset.shares} shares
+                                        </div>
+                                      )}
+                                      
+                                      {/* Fifth line: BrokerName (if exists) - smaller, lighter grey */}
+                                      {asset.brokerName && (
+                                        <div className="text-xs text-base-content/60">
+                                          {asset.brokerName}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-base-content/70">
+                      No assets found
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-base-content/70">
+                  Failed to load assets
+                </div>
+              )}
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button onClick={() => {
+              setIsAssetsModalOpen(false);
+              setSelectedUserAssets(null);
+            }}>close</button>
+          </form>
+        </div>
+      )}
     </div>
   );
 }

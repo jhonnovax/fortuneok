@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next";
 import mongoose from "mongoose";
 import connectMongo from "@/libs/mongoose";
 import User from "@/models/User";
+import Asset from "@/models/Asset";
 import { authOptions } from "@/libs/next-auth";
 
 // GET - Retrieve all users with pagination and filters
@@ -102,10 +103,38 @@ export async function GET(req) {
       .limit(limit)
       .lean();
     
-    // Format users to include id field
+    // Get asset statistics for each user
+    const userIds = users.map(user => user._id);
+    const assetStats = await Asset.aggregate([
+      { $match: { userId: { $in: userIds } } },
+      {
+        $group: {
+          _id: "$userId",
+          totalAssets: { $sum: 1 },
+          categories: { $addToSet: "$category" }
+        }
+      }
+    ]);
+
+    // Create a map of userId to asset stats
+    const assetStatsMap = {};
+    assetStats.forEach(stat => {
+      assetStatsMap[stat._id.toString()] = {
+        totalAssets: stat.totalAssets,
+        totalCategories: stat.categories.length,
+        categories: stat.categories
+      };
+    });
+
+    // Format users to include id field and asset stats
     const formattedUsers = users.map((user) => ({
       ...user,
       id: user._id.toString(),
+      assetStats: assetStatsMap[user._id.toString()] || {
+        totalAssets: 0,
+        totalCategories: 0,
+        categories: []
+      }
     }));
     
     return NextResponse.json({
