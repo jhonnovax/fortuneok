@@ -5,6 +5,7 @@ import connectMongo from "@/libs/mongoose";
 import User from "@/models/User";
 import Asset from "@/models/Asset";
 import { authOptions } from "@/libs/next-auth";
+import clientPromise from "@/libs/mongo";
 
 // GET - Retrieve all users with pagination and filters
 export async function GET(req) {
@@ -126,10 +127,63 @@ export async function GET(req) {
       };
     });
 
-    // Format users to include id field and asset stats
+    // Get provider information from accounts collection
+    // NextAuth stores accounts with userId referencing NextAuth's users collection
+    // We need to match by email since our User model and NextAuth's users might have different IDs
+    const client = await clientPromise;
+    const db = client.db();
+    const accountsCollection = db.collection("accounts");
+    const nextAuthUsersCollection = db.collection("users");
+    
+    // Get user emails
+    const userEmails = users.map(user => user.email).filter(Boolean);
+    
+    // First, get NextAuth users by email to get their IDs
+    const nextAuthUsers = await nextAuthUsersCollection.find({
+      email: { $in: userEmails }
+    }).toArray();
+    
+    // Create a map of email to NextAuth userId
+    const emailToNextAuthUserId = {};
+    nextAuthUsers.forEach(naUser => {
+      if (naUser.email) {
+        emailToNextAuthUserId[naUser.email.toLowerCase()] = naUser._id;
+      }
+    });
+    
+    // Get all NextAuth userIds
+    const nextAuthUserIds = Object.values(emailToNextAuthUserId);
+    
+    // Query accounts by NextAuth userId
+    const accounts = await accountsCollection.find({
+      userId: { $in: nextAuthUserIds }
+    }).toArray();
+
+    // Create a map of email to providers array
+    const emailToProvidersMap = {};
+    accounts.forEach(account => {
+      if (account.userId) {
+        // Find the email for this NextAuth userId
+        const email = Object.keys(emailToNextAuthUserId).find(
+          e => emailToNextAuthUserId[e].toString() === account.userId.toString()
+        );
+        if (email) {
+          if (!emailToProvidersMap[email]) {
+            emailToProvidersMap[email] = [];
+          }
+          // Add provider if not already in array
+          if (!emailToProvidersMap[email].includes(account.provider)) {
+            emailToProvidersMap[email].push(account.provider);
+          }
+        }
+      }
+    });
+
+    // Format users to include id field, asset stats, and providers array
     const formattedUsers = users.map((user) => ({
       ...user,
       id: user._id.toString(),
+      providers: user.email ? (emailToProvidersMap[user.email.toLowerCase()] || ['email']) : ['email'],
       assetStats: assetStatsMap[user._id.toString()] || {
         totalAssets: 0,
         totalCategories: 0,
