@@ -14,7 +14,7 @@ export default function AddAssetFloatingButton({ onAddAsset }) {
 
       {/* Hidden text, displayed on desktop */}
       <span className="hidden md:block pr-2">
-        Add Asset
+        Add asset
       </span>
     </button>
   )

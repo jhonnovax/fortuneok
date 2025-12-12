@@ -5,7 +5,7 @@ export default function EmptyState({
   description = "Add your first asset to begin tracking your wealth and see your portfolio grow.",
   icon,
   onAction,
-  actionLabel = "Add Your First Asset",
+  actionLabel = "Add our first asset",
   variant = "default" // 'default' or 'chart'
 }) {
   
@@ -71,7 +71,7 @@ export default function EmptyState({
       {onAction && (
         <button
           onClick={onAction}
-          className="btn btn-primary btn-lg gap-2 group hover:scale-105 transition-transform duration-200"
+          className="btn btn-primary btn-lg gap-2 group hover:scale-105 transition-transform duration-200 text-sm lg:text-lg"
         >
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
@@ -93,8 +93,8 @@ export default function EmptyState({
       {/* Motivational Tips */}
       {variant === 'default' && (
         <div className="mt-8 pt-6 border-t border-base-300 w-full max-w-md">
-          <p className="text-sm text-base-content/60 mb-4 font-medium">Quick Tips:</p>
-          <div className="flex flex-col gap-2 text-sm text-base-content/50">
+          <p className="text-sm text-base-content/80 mb-4 font-medium">Quick Tips:</p>
+          <div className="flex flex-col gap-2 text-sm text-base-content/70">
             <div className="flex items-start gap-2">
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 

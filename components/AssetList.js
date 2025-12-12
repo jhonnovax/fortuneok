@@ -86,7 +86,7 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
           title="No Assets Yet"
           description="Start building your portfolio by adding your first asset. Track stocks, bonds, cryptocurrencies, and more to get a complete view of your wealth."
           onAction={onAddAsset}
-          actionLabel="Add Your First Asset"
+          actionLabel="Add our first asset"
           variant="default"
         />
       </div>

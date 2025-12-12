@@ -103,7 +103,7 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, s
         title="Portfolio Allocation"
         description="Once you add assets, you'll see a beautiful visualization of how your portfolio is allocated across different investments."
         onAction={onAddAsset}
-        actionLabel="Add Assets to Get Started"
+        actionLabel="Add assets to get started"
         variant="chart"
       />
     );
