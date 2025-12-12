@@ -156,6 +156,7 @@ export default function Dashboard() {
       onEditAsset={handleEditAsset} 
       onDeleteAsset={handleDeleteAsset}
       onViewDetails={handleViewDetails}
+      onAddAsset={handleNewAsset}
     />
   );
 
@@ -219,6 +220,7 @@ export default function Dashboard() {
             error={error}
             filteredAssetData={filteredAssets} 
             showValues={showValues}
+            onAddAsset={handleNewAsset}
           />
 
           {/* Mobile Assets List */}

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { formatDateToString, formatFullCurrency, formatNumber, formatPercentage, maskValue } from '@/services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
+import EmptyState from './EmptyState';
 import { getAssetCategoryGroupIcon, getAssetPercentage } from '@/services/assetService';
 import { getChartColors } from '@/services/chartService';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
@@ -29,7 +30,7 @@ const TRADING_CATEGORIES = [
 ];
 
 
-export default function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategory, totalAssetsValue, showMoreActions, showViewDetails, showValues, onEditAsset, onDeleteAsset, onViewDetails }) {
+export default function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategory, totalAssetsValue, showMoreActions, showViewDetails, showValues, onEditAsset, onDeleteAsset, onViewDetails, onAddAsset }) {
 
   const moreActionsDropdownRef = useRef(null);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, assetId: null });
@@ -79,7 +80,17 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
     assetListUI = <ErrorLoadingData error={error} />;
   }
   else if (assetData.length === 0) {
-    assetListUI = (<p className="p4 lg:p-6 text-md text-center text-base-content/60">No assets found. Add your first asset to get started.</p>);
+    assetListUI = (
+      <div className="p-4 lg:p-6">
+        <EmptyState
+          title="No Assets Yet"
+          description="Start building your portfolio by adding your first asset. Track stocks, bonds, cryptocurrencies, and more to get a complete view of your wealth."
+          onAction={onAddAsset}
+          actionLabel="Add Your First Asset"
+          variant="default"
+        />
+      </div>
+    );
   }
   else {
     assetListUI = (

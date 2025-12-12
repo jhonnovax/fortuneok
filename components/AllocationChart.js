@@ -10,6 +10,7 @@ import {
 import { useMemo } from 'react';
 import { formatCurrency, formatPercentage, maskValue } from '../services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
+import EmptyState from './EmptyState';
 import { getChartColors } from '../services/chartService';
 import { BREAKPOINTS } from '@/services/breakpointService';
 import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
@@ -36,7 +37,7 @@ const CustomTooltip = ({ active, payload, showValues }) => {
   return null;
 };
 
-export default function AllocationChart({ isLoading, error, filteredAssetData, showValues }) {
+export default function AllocationChart({ isLoading, error, filteredAssetData, showValues, onAddAsset }) {
 
   const { breakpointInPixels } = useTailwindBreakpoint();
   const theme = useSystemTheme();
@@ -98,9 +99,13 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, s
     );
   } else if (filteredAssetData.length === 0) {
     chartUI = (
-      <p className="text-center text-base-content/60">
-        No allocation data available. Add assets to see your portfolio allocation.
-      </p>
+      <EmptyState
+        title="Portfolio Allocation"
+        description="Once you add assets, you'll see a beautiful visualization of how your portfolio is allocated across different investments."
+        onAction={onAddAsset}
+        actionLabel="Add Assets to Get Started"
+        variant="chart"
+      />
     );
   } else {
     chartUI = (
@@ -150,7 +155,7 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, s
       </h2>
 
       {/* Chart */}
-      <div className="card-body p-4 lg:p-6 h-[300px] lg:h-[400px] items-center justify-center">
+      <div className={`card-body p-4 lg:p-6 items-center justify-center ${filteredAssetData.length > 0 ? 'h-[300px] lg:h-[400px]' : ''}`}>
         {chartUI}
       </div>
 
