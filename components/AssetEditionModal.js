@@ -69,25 +69,117 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
     return Object.keys(newErrors).length === 0;
   };
 
+  // Validate a single field
+  const validateField = (fieldName, formData) => {
+    const isTradingCategory = TRADING_CATEGORIES.includes(formData.category);
+    const fieldErrors = {};
+
+    switch (fieldName) {
+      case 'date':
+        if (!formData.date) fieldErrors.date = 'Date is required';
+        break;
+      case 'category':
+        if (!formData.category) fieldErrors.category = 'Category is required';
+        break;
+      case 'brokerName':
+        if (isTradingCategory && !formData.brokerName) fieldErrors.brokerName = 'Broker name is required';
+        break;
+      case 'description':
+        if (!isTradingCategory && !formData.description) fieldErrors.description = 'Description is required';
+        break;
+      case 'symbol':
+        if (isTradingCategory && !formData.symbol) fieldErrors.symbol = 'Symbol is required';
+        break;
+      case 'shares':
+        if (isTradingCategory && !formData.shares) {
+          fieldErrors.shares = 'Shares is required';
+        } else if (isTradingCategory && isNaN(Number(formData.shares))) {
+          fieldErrors.shares = 'Enter a valid number';
+        }
+        break;
+      case 'currentValuationCurrency':
+        if (!isTradingCategory && !formData.currentValuation?.currency) {
+          fieldErrors.currentValuationCurrency = 'Currency is required';
+        }
+        break;
+      case 'currentValuation':
+        if (!isTradingCategory && !formData.currentValuation?.amount) {
+          fieldErrors.currentValuation = 'Amount is required';
+        } else if (!isTradingCategory && isNaN(Number(formData.currentValuation?.amount))) {
+          fieldErrors.currentValuation = 'Enter a valid number';
+        }
+        break;
+    }
+
+    return fieldErrors;
+  };
+
   const handleSubmit = async () => {
     if (!validateForm()) return;
     
     onSave(form);
   };
 
-  // Helper function to update form and trigger validation
-  const updateForm = (updates) => {
+  // Helper function to update form and trigger validation for specific field
+  const updateForm = (updates, fieldName) => {
     hasInteractedRef.current = true;
-    setForm(prevForm => ({ ...prevForm, ...updates }));
+    setForm(prevForm => {
+      const newForm = { ...prevForm, ...updates };
+      
+      // Validate only the changed field
+      if (fieldName && hasInteractedRef.current) {
+        const fieldErrors = validateField(fieldName, newForm);
+        setErrors(prevErrors => {
+          const newErrors = { ...prevErrors };
+          
+          // Map field names to their error keys
+          const fieldToErrorKey = {
+            'date': 'date',
+            'category': 'category',
+            'brokerName': 'brokerName',
+            'description': 'description',
+            'symbol': 'symbol',
+            'shares': 'shares',
+            'currentValuationCurrency': 'currentValuationCurrency',
+            'currentValuation': 'currentValuation'
+          };
+          
+          const errorKey = fieldToErrorKey[fieldName];
+          
+          // Update or clear error for the validated field
+          if (errorKey) {
+            if (fieldErrors[errorKey]) {
+              // Set error if validation failed
+              newErrors[errorKey] = fieldErrors[errorKey];
+            } else {
+              // Clear error if field is now valid
+              delete newErrors[errorKey];
+            }
+          }
+          
+          // If category changed, clear errors for fields that are no longer relevant
+          if (fieldName === 'category') {
+            const isTradingCategory = TRADING_CATEGORIES.includes(newForm.category);
+            if (isTradingCategory) {
+              // Clear non-trading category errors
+              delete newErrors.description;
+              delete newErrors.currentValuationCurrency;
+              delete newErrors.currentValuation;
+            } else {
+              // Clear trading category errors
+              delete newErrors.brokerName;
+              delete newErrors.symbol;
+              delete newErrors.shares;
+            }
+          }
+          
+          return newErrors;
+        });
+      }
+      
+      return newForm;
+    });
   };
-
-  // Validate form whenever it changes (after user interaction)
-  useEffect(() => {
-    if (hasInteractedRef.current) {
-      const newErrors = validateAssetData(form);
-      setErrors(newErrors);
-    }
-  }, [form]);
 
   // Reset form when modal opens
   useEffect(() => {
@@ -184,7 +276,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                     type="date"
                     className={`input input-bordered w-full ${errors.date ? 'input-error' : ''}`}
                     value={form.date}
-                    onChange={(e) => updateForm({ date: e.target.value })}
+                    onChange={(e) => updateForm({ date: e.target.value }, 'date')}
                     onClick={(e) => {
                       if (e.target.showPicker) {
                         e.target.showPicker();
@@ -200,7 +292,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                   <select 
                     className={`select select-bordered w-full ${errors.category ? 'select-error' : ''}`}
                     value={form.category}
-                    onChange={(e) => updateForm({ category: e.target.value })}
+                    onChange={(e) => updateForm({ category: e.target.value }, 'category')}
                     placeholder="Select category"
                     disabled={isSubmitting}
                   >
@@ -220,7 +312,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                         type="text"
                         className={`input input-bordered w-full ${errors.brokerName ? 'input-error' : ''}`}
                         value={form.brokerName}
-                        onChange={(e) => updateForm({ brokerName: e.target.value })}
+                        onChange={(e) => updateForm({ brokerName: e.target.value }, 'brokerName')}
                         placeholder="Enter broker name"
                         disabled={isSubmitting}
                       />
@@ -232,7 +324,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                         type="text"
                         className={`input input-bordered w-full ${errors.description ? 'input-error' : ''}`}
                         value={form.description}
-                        onChange={(e) => updateForm({ description: e.target.value })}
+                        onChange={(e) => updateForm({ description: e.target.value }, 'description')}
                         placeholder="Enter asset description"
                         disabled={isSubmitting}
                       />
@@ -271,7 +363,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                             <span className="text-base-content text-ellipsis overflow-hidden whitespace-nowrap">{suggestion.label}</span>
                           </div>
                         )}
-                        onSelect={(value) => updateForm({ currentValuation: { ...form.currentValuation, currency: value } })}
+                        onSelect={(value) => updateForm({ currentValuation: { ...form.currentValuation, currency: value } }, 'currentValuationCurrency')}
                       />
                     </div>
 
@@ -285,7 +377,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                         className={`input input-bordered w-full ${errors.currentValuation ? 'input-error' : ''}`}
                         value={form.currentValuation?.amount}
                         decimalsLimit={2}
-                        onValueChange={(value) => updateForm({ currentValuation: { ...form.currentValuation, amount: value } })}
+                        onValueChange={(value) => updateForm({ currentValuation: { ...form.currentValuation, amount: value } }, 'currentValuation')}
                         disabled={isSubmitting}
                         allowNegativeValue={false}
                         decimalSeparator="."
@@ -306,7 +398,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                           placeholder="Select symbol"
                           type={form.category}
                           value={form.symbol}
-                          onSelect={(value) => updateForm({ symbol: value })}
+                          onSelect={(value) => updateForm({ symbol: value }, 'symbol')}
                         />
                       </div>
                       <div className="form-control">
@@ -318,7 +410,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                           className={`input input-bordered w-full ${errors.shares ? 'input-error' : ''}`}
                           value={form.shares}
                           decimalsLimit={6}
-                          onValueChange={(value) => updateForm({ shares: value })}
+                          onValueChange={(value) => updateForm({ shares: value }, 'shares')}
                           disabled={isSubmitting}
                           allowNegativeValue={false}
                           disableGroupSeparators={true}
