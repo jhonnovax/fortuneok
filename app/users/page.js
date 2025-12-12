@@ -314,16 +314,7 @@ export default function UsersPage() {
                           onClick={() => handleSort('hasAccess')}
                         >
                           <div className="flex items-center">
-                            Has Access
-                            <SortIcon field="Has Access" />
-                          </div>
-                        </th>
-                        <th 
-                          className="cursor-pointer hover:bg-base-200 select-none"
-                          onClick={() => handleSort('customerId')}
-                        >
-                          <div className="flex items-center">
-                            Customer ID
+                          Customer ID
                             <SortIcon field="Customer ID" />
                           </div>
                         </th>
@@ -395,10 +386,9 @@ export default function UsersPage() {
                                 'N/A'
                               )}
                             </td>
-                            <td>
-                              {user.hasAccess ? '✅' : '❌'}
+                            <td className="font-mono text-xs">
+                              {user.hasAccess ? '✅' : '❌'} {user.customerId || ''}
                             </td>
-                            <td className="font-mono text-xs">{user.customerId || '❌'}</td>
                             <td>
                               <button
                                 className="btn btn-sm btn-primary"
