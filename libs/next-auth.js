@@ -51,14 +51,41 @@ export const authOptions = {
     signIn: async ({ user }) => {
       try {
         // Update lastAccessAt when user signs in or registers
+        // Also ensure createdAt is set for email provider users
         await connectMongoose();
-        await User.findOneAndUpdate(
-          { email: user.email },
-          { lastAccessAt: new Date() },
-          { upsert: false }
-        );
+        const existingUser = await User.findOne({ email: user.email });
+        
+        const updateData = { lastAccessAt: new Date() };
+        
+        // If user exists but createdAt is missing (common with email provider),
+        // set it to now. This happens because MongoDB adapter bypasses Mongoose timestamps.
+        if (existingUser && !existingUser.createdAt) {
+          updateData.createdAt = new Date();
+        }
+        
+        // If user doesn't exist yet (shouldn't happen, but handle edge case),
+        // create with createdAt. Otherwise just update.
+        if (!existingUser) {
+          updateData.createdAt = new Date();
+          await User.findOneAndUpdate(
+            { email: user.email },
+            {
+              email: user.email,
+              name: user.name,
+              image: user.image,
+              ...updateData,
+            },
+            { upsert: true, setDefaultsOnInsert: true }
+          );
+        } else {
+          await User.findOneAndUpdate(
+            { email: user.email },
+            updateData,
+            { upsert: false }
+          );
+        }
       } catch (error) {
-        console.error("Error updating lastAccessAt:", error);
+        console.error("Error updating user:", error);
         // Don't block sign-in if update fails
       }
       return true;
