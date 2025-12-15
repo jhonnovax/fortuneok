@@ -85,14 +85,10 @@ export async function GET(req) {
 
     // Get query parameters
     const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get("page") || "1", 10);
-    const limit = parseInt(searchParams.get("limit") || "20", 10);
     const search = searchParams.get("search") || "";
     const action = searchParams.get("action") || "";
     const errorType = searchParams.get("errorType") || "";
     const userEmail = searchParams.get("userEmail") || "";
-    const startDate = searchParams.get("startDate") || "";
-    const endDate = searchParams.get("endDate") || "";
     const sortField = searchParams.get("sortField") || "createdAt";
     const sortDirection = searchParams.get("sortDirection") || "desc";
 
@@ -132,36 +128,16 @@ export async function GET(req) {
       filterConditions.push({ userEmail: { $regex: userEmail, $options: "i" } });
     }
 
-    // Date range filter
-    if (startDate || endDate) {
-      const dateFilter = {};
-      if (startDate) {
-        dateFilter.$gte = new Date(startDate);
-      }
-      if (endDate) {
-        dateFilter.$lte = new Date(endDate);
-      }
-      filterConditions.push({ createdAt: dateFilter });
-    }
-
     // Combine all filter conditions with $and
     const filter = filterConditions.length > 0 ? { $and: filterConditions } : {};
-
-    // Calculate pagination
-    const skip = (page - 1) * limit;
-
-    // Get total count for pagination
-    const total = await Log.countDocuments(filter);
 
     // Build sort object
     const sortOrder = sortDirection === "asc" ? 1 : -1;
     const sort = { [sortField]: sortOrder };
 
-    // Fetch logs with pagination
+    // Fetch all logs (no pagination)
     const logs = await Log.find(filter)
       .sort(sort)
-      .skip(skip)
-      .limit(limit)
       .lean();
 
     // Format logs to include id field
@@ -172,12 +148,6 @@ export async function GET(req) {
 
     return NextResponse.json({
       logs: formattedLogs,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
     });
   } catch (error) {
     console.error("Error fetching logs:", error);

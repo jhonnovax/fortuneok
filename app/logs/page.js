@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import apiClient from '@/libs/api';
 import HeaderDashboard from '@/components/HeaderDashboard';
@@ -10,19 +10,18 @@ export default function LogsPage() {
   const [logs, setLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState('');
   const [action, setAction] = useState('');
   const [errorType, setErrorType] = useState('');
   const [userEmail, setUserEmail] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
   const [sortField, setSortField] = useState('createdAt');
   const [sortDirection, setSortDirection] = useState('desc');
   const [selectedLog, setSelectedLog] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedLogIds, setSelectedLogIds] = useState(new Set());
+  const [isDeleting, setIsDeleting] = useState(false);
+  const selectAllCheckboxRef = useRef(null);
 
   // Handle Escape key to close modal
   useEffect(() => {
@@ -47,10 +46,7 @@ export default function LogsPage() {
       setIsLoading(true);
       setError(null);
       try {
-        const params = new URLSearchParams({
-          page: page.toString(),
-          limit: '20',
-        });
+        const params = new URLSearchParams();
 
         if (search) {
           params.append('search', search);
@@ -64,20 +60,13 @@ export default function LogsPage() {
         if (userEmail) {
           params.append('userEmail', userEmail);
         }
-        if (startDate) {
-          params.append('startDate', startDate);
-        }
-        if (endDate) {
-          params.append('endDate', endDate);
-        }
         
         params.append('sortField', sortField);
         params.append('sortDirection', sortDirection);
 
         const response = await apiClient.get(`/logs?${params.toString()}`);
         setLogs(response.logs || []);
-        setTotalPages(response.pagination?.totalPages || 1);
-        setTotal(response.pagination?.total || 0);
+        setTotal(response.logs?.length || 0);
       } catch (err) {
         console.error('Failed to fetch logs:', err);
         setError(err.message || 'Failed to load logs');
@@ -87,12 +76,8 @@ export default function LogsPage() {
     };
 
     fetchLogs();
-  }, [page, search, action, errorType, userEmail, startDate, endDate, sortField, sortDirection, status]);
+  }, [search, action, errorType, userEmail, sortField, sortDirection, status]);
 
-  // Reset to page 1 when filters or sort change
-  useEffect(() => {
-    setPage(1);
-  }, [search, action, errorType, userEmail, startDate, endDate, sortField, sortDirection]);
 
   // Handle column header click for sorting
   const handleSort = (field) => {
@@ -165,11 +150,79 @@ export default function LogsPage() {
       setLogs(logs.filter(log => log.id !== logId));
       // Update total count
       setTotal(total - 1);
+      // Remove from selected if it was selected
+      setSelectedLogIds((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(logId);
+        return newSet;
+      });
     } catch (err) {
       // Error is already handled by apiClient interceptor
       console.error('Failed to delete log:', err);
     }
   };
+
+  const handleToggleSelectLog = (logId) => {
+    setSelectedLogIds((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(logId)) {
+        newSet.delete(logId);
+      } else {
+        newSet.add(logId);
+      }
+      return newSet;
+    });
+  };
+
+  const handleSelectAll = () => {
+    if (selectedLogIds.size === logs.length) {
+      // Deselect all
+      setSelectedLogIds(new Set());
+    } else {
+      // Select all
+      setSelectedLogIds(new Set(logs.map((log) => log.id)));
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedLogIds.size === 0) return;
+
+    const count = selectedLogIds.size;
+    if (!confirm(`Are you sure you want to delete ${count} log entry(ies)?`)) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      const logIdsArray = Array.from(selectedLogIds);
+      // Use POST to bulk delete endpoint
+      await apiClient.post('/logs/bulk-delete', {
+        logIds: logIdsArray,
+      });
+
+      // Remove deleted logs from state
+      setLogs(logs.filter((log) => !selectedLogIds.has(log.id)));
+      setTotal(total - count);
+      // Clear selection
+      setSelectedLogIds(new Set());
+    } catch (err) {
+      console.error('Failed to delete logs:', err);
+      // Error is already handled by apiClient interceptor
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  // Calculate select all checkbox state
+  const isAllSelected = logs.length > 0 && selectedLogIds.size === logs.length;
+  const isIndeterminate = selectedLogIds.size > 0 && selectedLogIds.size < logs.length;
+
+  // Update indeterminate state of select all checkbox
+  useEffect(() => {
+    if (selectAllCheckboxRef.current) {
+      selectAllCheckboxRef.current.indeterminate = isIndeterminate;
+    }
+  }, [isIndeterminate]);
 
   if (status === 'loading') {
     return (
@@ -263,39 +316,50 @@ export default function LogsPage() {
                     onChange={(e) => setUserEmail(e.target.value)}
                   />
                 </div>
-
-                {/* Start Date Filter */}
-                <div className="form-control w-full">
-                  <label className="label py-1 sm:py-2">
-                    <span className="label-text text-xs sm:text-sm">Start Date</span>
-                  </label>
-                  <input
-                    type="datetime-local"
-                    className="input input-bordered w-full input-sm sm:input-md"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                  />
-                </div>
-
-                {/* End Date Filter */}
-                <div className="form-control w-full">
-                  <label className="label py-1 sm:py-2">
-                    <span className="label-text text-xs sm:text-sm">End Date</span>
-                  </label>
-                  <input
-                    type="datetime-local"
-                    className="input input-bordered w-full input-sm sm:input-md"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                  />
-                </div>
               </div>
 
-              {/* Results Count */}
-              <div className="mb-3 sm:mb-4">
+              {/* Results Count and Bulk Actions */}
+              <div className="mb-3 sm:mb-4 flex items-center justify-between flex-wrap gap-2">
                 <p className="text-xs sm:text-sm text-base-content/70">
                   Showing {logs.length} of {total} logs
+                  {selectedLogIds.size > 0 && (
+                    <span className="ml-2 text-secondary font-semibold">
+                      ({selectedLogIds.size} selected)
+                    </span>
+                  )}
                 </p>
+                {selectedLogIds.size > 0 && (
+                  <button
+                    className="btn btn-error btn-sm"
+                    onClick={handleBulkDelete}
+                    disabled={isDeleting}
+                  >
+                    {isDeleting ? (
+                      <>
+                        <span className="loading loading-spinner loading-xs"></span>
+                        Deleting...
+                      </>
+                    ) : (
+                      <>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          />
+                        </svg>
+                        Delete Selected ({selectedLogIds.size})
+                      </>
+                    )}
+                  </button>
+                )}
               </div>
 
               {/* Loading State */}
@@ -318,6 +382,16 @@ export default function LogsPage() {
                   <table className="table table-zebra w-full min-w-[1000px]">
                     <thead>
                       <tr>
+                        <th className="w-12">
+                          <input
+                            type="checkbox"
+                            className="checkbox checkbox-sm"
+                            checked={isAllSelected}
+                            ref={selectAllCheckboxRef}
+                            onChange={handleSelectAll}
+                            aria-label="Select all logs"
+                          />
+                        </th>
                         <th 
                           className="cursor-pointer hover:bg-base-200 select-none"
                           onClick={() => handleSort('createdAt')}
@@ -354,13 +428,22 @@ export default function LogsPage() {
                     <tbody>
                       {logs.length === 0 ? (
                         <tr>
-                          <td colSpan="7" className="text-center py-8">
+                          <td colSpan="8" className="text-center py-8">
                             No logs found
                           </td>
                         </tr>
                       ) : (
                         logs.map((log) => (
                           <tr key={log.id}>
+                            <td>
+                              <input
+                                type="checkbox"
+                                className="checkbox checkbox-sm"
+                                checked={selectedLogIds.has(log.id)}
+                                onChange={() => handleToggleSelectLog(log.id)}
+                                aria-label={`Select log ${log.id}`}
+                              />
+                            </td>
                             <td className="text-sm">{formatDate(log.createdAt)}</td>
                             <td>
                               <span className={`badge ${getErrorTypeBadge(log.errorType)}`}>
@@ -417,31 +500,6 @@ export default function LogsPage() {
                 </div>
               )}
 
-              {/* Pagination */}
-              {!isLoading && !error && totalPages > 1 && (
-                <div className="flex justify-center mt-4 sm:mt-6">
-                  <div className="join">
-                    <button
-                      className="join-item btn btn-xs sm:btn-sm md:btn-md"
-                      onClick={() => setPage((p) => Math.max(1, p - 1))}
-                      disabled={page === 1}
-                    >
-                      «
-                    </button>
-                    <button className="join-item btn btn-xs sm:btn-sm md:btn-md" disabled>
-                      <span className="hidden sm:inline">Page </span>
-                      {page} <span className="hidden sm:inline">of {totalPages}</span>
-                    </button>
-                    <button
-                      className="join-item btn btn-xs sm:btn-sm md:btn-md"
-                      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                      disabled={page === totalPages}
-                    >
-                      »
-                    </button>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </main>
