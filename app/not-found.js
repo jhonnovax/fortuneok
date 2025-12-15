@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import ButtonSupport from "@/components/ButtonSupport";
 import config from "@/config";
 import { useEffect, useState } from "react";
@@ -169,7 +168,7 @@ export default function Custom404() {
 
         {/* Action Buttons */}
         <div className="flex flex-wrap gap-4 justify-center items-center">
-          <Link 
+          <a 
             href="/" 
             className="btn btn-primary btn-lg gap-2 group hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
           >
@@ -186,7 +185,7 @@ export default function Custom404() {
               />
             </svg>
             Go Home
-          </Link>
+          </a>
 
           <ButtonSupport />
         </div>
