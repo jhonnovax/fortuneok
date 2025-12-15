@@ -28,15 +28,24 @@ export default function CategorySelect({
 
   // Group categories by group property
   const groupedCategories = useMemo(() => {
-    return ASSET_CATEGORIES.reduce((groups, category) => {
+    const groups = ASSET_CATEGORIES.reduce((groups, category) => {
       const groupKey = category.group;
       if (!groups[groupKey]) {
         // Find the group header category (where value === group) or use first item
         const groupHeader = ASSET_CATEGORIES.find(cat => cat.group === groupKey && cat.value === groupKey) || category;
         const labelText = extractLabelText(groupHeader.label);
+        
+        // Custom group labels
+        let displayLabel = labelText;
+        if (groupKey === 'cash') {
+          displayLabel = 'Cash Category';
+        } else if (groupKey === 'stocks') {
+          displayLabel = 'Stock Category';
+        }
+        
         groups[groupKey] = {
           groupKey,
-          groupLabel: labelText,
+          groupLabel: displayLabel,
           icon: groupHeader.icon,
           items: []
         };
@@ -44,6 +53,7 @@ export default function CategorySelect({
       groups[groupKey].items.push(category);
       return groups;
     }, {});
+    return groups;
   }, []);
 
   // Flatten groups into a selectable list for keyboard navigation
@@ -52,15 +62,16 @@ export default function CategorySelect({
     return Object.values(groupedCategories).flatMap(group => {
       const list = [];
       const isGroupExpanded = expandedGroups.has(group.groupKey);
-      // Check if group header itself is selectable (exists as a category)
-      const groupCategory = group.items.find(item => item.value === group.groupKey);
+      // Check if group header itself is selectable (parent category or group header)
+      const parentCategory = group.items.find(item => item.value === `${group.groupKey}_parent`);
+      const groupCategory = parentCategory || group.items.find(item => item.value === group.groupKey);
       if (groupCategory) {
         list.push({ ...groupCategory, isGroupHeader: true, groupKey: group.groupKey });
       }
-      // Add children only if the group is expanded (excluding the group header if it was added)
+      // Add children only if the group is expanded (excluding the group header and parent if they were added)
       if (isGroupExpanded) {
         group.items.forEach(item => {
-          if (item.value !== group.groupKey) {
+          if (item.value !== group.groupKey && item.value !== `${group.groupKey}_parent`) {
             list.push({ ...item, isGroupHeader: false, groupKey: group.groupKey });
           }
         });
@@ -82,6 +93,23 @@ export default function CategorySelect({
       }
     }
   }, [value, groupedCategories]);
+
+  // Expand parent group when dropdown opens if a child is selected
+  useEffect(() => {
+    if (isOpen && value) {
+      // Check if value is a child (not a group header or parent)
+      const selectedGroup = Object.values(groupedCategories).find(group => {
+        return group.items.some(item => 
+          item.value === value && 
+          item.value !== group.groupKey && 
+          item.value !== `${group.groupKey}_parent`
+        );
+      });
+      if (selectedGroup) {
+        setExpandedGroups(prev => new Set([...prev, selectedGroup.groupKey]));
+      }
+    }
+  }, [isOpen, value, groupedCategories]);
 
   // Calculate dropdown position
   const updateDropdownPosition = useCallback(() => {
@@ -377,74 +405,84 @@ export default function CategorySelect({
           >
             <ul ref={listRef} className="py-2">
               {Object.values(groupedCategories).map((group) => {
-                const groupCategory = group.items.find(item => item.value === group.groupKey);
-                const children = group.items.filter(item => item.value !== group.groupKey);
+                // Find parent category (cash_parent, stocks_parent) or group header
+                const parentCategory = group.items.find(item => item.value === `${group.groupKey}_parent`);
+                const groupCategory = parentCategory || group.items.find(item => item.value === group.groupKey);
+                const children = group.items.filter(item => 
+                  item.value !== group.groupKey && 
+                  item.value !== `${group.groupKey}_parent`
+                );
                 const hasSelectableHeader = !!groupCategory;
                 const isExpanded = expandedGroups.has(group.groupKey);
                 const hasChildren = children.length > 0;
                 
                 return (
-                  <li key={group.groupKey} className="mb-1 last:mb-0">
+                  <li key={group.groupKey} className="border-b border-base-content/10 last:border-b-0">
                     {/* Group Header */}
                     <div className="flex items-center">
                       {hasSelectableHeader ? (
                         <button
                           type="button"
-                          data-value={group.groupKey}
+                          data-value={groupCategory.value}
                           className={`flex-1 text-left px-3 py-2 text-xs font-semibold text-base-content/70 uppercase tracking-wide flex items-center gap-2 focus:outline-none ${
-                            value === group.groupKey 
+                            value === groupCategory.value 
                               ? 'bg-primary/40 font-medium cursor-default' 
                               : 'hover:bg-base-200 focus:bg-base-200 cursor-pointer'
                           } ${
-                            highlightedIndex >= 0 && flatList[highlightedIndex]?.value === group.groupKey && value !== group.groupKey ? 'bg-base-200' : ''
+                            highlightedIndex >= 0 && flatList[highlightedIndex]?.value === groupCategory.value && value !== groupCategory.value ? 'bg-base-200' : ''
                           }`}
-                          onClick={() => {
-                            // Only allow selection if not already selected
-                            if (value !== group.groupKey) {
-                              handleSelect(groupCategory);
-                            }
-                          }}
-                          onMouseEnter={() => {
-                            // Don't highlight if this is the selected item
-                            if (value !== group.groupKey) {
-                              const index = flatList.findIndex(item => item.value === group.groupKey);
-                              setHighlightedIndex(index);
+                          onClick={(e) => {
+                            // If has children, toggle expand/collapse; otherwise select
+                            if (hasChildren) {
+                              toggleGroup(group.groupKey, e);
+                            } else {
+                              // Only allow selection if not already selected
+                              if (value !== groupCategory.value) {
+                                handleSelect(groupCategory);
+                              }
                             }
                           }}
                           role="option"
-                          aria-selected={value === group.groupKey}
+                          aria-selected={value === groupCategory.value}
                         >
                           <span>{group.icon}</span>
                           <span>{group.groupLabel}</span>
+                          {hasChildren && (
+                            <svg
+                              className={`w-4 h-4 ml-auto transition-transform ${isExpanded ? 'rotate-90' : ''}`}
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                            </svg>
+                          )}
                         </button>
                       ) : (
                         <div className="flex-1 px-3 py-2 text-xs font-semibold text-base-content/70 uppercase tracking-wide flex items-center gap-2 cursor-default">
                           <span>{group.icon}</span>
                           <span>{group.groupLabel}</span>
+                          {hasChildren && (
+                            <button
+                              type="button"
+                              className="ml-auto px-2 py-2 hover:bg-base-200 focus:bg-base-200 focus:outline-none transition-transform cursor-pointer"
+                              onClick={(e) => toggleGroup(group.groupKey, e)}
+                              aria-expanded={isExpanded}
+                              aria-label={isExpanded ? `Collapse ${group.groupLabel}` : `Expand ${group.groupLabel}`}
+                            >
+                              <svg
+                                className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-90' : ''}`}
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2}
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                              </svg>
+                            </button>
+                          )}
                         </div>
-                      )}
-                      
-                      {/* Expand/Collapse Button */}
-                      {hasChildren && (
-                        <button
-                          type="button"
-                          className={`px-2 py-2 hover:bg-base-200 focus:bg-base-200 focus:outline-none transition-transform cursor-pointer ${
-                            isExpanded ? 'rotate-90' : ''
-                          }`}
-                          onClick={(e) => toggleGroup(group.groupKey, e)}
-                          aria-expanded={isExpanded}
-                          aria-label={isExpanded ? `Collapse ${group.groupLabel}` : `Expand ${group.groupLabel}`}
-                        >
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                          </svg>
-                        </button>
                       )}
                     </div>
                     
@@ -462,21 +500,22 @@ export default function CategorySelect({
                           opacity: isExpanded ? 1 : 0
                         }}
                       >
-                        <ul className="pl-0 border-l-2 border-base-content/10 ml-4 my-1">
-                          {children.map((item) => {
+                        <ul className="pl-0 ml-4 my-1 bg-base-200/30 rounded-md border-l-2 border-base-content/10">
+                          {children.map((item, childIndex) => {
                             const index = flatList.findIndex(flatItem => flatItem.value === item.value);
                             const isHighlighted = index === highlightedIndex;
                             // Extract label text without emoji
                             const labelText = extractLabelText(item.label);
                             
+                            // Check if selected
                             const isSelected = value === item.value;
                             
                             return (
-                              <li key={item.value}>
+                              <li key={item.value} className={`border-b border-base-content/10 last:border-b-0 ${childIndex === 0 ? 'border-t border-base-content/10' : ''}`}>
                                 <button
                                   type="button"
                                   data-value={item.value}
-                                  className={`w-full text-left px-3 py-2 focus:outline-none transition-colors ${
+                                  className={`w-full text-left pl-6 pr-3 py-2 focus:outline-none transition-colors ${
                                     isSelected
                                       ? 'bg-primary/40 font-medium cursor-default'
                                       : 'hover:bg-base-200 focus:bg-base-200 cursor-pointer'

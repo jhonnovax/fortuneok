@@ -3,6 +3,7 @@ import { getLocalDateFromUTCString } from "@/services/dateService";
 export const ASSET_CATEGORIES = [
   { group: 'bonds', label: '📈 Bonds', value: 'bonds', icon: '📈' },
   { group: 'cars', label: '🚗 Cars', value: 'cars', icon: '🚗' },
+  { group: 'cash', label: '💵 Cash', value: 'cash_parent', icon: '💵' },
   { group: 'cash', label: '💵 Cash', value: 'cash', icon: '💵' },
   { group: 'cash', label: '🏦 Certificates of deposit', value: 'certificates_of_deposit', icon: '🏦' },
   { group: 'cash', label: '💵 Checking account', value: 'checking_account', icon: '🏦' },
@@ -12,6 +13,7 @@ export const ASSET_CATEGORIES = [
   { group: 'etf_funds', label: '📈 ETF / Funds', value: 'etf_funds', icon: '📈' },
   { group: 'precious_metals', label: '👑 Precious metals', value: 'precious_metals', icon: '👑' },
   { group: 'real_estate', label: '🏠 Real Estate', value: 'real_estate', icon: '🏠' },
+  { group: 'stocks', label: '📈 Stocks', value: 'stocks_parent', icon: '📈' },
   { group: 'stocks', label: '📈 Stocks', value: 'stocks', icon: '📈' },
   { group: 'stocks', label: '📈 Option', value: 'option', icon: '📈' },
   { group: 'stocks', label: '📈 Futures', value: 'futures', icon: '📈' },
