@@ -99,7 +99,6 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
         {assetData.map((asset, assetIndex) => (
           <div 
             key={asset.id} 
-            className="transition-all duration-300 ease-out animate-fade-in-up"
             style={{ 
               animationDelay: `${assetIndex * 50}ms`,
               animationFillMode: 'both'
