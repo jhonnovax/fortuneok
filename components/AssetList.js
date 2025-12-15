@@ -197,7 +197,7 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
                         <Flag countryCode={currencies.find(currency => currency.code === baseCurrency)?.flag} size="sm" /> 
                         {baseCurrency}
 
-                        <span className="ml-1">
+                        <span className="ml-0">
                           {showValues ? formatFullCurrency(asset.valuationInPreferredCurrency || 0) : maskValue(asset.valuationInPreferredCurrency || 0)}
                         </span>
 

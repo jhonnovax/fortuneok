@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { ASSET_CATEGORIES } from '@/services/assetService';
 import { useSession } from 'next-auth/react';
 import ButtonSignin from '@/components/ButtonSignin';
 import dynamic from 'next/dynamic';
@@ -9,6 +8,7 @@ import { createPortal } from 'react-dom';
 import currencies from '@/public/currencies.json';
 import Flag from './Flag';
 import { validateAssetData, TRADING_CATEGORIES } from '@/services/assetService';
+import CategorySelect from './CategorySelect';
 const currenciesSuggestionList = currencies.map(currency => ({
   ...currency,
   value: currency.code
@@ -296,18 +296,13 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                 {/* Category */}
                 <div className="form-control">
                   {renderLabel('Category', true, errors.category)}
-                  <select 
-                    className={`select select-bordered w-full ${errors.category ? 'select-error' : ''}`}
+                  <CategorySelect
                     value={form.category}
-                    onChange={(e) => updateForm({ category: e.target.value }, 'category')}
-                    placeholder="Select category"
+                    onChange={(value) => updateForm({ category: value }, 'category')}
                     disabled={isSubmitting}
-                  >
-                    <option disabled value="">Select category</option>
-                    {ASSET_CATEGORIES.map(cat => (
-                      <option key={cat.value} value={cat.value}>{cat.label}</option>
-                    ))}
-                  </select>
+                    error={errors.category}
+                    placeholder="Select category"
+                  />
                 </div>
 
                 {/* Description or Broker name based on category */}
