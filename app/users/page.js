@@ -445,7 +445,7 @@ export default function UsersPage() {
                         disabled={page === 1}
                         aria-label="Go to first page"
                       >
-                        ««
+                        First
                       </button>
                       
                       {/* Previous Page Button */}
@@ -455,7 +455,7 @@ export default function UsersPage() {
                         disabled={page === 1}
                         aria-label="Go to previous page"
                       >
-                        «
+                        Prev
                       </button>
                       
                       {/* Page Number Buttons */}
@@ -494,7 +494,7 @@ export default function UsersPage() {
                         disabled={page === totalPages}
                         aria-label="Go to next page"
                       >
-                        »
+                        Next
                       </button>
                       
                       {/* Last Page Button */}
@@ -504,7 +504,7 @@ export default function UsersPage() {
                         disabled={page === totalPages}
                         aria-label="Go to last page"
                       >
-                        »»
+                        Last
                       </button>
                     </div>
                   </div>
