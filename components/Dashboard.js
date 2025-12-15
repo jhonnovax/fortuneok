@@ -129,6 +129,7 @@ export default function Dashboard() {
           message: 'Asset updated successfully! 🎉', 
           type: 'success' 
         });
+        setIsAddModalOpen(false);
       } else {
         // Create new asset
         await addAsset(assetData);
