@@ -17,6 +17,8 @@ const ButtonAccount = ({ onAddAsset }) => {
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const menuItemRefs = useRef({});
   const isDashboard = pathname === "/dashboard";
 
   const handleSignOut = () => {
@@ -52,6 +54,51 @@ const ButtonAccount = ({ onAddAsset }) => {
   function handleClickOutside(e) {
     if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
       setOpenDropdown(false);
+      setHighlightedIndex(-1);
+    }
+  }
+
+  function handleKeyDown(e) {
+    if (!openDropdown) return;
+
+    const menuItems = [];
+    if (isDashboard) menuItems.push('addAsset');
+    menuItems.push('logout');
+
+    const currentIndex = highlightedIndex;
+
+    switch (e.key) {
+      case 'Escape': {
+        e.preventDefault();
+        setOpenDropdown(false);
+        setHighlightedIndex(-1);
+        break;
+      }
+      case 'ArrowDown': {
+        e.preventDefault();
+        const nextIndex = currentIndex < menuItems.length - 1 ? currentIndex + 1 : 0;
+        setHighlightedIndex(nextIndex);
+        break;
+      }
+      case 'ArrowUp': {
+        e.preventDefault();
+        const prevIndex = currentIndex > 0 ? currentIndex - 1 : menuItems.length - 1;
+        setHighlightedIndex(prevIndex);
+        break;
+      }
+      case 'Enter': {
+        if (currentIndex >= 0 && currentIndex < menuItems.length) {
+          e.preventDefault();
+          if (menuItems[currentIndex] === 'addAsset') {
+            handleAddAsset();
+          } else if (menuItems[currentIndex] === 'logout') {
+            handleLogout();
+          }
+        }
+        break;
+      }
+      default:
+        break;
     }
   }
 
@@ -61,14 +108,44 @@ const ButtonAccount = ({ onAddAsset }) => {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
+  // Reset highlighted index when dropdown opens/closes
+  useEffect(() => {
+    if (openDropdown) {
+      setHighlightedIndex(0);
+    } else {
+      setHighlightedIndex(-1);
+    }
+  }, [openDropdown]);
+
+  // Focus management for keyboard navigation
+  useEffect(() => {
+    if (openDropdown && highlightedIndex >= 0) {
+      const menuItem = menuItemRefs.current[highlightedIndex];
+      if (menuItem) {
+        menuItem.focus();
+      }
+    }
+  }, [highlightedIndex, openDropdown]);
+
   // Don't show anything if not authenticated (we don't have any info about the user)
   if (status === "unauthenticated") {
     return null;
   }
 
   return (
-    <div ref={dropdownRef} className="dropdown dropdown-end">
-      <button type="button" className="btn btn-tertiary" onClick={() => setOpenDropdown(!openDropdown)}>
+    <div 
+      ref={dropdownRef} 
+      className="dropdown dropdown-end"
+      onKeyDown={handleKeyDown}
+      tabIndex={-1}
+    >
+      <button 
+        type="button" 
+        className="btn btn-tertiary" 
+        onClick={() => setOpenDropdown(!openDropdown)}
+        aria-expanded={openDropdown}
+        aria-haspopup="true"
+      >
         {session?.user?.image ? (
               <img
                 src={session?.user?.image}
@@ -109,12 +186,19 @@ const ButtonAccount = ({ onAddAsset }) => {
               </svg>
             )}
       </button>
-      <ul className={`absolute right-0 z-[1] menu p-2 shadow bg-base-100 rounded-box w-full min-w-40 mt-1 ${openDropdown ? 'block' : 'hidden'}`}>
+      <ul 
+        className={`absolute right-0 z-[1] menu p-2 shadow bg-base-100 rounded-box w-full min-w-40 mt-1 ${openDropdown ? 'block' : 'hidden'}`}
+        role="menu"
+      >
         {isDashboard && (
-          <li>
+          <li role="menuitem">
             <button
-              className="flex items-center gap-2 hover:bg-base-300 duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
+              className={`flex items-center gap-2 hover:bg-base-300 duration-200 py-1.5 px-4 w-full rounded-lg font-medium ${highlightedIndex === 0 ? 'bg-base-300' : ''}`}
               onClick={handleAddAsset}
+              ref={(ref) => {
+                menuItemRefs.current[0] = ref;
+              }}
+              onMouseEnter={() => setHighlightedIndex(0)}
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -123,10 +207,14 @@ const ButtonAccount = ({ onAddAsset }) => {
             </button>
           </li>
         )}
-        <li>
+        <li role="menuitem">
           <button
-            className="flex items-center gap-2 hover:bg-error/20 duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
+            className={`flex items-center gap-2 hover:bg-error/20 duration-200 py-1.5 px-4 w-full rounded-lg font-medium ${highlightedIndex === (isDashboard ? 1 : 0) ? 'bg-error/20' : ''}`}
             onClick={handleLogout}
+            ref={(ref) => {
+              menuItemRefs.current[isDashboard ? 1 : 0] = ref;
+            }}
+            onMouseEnter={() => setHighlightedIndex(isDashboard ? 1 : 0)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

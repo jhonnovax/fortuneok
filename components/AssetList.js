@@ -35,6 +35,8 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
   const moreActionsDropdownRef = useRef(null);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, assetId: null });
   const [openMoreActionsDropdown, setOpenMoreActionsDropdown] = useState(null);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const menuItemRefs = useRef({});
   const theme = useSystemTheme();
 
   const chartColors = getChartColors(theme);
@@ -45,8 +47,62 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
     /* if (moreActionsDropdownRef.current && !moreActionsDropdownRef.current.contains(e.target)) { */
     if (!e.target.closest('.dropdown')) {
       setOpenMoreActionsDropdown(null);
+      setHighlightedIndex(-1);
     }
   }
+
+  function handleKeyDown(e, assetId) {
+    if (openMoreActionsDropdown !== assetId) return;
+
+    const menuItems = ['edit', 'delete'];
+    const currentIndex = highlightedIndex;
+
+    switch (e.key) {
+      case 'Escape': {
+        e.preventDefault();
+        setOpenMoreActionsDropdown(null);
+        setHighlightedIndex(-1);
+        break;
+      }
+      case 'ArrowDown': {
+        e.preventDefault();
+        const nextIndex = currentIndex < menuItems.length - 1 ? currentIndex + 1 : 0;
+        setHighlightedIndex(nextIndex);
+        break;
+      }
+      case 'ArrowUp': {
+        e.preventDefault();
+        const prevIndex = currentIndex > 0 ? currentIndex - 1 : menuItems.length - 1;
+        setHighlightedIndex(prevIndex);
+        break;
+      }
+      case 'Enter': {
+        if (currentIndex >= 0 && currentIndex < menuItems.length) {
+          e.preventDefault();
+          const asset = assetData.find(a => a.id === assetId);
+          if (asset) {
+            if (menuItems[currentIndex] === 'edit') {
+              handleEditAsset(asset);
+            } else if (menuItems[currentIndex] === 'delete') {
+              handleDeleteAsset({ isOpen: true, assetId: asset.id });
+            }
+          }
+        }
+        break;
+      }
+      default:
+        break;
+    }
+  }
+
+  // Reset highlighted index when dropdown opens/closes
+  useEffect(() => {
+    if (openMoreActionsDropdown) {
+      setHighlightedIndex(0);
+    } else {
+      setHighlightedIndex(-1);
+    }
+  }, [openMoreActionsDropdown]);
 
   function handleEditAsset(asset) {
     setOpenMoreActionsDropdown(null);
@@ -62,6 +118,17 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Focus management for keyboard navigation
+  useEffect(() => {
+    if (openMoreActionsDropdown && highlightedIndex >= 0) {
+      const refKey = `${openMoreActionsDropdown}-${highlightedIndex}`;
+      const menuItem = menuItemRefs.current[refKey];
+      if (menuItem) {
+        menuItem.focus();
+      }
+    }
+  }, [highlightedIndex, openMoreActionsDropdown]);
 
   if (isLoading) {
     assetListUI = (
@@ -174,28 +241,54 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
 
                       {/* Show more actions */}
                       {showMoreActions && (
-                        <div ref={(ref) => moreActionsDropdownRef.current = openMoreActionsDropdown === asset.id ? ref : null} className="dropdown dropdown-end">
+                        <div 
+                          ref={(ref) => moreActionsDropdownRef.current = openMoreActionsDropdown === asset.id ? ref : null} 
+                          className="dropdown dropdown-end"
+                          onKeyDown={(e) => handleKeyDown(e, asset.id)}
+                          tabIndex={-1}
+                        >
                           <button 
                             type="button"
                             className="btn btn-tertiary btn-sm btn-circle"
                             title="More actions"
                             onClick={() => setOpenMoreActionsDropdown(openMoreActionsDropdown === asset.id ? null : asset.id)}
+                            aria-expanded={openMoreActionsDropdown === asset.id}
+                            aria-haspopup="true"
                           >
                             <svg width="18" height="18" strokeLinejoin="round" viewBox="0 0 16 16">
                               <path fillRule="evenodd" clipRule="evenodd" d="M4 8C4 8.82843 3.32843 9.5 2.5 9.5C1.67157 9.5 1 8.82843 1 8C1 7.17157 1.67157 6.5 2.5 6.5C3.32843 6.5 4 7.17157 4 8ZM9.5 8C9.5 8.82843 8.82843 9.5 8 9.5C7.17157 9.5 6.5 8.82843 6.5 8C6.5 7.17157 7.17157 6.5 8 6.5C8.82843 6.5 9.5 7.17157 9.5 8ZM13.5 9.5C14.3284 9.5 15 8.82843 15 8C15 7.17157 14.3284 6.5 13.5 6.5C12.6716 6.5 12 7.17157 12 8C12 8.82843 12.6716 9.5 13.5 9.5Z" fill="currentColor" />
                             </svg>
                           </button>
-                          <ul className={`absolute right-0 z-[1] menu p-2 shadow bg-base-100 rounded-box w-40 ${openMoreActionsDropdown === asset.id ? 'block' : 'hidden'}`}>
-                            <li>
-                              <button type="button" onClick={() => handleEditAsset(asset)}>
+                          <ul 
+                            className={`absolute right-0 z-[1] menu p-2 shadow bg-base-100 rounded-box w-40 ${openMoreActionsDropdown === asset.id ? 'block' : 'hidden'}`}
+                            role="menu"
+                          >
+                            <li role="menuitem">
+                              <button 
+                                type="button" 
+                                onClick={() => handleEditAsset(asset)}
+                                className={openMoreActionsDropdown === asset.id && highlightedIndex === 0 ? 'bg-base-200' : ''}
+                                ref={(ref) => {
+                                  if (openMoreActionsDropdown === asset.id) {
+                                    menuItemRefs.current[`${asset.id}-0`] = ref;
+                                  }
+                                }}
+                                onMouseEnter={() => setHighlightedIndex(0)}
+                              >
                                 Edit Asset
                               </button>
                             </li>
-                            <li>
+                            <li role="menuitem">
                               <button 
                                 type="button"
-                                className="hover:bg-error/20 duration-200"
+                                className={`hover:bg-error/20 duration-200 ${openMoreActionsDropdown === asset.id && highlightedIndex === 1 ? 'bg-error/20' : ''}`}
                                 onClick={() => handleDeleteAsset({ isOpen: true, assetId: asset.id })}
+                                ref={(ref) => {
+                                  if (openMoreActionsDropdown === asset.id) {
+                                    menuItemRefs.current[`${asset.id}-1`] = ref;
+                                  }
+                                }}
+                                onMouseEnter={() => setHighlightedIndex(1)}
                               >
                                 Remove Asset
                               </button>
