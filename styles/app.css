@@ -49,3 +49,22 @@ progress::-webkit-progress-value {
 .pulse-attention {
   animation: pulse-attention 2s ease-in-out infinite;
 }
+
+/* 404 Page Animations */
+.animate-draw-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawLine 3s ease-out forwards;
+}
+
+.animate-draw-line-delayed {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawLine 3s ease-out 1.5s forwards;
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}

@@ -16,6 +16,13 @@ module.exports = {
         'scale-in': 'scaleIn 0.3s ease-out',
         'bounce-in': 'bounceIn 0.6s ease-out',
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'float-1': 'float1 6s ease-in-out infinite',
+        'float-2': 'float2 8s ease-in-out infinite',
+        'float-3': 'float3 7s ease-in-out infinite',
+        'float-4': 'float4 9s ease-in-out infinite',
+        'gradient-x': 'gradientX 3s ease infinite',
+        'draw-line': 'drawLine 3s ease-out forwards',
+        'draw-line-delayed': 'drawLine 3s ease-out 1.5s forwards',
       },
       keyframes: {
         slideInRight: {
@@ -43,6 +50,31 @@ module.exports = {
           '50%': { transform: 'scale(1.05)' },
           '70%': { transform: 'scale(0.9)' },
           '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        float1: {
+          '0%, 100%': { transform: 'translate(0, 0) rotate(0deg)' },
+          '33%': { transform: 'translate(30px, -30px) rotate(120deg)' },
+          '66%': { transform: 'translate(-20px, 20px) rotate(240deg)' },
+        },
+        float2: {
+          '0%, 100%': { transform: 'translate(0, 0) rotate(0deg)' },
+          '33%': { transform: 'translate(-25px, -25px) rotate(-120deg)' },
+          '66%': { transform: 'translate(25px, 25px) rotate(-240deg)' },
+        },
+        float3: {
+          '0%, 100%': { transform: 'translate(0, 0) rotate(0deg)' },
+          '50%': { transform: 'translate(20px, -40px) rotate(180deg)' },
+        },
+        float4: {
+          '0%, 100%': { transform: 'translate(0, 0) rotate(0deg)' },
+          '50%': { transform: 'translate(-30px, -20px) rotate(-180deg)' },
+        },
+        gradientX: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+        drawLine: {
+          'to': { strokeDashoffset: '0' },
         },
       }
     }
