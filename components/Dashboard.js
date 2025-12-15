@@ -148,6 +148,8 @@ export default function Dashboard() {
         message: err.message || 'Failed to save asset', 
         type: 'error' 
       });
+      // Error is already logged in the store, but we ensure it's captured here too
+      // The store will handle the logging, so we don't need to duplicate it
     } finally {
       setIsSavingAsset(false);
       setIsAddModalOpen(false);
@@ -169,6 +171,8 @@ export default function Dashboard() {
         message: err.message || 'Failed to delete asset', 
         type: 'error' 
       });
+      // Error is already logged in the store, but we ensure it's captured here too
+      // The store will handle the logging, so we don't need to duplicate it
     }
   }, [deleteAsset]);
 
@@ -178,7 +182,10 @@ export default function Dashboard() {
 
   // Fetch currency rates
   useEffect(() => {
-    getCurrencyRates(baseCurrency);
+    getCurrencyRates(baseCurrency).catch((err) => {
+      console.error('Failed to fetch currency rates:', err);
+      // Error is already logged in the store
+    });
   }, [getCurrencyRates, baseCurrency]);
 
   // Fetch assets
@@ -188,6 +195,7 @@ export default function Dashboard() {
       .catch((err) => {
         console.error('Failed to fetch assets:', err);
         setError('Failed to load data');
+        // Error is already logged in the store
       })
       .finally(() => {
         setIsLoading(false);

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { SessionProvider } from "next-auth/react";
 import { PreferencesProvider } from "@/contexts/PreferencesContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { initializeErrorHandlers } from "@/libs/errorLogger";
 import dynamic from 'next/dynamic';
 
 // Dynamic import for react-hot-toast with lazy loading
@@ -18,6 +19,11 @@ const Toaster = dynamic(() => import('react-hot-toast').then(mod => ({ default: 
 // 2. Toaster: Show Success/Error messages anywhere from the app with toast()
 const LayoutClientPrivate = ({ children }) => {
   const pathname = usePathname();
+
+  // Initialize global error handlers
+  useEffect(() => {
+    initializeErrorHandlers();
+  }, []);
 
   // Add scroll restoration
   useEffect(() => {
