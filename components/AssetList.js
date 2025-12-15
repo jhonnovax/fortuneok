@@ -200,7 +200,7 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
                           {showValues ? formatFullCurrency(asset.valuationInPreferredCurrency || 0) : maskValue(asset.valuationInPreferredCurrency || 0)}
                         </span>
 
-                        {asset.currencies.length > 0 && (
+                        {asset.currencies.length > 1 && (
                           <div className='block'>
                             {asset.currencies.map((currencyData, currencyIndex) => (
                               <CurrencyBadge 

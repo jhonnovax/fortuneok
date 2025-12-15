@@ -277,7 +277,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
                 {/* Date */}
                 <div className="form-control md:col-span-2">
-                  {renderLabel('Date', true, errors.date)}
+                  {renderLabel('Date of investment', true, errors.date)}
                   <input 
                     type="date"
                     className={`input input-bordered w-full ${errors.date ? 'input-error' : ''}`}
