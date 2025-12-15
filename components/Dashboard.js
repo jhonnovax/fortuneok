@@ -138,6 +138,7 @@ export default function Dashboard() {
           type: 'success' 
         });
         setShowConfetti(true);
+        setIsAddModalOpen(false);
         setTimeout(() => setShowConfetti(false), 3000);
       }
     } catch (err) {
@@ -152,7 +153,6 @@ export default function Dashboard() {
       // The store will handle the logging, so we don't need to duplicate it
     } finally {
       setIsSavingAsset(false);
-      setIsAddModalOpen(false);
     }
   }
 
