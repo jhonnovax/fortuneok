@@ -411,30 +411,136 @@ export default function UsersPage() {
               )}
 
               {/* Pagination */}
-              {!isLoading && !error && totalPages > 1 && (
-                <div className="flex justify-center mt-4 sm:mt-6">
-                  <div className="join">
-                    <button
-                      className="join-item btn btn-xs sm:btn-sm md:btn-md"
-                      onClick={() => setPage((p) => Math.max(1, p - 1))}
-                      disabled={page === 1}
-                    >
-                      «
-                    </button>
-                    <button className="join-item btn btn-xs sm:btn-sm md:btn-md" disabled>
-                      <span className="hidden sm:inline">Page </span>
-                      {page} <span className="hidden sm:inline">of {totalPages}</span>
-                    </button>
-                    <button
-                      className="join-item btn btn-xs sm:btn-sm md:btn-md"
-                      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                      disabled={page === totalPages}
-                    >
-                      »
-                    </button>
+              {!isLoading && !error && totalPages > 1 && (() => {
+                // Generate page numbers to display with ellipsis logic
+                const getPageNumbers = () => {
+                  const pages = [];
+                  const showFirst = 2; // Always show first N pages
+                  const showLast = 2; // Always show last N pages
+                  const showAround = 1; // Show N pages around current page
+                  
+                  // If total pages is small, show all
+                  if (totalPages <= 7) {
+                    for (let i = 1; i <= totalPages; i++) {
+                      pages.push(i);
+                    }
+                    return pages;
+                  }
+                  
+                  const pageSet = new Set();
+                  
+                  // Add first pages
+                  for (let i = 1; i <= showFirst; i++) {
+                    pageSet.add(i);
+                  }
+                  
+                  // Add pages around current page
+                  for (let i = Math.max(1, page - showAround); i <= Math.min(totalPages, page + showAround); i++) {
+                    pageSet.add(i);
+                  }
+                  
+                  // Add last pages
+                  for (let i = totalPages - showLast + 1; i <= totalPages; i++) {
+                    pageSet.add(i);
+                  }
+                  
+                  // Convert to sorted array
+                  const sortedPages = Array.from(pageSet).sort((a, b) => a - b);
+                  
+                  // Build final array with ellipsis
+                  const result = [];
+                  for (let i = 0; i < sortedPages.length; i++) {
+                    const current = sortedPages[i];
+                    const next = sortedPages[i + 1];
+                    
+                    result.push(current);
+                    
+                    // Add ellipsis if there's a gap
+                    if (next && next - current > 1) {
+                      result.push('ellipsis');
+                    }
+                  }
+                  
+                  return result;
+                };
+                
+                const pageNumbers = getPageNumbers();
+                
+                return (
+                  <div className="flex justify-center mt-4 sm:mt-6">
+                    <div className="join">
+                      {/* First Page Button */}
+                      <button
+                        className="join-item btn btn-xs sm:btn-sm md:btn-md"
+                        onClick={() => setPage(1)}
+                        disabled={page === 1}
+                        aria-label="Go to first page"
+                      >
+                        ««
+                      </button>
+                      
+                      {/* Previous Page Button */}
+                      <button
+                        className="join-item btn btn-xs sm:btn-sm md:btn-md"
+                        onClick={() => setPage((p) => Math.max(1, p - 1))}
+                        disabled={page === 1}
+                        aria-label="Go to previous page"
+                      >
+                        «
+                      </button>
+                      
+                      {/* Page Number Buttons */}
+                      {pageNumbers.map((pageNum, index) => {
+                        if (pageNum === 'ellipsis') {
+                          return (
+                            <button
+                              key={`ellipsis-${index}`}
+                              className="join-item btn btn-xs sm:btn-sm md:btn-md btn-disabled"
+                              disabled
+                            >
+                              ...
+                            </button>
+                          );
+                        }
+                        
+                        return (
+                          <button
+                            key={pageNum}
+                            className={`join-item btn btn-xs sm:btn-sm md:btn-md ${
+                              page === pageNum ? 'btn-active' : ''
+                            }`}
+                            onClick={() => setPage(pageNum)}
+                            aria-label={`Go to page ${pageNum}`}
+                            aria-current={page === pageNum ? 'page' : undefined}
+                          >
+                            {pageNum}
+                          </button>
+                        );
+                      })}
+                      
+                      {/* Next Page Button */}
+                      <button
+                        className="join-item btn btn-xs sm:btn-sm md:btn-md"
+                        onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                        disabled={page === totalPages}
+                        aria-label="Go to next page"
+                      >
+                        »
+                      </button>
+                      
+                      {/* Last Page Button */}
+                      <button
+                        className="join-item btn btn-xs sm:btn-sm md:btn-md"
+                        onClick={() => setPage(totalPages)}
+                        disabled={page === totalPages}
+                        aria-label="Go to last page"
+                      >
+                        »»
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
+                );
+              })()}
             </div>
           </div>
         </main>
