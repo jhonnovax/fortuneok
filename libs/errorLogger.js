@@ -5,6 +5,40 @@ import apiClient from "./api";
  * Captures and logs front-end errors to the backend
  */
 
+// Deduplication: Track recently logged errors to prevent duplicates
+const RECENT_ERRORS_KEY = "__recentErrors__";
+const DEDUP_WINDOW_MS = 2000; // 2 seconds window
+
+/**
+ * Check if this error was recently logged (deduplication)
+ */
+const isRecentlyLogged = (errorData) => {
+  if (typeof window === "undefined") return false;
+  
+  const recentErrors = window[RECENT_ERRORS_KEY] || [];
+  const now = Date.now();
+  
+  // Create a unique key for this error
+  const errorKey = `${errorData.action}:${errorData.errorMessage}:${errorData.errorStack || ""}`;
+  
+  // Check if this error was logged recently
+  const isDuplicate = recentErrors.some(
+    (entry) => entry.key === errorKey && now - entry.timestamp < DEDUP_WINDOW_MS
+  );
+  
+  if (!isDuplicate) {
+    // Add to recent errors and clean up old entries
+    recentErrors.push({ key: errorKey, timestamp: now });
+    // Keep only entries from the last 5 seconds
+    const filtered = recentErrors.filter(
+      (entry) => now - entry.timestamp < 5000
+    );
+    window[RECENT_ERRORS_KEY] = filtered;
+  }
+  
+  return isDuplicate;
+};
+
 /**
  * Log an error to the backend
  * @param {Object} errorData - Error information to log
@@ -21,6 +55,11 @@ import apiClient from "./api";
  */
 export const logError = async (errorData) => {
   try {
+    // Deduplication: Skip if this error was recently logged
+    if (isRecentlyLogged(errorData)) {
+      return;
+    }
+
     // Get current URL
     const url = typeof window !== "undefined" ? window.location.href : "";
 
@@ -102,15 +141,25 @@ export const logAction = async (action, data = {}, success = true) => {
   });
 };
 
+// Track if error handlers are already initialized using window property (persists across module reloads)
+const INIT_FLAG = "__errorHandlersInitialized__";
+const HANDLER_REFS = "__errorHandlerRefs__";
+
 /**
  * Initialize global error handlers
  * This should be called once in the app (e.g., in _app.js or layout)
+ * Safe to call multiple times - will only initialize once
  */
 export const initializeErrorHandlers = () => {
   if (typeof window === "undefined") return;
+  
+  // Prevent duplicate initialization using window property (survives module reloads)
+  if (window[INIT_FLAG]) {
+    return;
+  }
 
   // Handle unhandled promise rejections
-  window.addEventListener("unhandledrejection", (event) => {
+  const unhandledRejectionHandler = (event) => {
     logError({
       action: "unhandled_promise_rejection",
       errorType: "error",
@@ -120,10 +169,12 @@ export const initializeErrorHandlers = () => {
         reason: event.reason,
       },
     });
-  });
+  };
+  
+  window.addEventListener("unhandledrejection", unhandledRejectionHandler);
 
   // Handle global errors
-  window.addEventListener("error", (event) => {
+  const errorHandler = (event) => {
     logError({
       action: "global_error",
       errorType: "error",
@@ -135,5 +186,36 @@ export const initializeErrorHandlers = () => {
         colno: event.colno,
       },
     });
-  });
+  };
+  
+  window.addEventListener("error", errorHandler);
+
+  // Store references for cleanup
+  window[HANDLER_REFS] = {
+    unhandledRejection: unhandledRejectionHandler,
+    error: errorHandler,
+  };
+
+  // Mark as initialized
+  window[INIT_FLAG] = true;
+};
+
+/**
+ * Cleanup error handlers (useful for testing or cleanup)
+ */
+export const cleanupErrorHandlers = () => {
+  if (typeof window === "undefined") return;
+  
+  const refs = window[HANDLER_REFS];
+  if (refs) {
+    if (refs.unhandledRejection) {
+      window.removeEventListener("unhandledrejection", refs.unhandledRejection);
+    }
+    if (refs.error) {
+      window.removeEventListener("error", refs.error);
+    }
+    delete window[HANDLER_REFS];
+  }
+  
+  delete window[INIT_FLAG];
 };

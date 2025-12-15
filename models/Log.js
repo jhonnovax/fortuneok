@@ -32,6 +32,7 @@ const logSchema = mongoose.Schema(
         "info",
         "api_error",
         "validation_error",
+        "global_error",
         "unknown",
       ],
     },
@@ -66,7 +67,16 @@ const logSchema = mongoose.Schema(
     },
     requestMethod: {
       type: String,
-      enum: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+      default: null,
+      validate: {
+        validator: function (value) {
+          // Allow null/undefined or valid HTTP methods
+          if (value === null || value === undefined) return true;
+          const validMethods = ["GET", "POST", "PUT", "PATCH", "DELETE"];
+          return validMethods.includes(value);
+        },
+        message: "{VALUE} is not a valid request method",
+      },
     },
     requestBody: {
       type: mongoose.Schema.Types.Mixed,

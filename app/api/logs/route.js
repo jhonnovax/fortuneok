@@ -35,10 +35,20 @@ export async function POST(req) {
       additionalData: body.additionalData || {},
       statusCode: body.statusCode || null,
       requestUrl: body.requestUrl || null,
-      requestMethod: body.requestMethod || null,
       requestBody: body.requestBody || null,
       responseData: body.responseData || null,
     };
+
+    // Only include requestMethod if it's provided and valid (exclude null/undefined)
+    const validMethods = ["GET", "POST", "PUT", "PATCH", "DELETE"];
+    if (
+      body.requestMethod &&
+      typeof body.requestMethod === "string" &&
+      validMethods.includes(body.requestMethod.toUpperCase())
+    ) {
+      logData.requestMethod = body.requestMethod.toUpperCase();
+    }
+    // If requestMethod is null or invalid, we simply don't include it in logData
 
     const log = await Log.create(logData);
 
