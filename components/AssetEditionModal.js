@@ -239,13 +239,10 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
     createPortal(
       <dialog 
         className={`modal modal-bottom sm:modal-middle ${isOpen ? 'modal-open' : ''}`}
-        style={{
-          animation: isOpen ? 'fadeIn 0.2s ease-out' : 'none'
-        }}
       >
         <div 
-          className={`modal-box relative p-0 flex flex-col h-full max-h-screen rounded-tl-none rounded-tr-none sm:rounded-tl-xl sm:rounded-tr-xl sm:h-auto sm:max-h-[90vh] sm:max-w-2xl transition-all duration-300 ${
-            isOpen ? 'animate-scale-in opacity-100' : 'opacity-0 scale-95'
+          className={`modal-box relative p-0 flex flex-col h-full max-h-screen rounded-tl-none rounded-tr-none sm:rounded-tl-xl sm:rounded-tr-xl sm:h-auto sm:max-h-[90vh] sm:max-w-2xl sm:transition-all sm:duration-300 ${
+            isOpen ? 'sm:animate-scale-in sm:opacity-100' : 'sm:opacity-0 sm:scale-95'
           }`}
         >
 
