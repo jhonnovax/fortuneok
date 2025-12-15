@@ -5,6 +5,7 @@ import LayoutClientPrivate from "@/components/LayoutClientPrivate";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/libs/next-auth";
 import { redirect } from "next/navigation";
+import { isAuthorizedEmail } from "@/libs/authAccess";
 
 export const metadata = getSEOTags({
   title: `Users | ${config.appName}`,
@@ -18,7 +19,10 @@ export default async function UsersLayout({ children }) {
   const session = await getServerSession(authOptions);
   
   // Server-side authentication check - redirect before rendering to avoid flash
-  if (!session?.user || session.user.email !== 'jhonnovax@gmail.com') {
+  // Check if user's email is in the allowed admin emails list from environment variable
+  const isAuthorized = session?.user?.email && isAuthorizedEmail(session.user.email);
+
+  if (!isAuthorized) {
     redirect('/not-found');
   }
 
