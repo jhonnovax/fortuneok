@@ -7,6 +7,7 @@ import ButtonSignin from '@/components/ButtonSignin';
 import dynamic from 'next/dynamic';
 import { createPortal } from 'react-dom';
 import currencies from '@/public/currencies.json';
+import Flag from './Flag';
 import { validateAssetData, TRADING_CATEGORIES } from '@/services/assetService';
 const currenciesSuggestionList = currencies.map(currency => ({
   ...currency,
@@ -352,14 +353,14 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
                         customInputValueRenderer={(selectedValue) => {
                           const selectedSuggestion = currenciesSuggestionList.find(item => item.value === selectedValue);
                           return selectedSuggestion
-                            ? `${selectedSuggestion.flag} ${selectedSuggestion.value} - ${selectedSuggestion.label}`
+                            ? `${selectedSuggestion.value} - ${selectedSuggestion.label}`
                             : selectedValue;
                         }}
                         customSuggestionItemRenderer={(suggestion) => (
                           <div className="w-full flex items-center gap-1 p-3 text-left" title={suggestion.label}>
                             {/* Flag with border */}
                             <div className="w-8 h-6 flex-shrink-0 overflow-hidden rounded flex items-center justify-center">
-                              <span className="text-xl">{suggestion.flag}</span>
+                              <Flag countryCode={suggestion.flag} size="lg" />
                             </div>
                             {/* Currency code in pill */}
                             <div className="text-sm pr-1 py-1 rounded">

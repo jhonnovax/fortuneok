@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { usePreferences } from '../contexts/PreferencesContext';
 import InputSuggestionList from './InputSuggestionList';
+import Flag from './Flag';
 import currencies from '@/public/currencies.json';
 const currenciesSuggestionList = currencies.map(currency => ({
   ...currency,
@@ -48,14 +49,14 @@ export default function CurrencySelection({ isEditingCurrency, onEditingCurrency
           customInputValueRenderer={(selectedValue) => {
             const selectedSuggestion = currenciesSuggestionList.find(item => item.value === selectedValue);
             return selectedSuggestion
-              ? `${selectedSuggestion.flag} ${selectedSuggestion.value} - ${selectedSuggestion.label}`
+              ? `${selectedSuggestion.value} - ${selectedSuggestion.label}`
               : selectedValue;
           }}
           customSuggestionItemRenderer={(suggestion) => (
             <div className="w-full flex items-center gap-1 p-3 text-left" title={suggestion.label}>
               {/* Flag with border */}
               <div className="w-8 h-6 flex-shrink-0 overflow-hidden rounded flex items-center justify-center">
-                <span className="text-xl">{suggestion.flag}</span>
+                <Flag countryCode={suggestion.flag} size="lg" />
               </div>
               {/* Currency code in pill */}
               <div className="text-sm pr-1 py-1 rounded">
@@ -85,11 +86,11 @@ export default function CurrencySelection({ isEditingCurrency, onEditingCurrency
   // Render currency selection button
   return (
     <button 
-      className="btn btn-sm lg:btn-md gap-1"
+      className="btn btn-sm lg:btn-md gap-1 flex items-center"
       title="Edit currency"
       onClick={() => onEditingCurrency(true)}
     >
-      {preferredCurrencyDetails?.flag} {preferredCurrency}
+      <Flag countryCode={preferredCurrencyDetails?.flag} size="sm" /> {preferredCurrency}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"

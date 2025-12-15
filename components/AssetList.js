@@ -8,6 +8,7 @@ import { getAssetCategoryGroupIcon, getAssetPercentage } from '@/services/assetS
 import { getChartColors } from '@/services/chartService';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
 import currencies from '@/public/currencies.json';
+import Flag from './Flag';
 import dynamic from 'next/dynamic';
 
 // Dynamic imports for heavy components
@@ -192,8 +193,8 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
                         </p>
                       )}
 
-                      <div className="text-sm">
-                        {currencies.find(currency => currency.code === baseCurrency)?.flag} 
+                      <div className="text-sm flex items-center gap-1">
+                        <Flag countryCode={currencies.find(currency => currency.code === baseCurrency)?.flag} size="sm" /> 
                         {baseCurrency}
 
                         <span className="ml-1">
