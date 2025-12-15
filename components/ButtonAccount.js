@@ -59,7 +59,12 @@ const ButtonAccount = ({ onAddAsset }) => {
   }
 
   function handleKeyDown(e) {
-    if (!openDropdown) return;
+    // Only handle keys when dropdown is open
+    if (!openDropdown) {
+      // Allow Tab to work normally when dropdown is closed
+      if (e.key === 'Tab') return;
+      return;
+    }
 
     const menuItems = [];
     if (isDashboard) menuItems.push('addAsset');
@@ -137,14 +142,14 @@ const ButtonAccount = ({ onAddAsset }) => {
       ref={dropdownRef} 
       className="dropdown dropdown-end"
       onKeyDown={handleKeyDown}
-      tabIndex={-1}
     >
       <button 
         type="button" 
-        className="btn btn-tertiary" 
+        className="btn btn-tertiary focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus:ring-2 focus:ring-black focus:ring-offset-2" 
         onClick={() => setOpenDropdown(!openDropdown)}
         aria-expanded={openDropdown}
         aria-haspopup="true"
+        tabIndex={0}
       >
         {session?.user?.image ? (
               <img
