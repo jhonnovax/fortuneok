@@ -194,7 +194,7 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
                             <li>
                               <button 
                                 type="button"
-                                className="text-red-500 hover:bg-error hover:text-black duration-200"
+                                className="hover:bg-error/20 duration-200"
                                 onClick={() => handleDeleteAsset({ isOpen: true, assetId: asset.id })}
                               >
                                 Remove Asset
