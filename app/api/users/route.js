@@ -94,28 +94,96 @@ export async function GET(req) {
     
     // Build sort object
     const sortOrder = sortDirection === "asc" ? 1 : -1;
-    const sort = { [sortField]: sortOrder };
     
-    // Fetch users with pagination, sorted by specified field and direction
-    const users = await User.find(filter)
-      .select("_id name email emailVerified hasAccess customerId createdAt lastAccessAt")
-      .sort(sort)
-      .skip(skip)
-      .limit(limit)
-      .lean();
+    let users;
+    let assetStats;
     
-    // Get asset statistics for each user
-    const userIds = users.map(user => user._id);
-    const assetStats = await Asset.aggregate([
-      { $match: { userId: { $in: userIds } } },
-      {
-        $group: {
-          _id: "$userId",
-          totalAssets: { $sum: 1 },
-          categories: { $addToSet: "$category" }
+    // If sorting by totalAssets, we need to get all users, calculate asset counts, then sort
+    if (sortField === "totalAssets") {
+      // Get all users matching the filter (without pagination)
+      const allUsers = await User.find(filter)
+        .select("_id name email emailVerified hasAccess customerId createdAt lastAccessAt")
+        .lean();
+      
+      const allUserIds = allUsers.map(user => user._id);
+      
+      // Get asset statistics for all users
+      const allAssetStats = await Asset.aggregate([
+        { $match: { userId: { $in: allUserIds } } },
+        {
+          $group: {
+            _id: "$userId",
+            totalAssets: { $sum: 1 },
+            categories: { $addToSet: "$category" }
+          }
         }
-      }
-    ]);
+      ]);
+      
+      // Create a map of userId to asset stats
+      const allAssetStatsMap = {};
+      allAssetStats.forEach(stat => {
+        allAssetStatsMap[stat._id.toString()] = {
+          totalAssets: stat.totalAssets,
+          totalCategories: stat.categories.length,
+          categories: stat.categories
+        };
+      });
+      
+      // Add asset stats to users and sort by totalAssets
+      const usersWithAssetCounts = allUsers.map(user => ({
+        ...user,
+        totalAssets: allAssetStatsMap[user._id.toString()]?.totalAssets || 0
+      }));
+      
+      // Sort by totalAssets
+      usersWithAssetCounts.sort((a, b) => {
+        if (sortOrder === 1) {
+          return a.totalAssets - b.totalAssets;
+        } else {
+          return b.totalAssets - a.totalAssets;
+        }
+      });
+      
+      // Apply pagination
+      users = usersWithAssetCounts.slice(skip, skip + limit);
+      
+      // Get asset stats for paginated users
+      const userIds = users.map(user => user._id);
+      assetStats = await Asset.aggregate([
+        { $match: { userId: { $in: userIds } } },
+        {
+          $group: {
+            _id: "$userId",
+            totalAssets: { $sum: 1 },
+            categories: { $addToSet: "$category" }
+          }
+        }
+      ]);
+    } else {
+      // Normal sorting for other fields
+      const sort = { [sortField]: sortOrder };
+      
+      // Fetch users with pagination, sorted by specified field and direction
+      users = await User.find(filter)
+        .select("_id name email emailVerified hasAccess customerId createdAt lastAccessAt")
+        .sort(sort)
+        .skip(skip)
+        .limit(limit)
+        .lean();
+      
+      // Get asset statistics for each user
+      const userIds = users.map(user => user._id);
+      assetStats = await Asset.aggregate([
+        { $match: { userId: { $in: userIds } } },
+        {
+          $group: {
+            _id: "$userId",
+            totalAssets: { $sum: 1 },
+            categories: { $addToSet: "$category" }
+          }
+        }
+      ]);
+    }
 
     // Create a map of userId to asset stats
     const assetStatsMap = {};

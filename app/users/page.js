@@ -15,8 +15,6 @@ export default function UsersPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState('');
-  const [emailVerified, setEmailVerified] = useState('');
-  const [hasAccess, setHasAccess] = useState('');
   const [sortField, setSortField] = useState('lastAccessAt');
   const [sortDirection, setSortDirection] = useState('desc');
   const [selectedUserAssets, setSelectedUserAssets] = useState(null);
@@ -82,12 +80,6 @@ export default function UsersPage() {
         if (search) {
           params.append('search', search);
         }
-        if (emailVerified !== '') {
-          params.append('emailVerified', emailVerified);
-        }
-        if (hasAccess !== '') {
-          params.append('hasAccess', hasAccess);
-        }
         
         params.append('sortField', sortField);
         params.append('sortDirection', sortDirection);
@@ -105,12 +97,12 @@ export default function UsersPage() {
     };
 
     fetchUsers();
-  }, [page, search, emailVerified, hasAccess, sortField, sortDirection, status]);
+  }, [page, search, sortField, sortDirection, status]);
 
   // Reset to page 1 when filters or sort change
   useEffect(() => {
     setPage(1);
-  }, [search, emailVerified, hasAccess, sortField, sortDirection]);
+  }, [search, sortField, sortDirection]);
 
   // Handle column header click for sorting
   const handleSort = (field) => {
@@ -133,6 +125,7 @@ export default function UsersPage() {
       'Email Verified': 'emailVerified',
       'Has Access': 'hasAccess',
       'Customer ID': 'customerId',
+      'Assets': 'totalAssets',
       'Created At': 'createdAt',
       'Last Access At': 'lastAccessAt',
     };
@@ -198,7 +191,7 @@ export default function UsersPage() {
               <h1 className="card-title text-xl sm:text-2xl mb-4">Users</h1>
 
               {/* Filters Section */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
+              <div className="mb-4 sm:mb-6">
                 {/* Search Input */}
                 <div className="form-control w-full">
                   <label className="label py-1 sm:py-2">
@@ -211,38 +204,6 @@ export default function UsersPage() {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                   />
-                </div>
-
-                {/* Email Verified Toggle */}
-                <div className="form-control w-full">
-                  <label className="label py-1 sm:py-2">
-                    <span className="label-text text-xs sm:text-sm">Email Verified</span>
-                  </label>
-                  <select
-                    className="select select-bordered w-full select-sm sm:select-md"
-                    value={emailVerified}
-                    onChange={(e) => setEmailVerified(e.target.value)}
-                  >
-                    <option value="">All</option>
-                    <option value="true">Verified</option>
-                    <option value="false">Not Verified</option>
-                  </select>
-                </div>
-
-                {/* Has Access Toggle */}
-                <div className="form-control w-full">
-                  <label className="label py-1 sm:py-2">
-                    <span className="label-text text-xs sm:text-sm">Has Access</span>
-                  </label>
-                  <select
-                    className="select select-bordered w-full select-sm sm:select-md"
-                    value={hasAccess}
-                    onChange={(e) => setHasAccess(e.target.value)}
-                  >
-                    <option value="">All</option>
-                    <option value="true">Yes</option>
-                    <option value="false">No</option>
-                  </select>
                 </div>
               </div>
 
@@ -309,7 +270,15 @@ export default function UsersPage() {
                             <SortIcon field="Customer ID" />
                           </div>
                         </th>
-                        <th>Assets</th>
+                        <th 
+                          className="cursor-pointer hover:bg-base-200 select-none"
+                          onClick={() => handleSort('totalAssets')}
+                        >
+                          <div className="flex items-center">
+                            Assets
+                            <SortIcon field="Assets" />
+                          </div>
+                        </th>
                         <th 
                           className="cursor-pointer hover:bg-base-200 select-none"
                           onClick={() => handleSort('createdAt')}
