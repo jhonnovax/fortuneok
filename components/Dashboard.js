@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import HeaderDashboard from "./HeaderDashboard";
 import Sidebar from "./Sidebar";
 import AssetList from "./AssetList";
@@ -36,7 +36,6 @@ export default function Dashboard() {
   const { appName, appShortDescription, appDescription } = config;
 
   const [isSavingAsset, setIsSavingAsset] = useState(false);
-  const [isDeletingAsset, setIsDeletingAsset] = useState(false);
   const [submitAssetError, setSubmitAssetError] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -49,12 +48,20 @@ export default function Dashboard() {
   const { preferredCurrency: baseCurrency } = usePreferences();
 
   const getCurrencyRates = useCurrencyRatesStore((state) => state.getCurrencyRates);
+  const currencyRates = useCurrencyRatesStore((state) => state.currencyRates);
+  const assets = useAssetStore((state) => state.assets);
+  const selectedAssetIds = useAssetStore((state) => state.selectedAssetIds);
+  const sortBy = useAssetStore((state) => state.sortBy);
   const getAssets = useAssetStore((state) => state.getAssets);
   const getFilteredAndSortedAssets = useAssetStore((state) => state.getFilteredAndSortedAssets);
   const addAsset = useAssetStore((state) => state.addAsset);
   const updateAsset = useAssetStore((state) => state.updateAsset);
   const deleteAsset = useAssetStore((state) => state.deleteAsset);
-  const assetData = getFilteredAndSortedAssets();
+  
+  const assetData = useMemo(() => {
+    return getFilteredAndSortedAssets(currencyRates);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currencyRates, assets, selectedAssetIds, sortBy]);
   
   const filteredAssets = useMemo(() => {
     let assets = assetData.map((asset) => {
@@ -97,15 +104,15 @@ export default function Dashboard() {
     }, 0);
   }, [filteredAssets]);
 
-  async function handleNewAsset() {
+  const handleNewAsset = useCallback(() => {
     setSelectedAsset(null);
     setIsAddModalOpen(true);
-  }
+  }, []);
 
-  async function handleEditAsset(asset) {
+  const handleEditAsset = useCallback((asset) => {
     setSelectedAsset(asset);
     setIsAddModalOpen(true);
-  }
+  }, []);
 
   async function handleSaveAsset(asset) {
     try {
@@ -147,9 +154,8 @@ export default function Dashboard() {
     }
   }
 
-  async function handleDeleteAsset(assetId) {
+  const handleDeleteAsset = useCallback(async (assetId) => {
     try {
-      setIsDeletingAsset(true);
       await deleteAsset(assetId);
       setToast({ 
         isVisible: true, 
@@ -163,33 +169,12 @@ export default function Dashboard() {
         message: err.message || 'Failed to delete asset', 
         type: 'error' 
       });
-    } finally {
-      setIsDeletingAsset(false);
     }
-  }
+  }, [deleteAsset]);
 
-  async function handleViewDetails(asset) {
+  const handleViewDetails = useCallback((asset) => {
     setSelectedCategory(asset.category);
-  }
-
-  // AssetList component
-  const AssetListComponent = () => (
-    <AssetList 
-      isLoading={isLoading} 
-      error={error} 
-      baseCurrency={baseCurrency}
-      assetData={filteredAssets} 
-      selectedCategory={selectedCategory}
-      totalAssetsValue={totalAssetsValue}
-      showMoreActions={showAssetActionsButton}
-      showViewDetails={showAssetViewDetailsButton}
-      showValues={showValues}
-      onEditAsset={handleEditAsset} 
-      onDeleteAsset={handleDeleteAsset}
-      onViewDetails={handleViewDetails}
-      onAddAsset={handleNewAsset}
-    />
-  );
+  }, []);
 
   // Fetch currency rates
   useEffect(() => {
@@ -222,7 +207,21 @@ export default function Dashboard() {
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
         >
-        <AssetListComponent />
+        <AssetList 
+          isLoading={isLoading} 
+          error={error} 
+          baseCurrency={baseCurrency}
+          assetData={filteredAssets} 
+          selectedCategory={selectedCategory}
+          totalAssetsValue={totalAssetsValue}
+          showMoreActions={showAssetActionsButton}
+          showViewDetails={showAssetViewDetailsButton}
+          showValues={showValues}
+          onEditAsset={handleEditAsset} 
+          onDeleteAsset={handleDeleteAsset}
+          onViewDetails={handleViewDetails}
+          onAddAsset={handleNewAsset}
+        />
       </Sidebar>
 
       {/* Main content */}
@@ -264,7 +263,21 @@ export default function Dashboard() {
                   setSelectedCategory={setSelectedCategory}
                 />
               )}
-              <AssetListComponent />
+              <AssetList 
+                isLoading={isLoading} 
+                error={error} 
+                baseCurrency={baseCurrency}
+                assetData={filteredAssets} 
+                selectedCategory={selectedCategory}
+                totalAssetsValue={totalAssetsValue}
+                showMoreActions={showAssetActionsButton}
+                showViewDetails={showAssetViewDetailsButton}
+                showValues={showValues}
+                onEditAsset={handleEditAsset} 
+                onDeleteAsset={handleDeleteAsset}
+                onViewDetails={handleViewDetails}
+                onAddAsset={handleNewAsset}
+              />
             </div>
           </div>
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 import { formatDateToString, formatFullCurrency, formatNumber, formatPercentage, maskValue } from '@/services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import EmptyState from './EmptyState';
@@ -30,7 +30,7 @@ const TRADING_CATEGORIES = [
 ];
 
 
-export default function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategory, totalAssetsValue, showMoreActions, showViewDetails, showValues, onEditAsset, onDeleteAsset, onViewDetails, onAddAsset }) {
+function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategory, totalAssetsValue, showMoreActions, showViewDetails, showValues, onEditAsset, onDeleteAsset, onViewDetails, onAddAsset }) {
 
   const moreActionsDropdownRef = useRef(null);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, assetId: null });
@@ -247,5 +247,6 @@ export default function AssetsList({ isLoading, error, assetData, baseCurrency, 
   
     </div>
   );
+}
 
-} 
+export default memo(AssetsList); 
