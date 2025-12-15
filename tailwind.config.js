@@ -95,6 +95,7 @@ module.exports = {
         bumblebee: {
           ...require("daisyui/src/theming/themes")["bumblebee"],
           primary: "#a9ff68",
+          error: "#ffae9b",
         },
       },
       {

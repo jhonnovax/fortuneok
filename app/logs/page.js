@@ -368,7 +368,7 @@ export default function LogsPage() {
                               </span>
                             </td>
                             <td>
-                              <span className="badge badge-ghost">{log.action}</span>
+                              <span className="font-normal">{log.action}</span>
                             </td>
                             <td className="max-w-xs truncate" title={log.errorMessage}>
                               {log.errorMessage}

@@ -120,7 +120,7 @@ const ButtonAccount = ({ onAddAsset }) => {
         </li>
         <li>
           <button
-            className="flex items-center gap-2 hover:bg-error/20 hover:text-error duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
+            className="flex items-center gap-2 hover:bg-error duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
             onClick={handleLogout}
           >
             <svg
