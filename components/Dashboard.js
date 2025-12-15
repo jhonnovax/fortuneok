@@ -302,7 +302,7 @@ export default function Dashboard() {
         />
 
         {/* Floating Add Asset Button */}
-        {!isLoading && <AddAssetFloatingButton onAddAsset={handleNewAsset} />}
+        {!isLoading && !isAddModalOpen && <AddAssetFloatingButton onAddAsset={handleNewAsset} />}
 
         {/* Toast Notification */}
         <Toast

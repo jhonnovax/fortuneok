@@ -3,6 +3,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
+import { usePathname } from "next/navigation";
 import apiClient from "@/libs/api";
 
 // A button to show user some account actions
@@ -13,8 +14,10 @@ import apiClient from "@/libs/api";
 const ButtonAccount = ({ onAddAsset }) => {
   const dropdownRef = useRef(null);
   const { data: session, status } = useSession();
+  const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(false);
+  const isDashboard = pathname === "/dashboard";
 
   const handleSignOut = () => {
     signOut({ callbackUrl: "/" });
@@ -107,17 +110,19 @@ const ButtonAccount = ({ onAddAsset }) => {
             )}
       </button>
       <ul className={`absolute right-0 z-[1] menu p-2 shadow bg-base-100 rounded-box w-full min-w-40 mt-1 ${openDropdown ? 'block' : 'hidden'}`}>
-        <li>
-          <button
-            className="flex items-center gap-2 hover:bg-base-300 duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
-            onClick={handleAddAsset}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            Add Asset
-          </button>
-        </li>
+        {isDashboard && (
+          <li>
+            <button
+              className="flex items-center gap-2 hover:bg-base-300 duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
+              onClick={handleAddAsset}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              Add Asset
+            </button>
+          </li>
+        )}
         <li>
           <button
             className="flex items-center gap-2 hover:bg-error/20 duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
