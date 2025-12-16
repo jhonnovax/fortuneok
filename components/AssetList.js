@@ -202,13 +202,14 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
                         </span>
 
                         {asset.currencies.length > 1 && (
-                          <div className='block'>
+                          <div className='flex flex-col gap-1'>
                             {asset.currencies.map((currencyData, currencyIndex) => (
-                              <CurrencyBadge 
-                                key={currencyIndex}
-                                currencyCode={currencyData.currency} 
-                                percentage={formatPercentage(currencyData.valuationInPreferredCurrency / asset.valuationInPreferredCurrency * 100, 2)} 
-                              />
+                              <div key={currencyIndex} className="tooltip tooltip-neutral" data-tip={`${formatPercentage(currencyData.valuationInPreferredCurrency / asset.valuationInPreferredCurrency * 100, 2)} of ${asset.description} is in ${currencyData.currency}`}>
+                                <CurrencyBadge 
+                                  currencyCode={currencyData.currency} 
+                                  percentage={formatPercentage(currencyData.valuationInPreferredCurrency / asset.valuationInPreferredCurrency * 100, 2)} 
+                                />
+                              </div>
                             ))}
                           </div>
                         )}
