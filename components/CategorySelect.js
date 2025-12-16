@@ -159,7 +159,7 @@ export default function CategorySelect({
   // Handle opening dropdown
   const handleOpen = useCallback(() => {
     if (disabled) return;
-    setIsOpen(true);
+    setIsOpen(prev => !prev);
     updateDropdownPosition();
     setHighlightedIndex(-1);
   }, [disabled, updateDropdownPosition]);
@@ -403,7 +403,7 @@ export default function CategorySelect({
             role="listbox"
             aria-label="Category selection"
           >
-            <ul ref={listRef} className="py-2">
+            <ul ref={listRef} className="py-0">
               {Object.values(groupedCategories).map((group) => {
                 // Find parent category (cash_parent, stocks_parent) or group header
                 const parentCategory = group.items.find(item => item.value === `${group.groupKey}_parent`);
@@ -426,7 +426,7 @@ export default function CategorySelect({
                           data-value={groupCategory.value}
                           className={`flex-1 text-left px-3 py-2 text-xs font-semibold text-base-content/70 uppercase tracking-wide flex items-center gap-2 focus:outline-none ${
                             value === groupCategory.value 
-                              ? 'bg-primary/40 font-medium cursor-default' 
+                              ? 'bg-primary text-neutral font-medium cursor-default' 
                               : 'hover:bg-base-200 focus:bg-base-200 cursor-pointer'
                           } ${
                             highlightedIndex >= 0 && flatList[highlightedIndex]?.value === groupCategory.value && value !== groupCategory.value ? 'bg-base-200' : ''
@@ -517,7 +517,7 @@ export default function CategorySelect({
                                   data-value={item.value}
                                   className={`w-full text-left pl-6 pr-3 py-2 focus:outline-none transition-colors ${
                                     isSelected
-                                      ? 'bg-primary/40 font-medium cursor-default'
+                                      ? 'bg-primary text-neutral font-medium cursor-default'
                                       : 'hover:bg-base-200 focus:bg-base-200 cursor-pointer'
                                   } ${
                                     isHighlighted && !isSelected ? 'bg-base-200' : ''
