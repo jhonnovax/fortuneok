@@ -31,9 +31,15 @@ export default function CategorySelect({
     const groups = ASSET_CATEGORIES.reduce((groups, category) => {
       const groupKey = category.group;
       if (!groups[groupKey]) {
-        // Find the group header category (where value === group) or use first item
-        const groupHeader = ASSET_CATEGORIES.find(cat => cat.group === groupKey && cat.value === groupKey) || category;
-        const labelText = extractLabelText(groupHeader.label);
+        // Find the parent category first (cash_parent, stocks_parent), then fallback to groupKey value, then first item
+        const parentCategory = ASSET_CATEGORIES.find(cat => 
+          cat.group === groupKey && cat.value === `${groupKey}_parent`
+        );
+        const groupHeaderCategory = parentCategory || 
+          ASSET_CATEGORIES.find(cat => cat.group === groupKey && cat.value === groupKey) || 
+          category;
+        
+        const labelText = extractLabelText(groupHeaderCategory.label);
         
         // Custom group labels
         let displayLabel = labelText;
@@ -46,7 +52,7 @@ export default function CategorySelect({
         groups[groupKey] = {
           groupKey,
           groupLabel: displayLabel,
-          icon: groupHeader.icon,
+          icon: groupHeaderCategory.icon,
           items: []
         };
       }
@@ -68,11 +74,21 @@ export default function CategorySelect({
       if (groupCategory) {
         list.push({ ...groupCategory, isGroupHeader: true, groupKey: group.groupKey });
       }
-      // Add children only if the group is expanded (excluding the group header and parent if they were added)
+      // Add children only if the group is expanded
+      // If there's a parent category, exclude only the parent; otherwise exclude items where value === groupKey
       if (isGroupExpanded) {
+        const parentCategory = group.items.find(item => item.value === `${group.groupKey}_parent`);
         group.items.forEach(item => {
-          if (item.value !== group.groupKey && item.value !== `${group.groupKey}_parent`) {
-            list.push({ ...item, isGroupHeader: false, groupKey: group.groupKey });
+          if (parentCategory) {
+            // If parent exists, exclude only the parent category
+            if (item.value !== `${group.groupKey}_parent`) {
+              list.push({ ...item, isGroupHeader: false, groupKey: group.groupKey });
+            }
+          } else {
+            // If no parent, exclude items where value === groupKey (they're the header)
+            if (item.value !== group.groupKey && item.value !== `${group.groupKey}_parent`) {
+              list.push({ ...item, isGroupHeader: false, groupKey: group.groupKey });
+            }
           }
         });
       }
@@ -99,14 +115,28 @@ export default function CategorySelect({
     if (isOpen && value) {
       // Check if value is a child (not a group header or parent)
       const selectedGroup = Object.values(groupedCategories).find(group => {
-        return group.items.some(item => 
-          item.value === value && 
-          item.value !== group.groupKey && 
-          item.value !== `${group.groupKey}_parent`
-        );
+        const parentCategory = group.items.find(item => item.value === `${group.groupKey}_parent`);
+        
+        // If there's a parent category, then items with value === groupKey are children
+        // Otherwise, items with value === groupKey are the header
+        if (parentCategory) {
+          // Has parent: value is a child if it's not the parent
+          return group.items.some(item => 
+            item.value === value && 
+            item.value !== `${group.groupKey}_parent`
+          );
+        } else {
+          // No parent: value is a child if it's not the groupKey (header)
+          return group.items.some(item => 
+            item.value === value && 
+            item.value !== group.groupKey &&
+            item.value !== `${group.groupKey}_parent`
+          );
+        }
       });
       if (selectedGroup) {
-        setExpandedGroups(prev => new Set([...prev, selectedGroup.groupKey]));
+        // Only expand the selected group (accordion behavior - only one open at a time)
+        setExpandedGroups(new Set([selectedGroup.groupKey]));
       }
     }
   }, [isOpen, value, groupedCategories]);
@@ -180,18 +210,20 @@ export default function CategorySelect({
     });
   }, [onChange, handleClose]);
 
-  // Toggle group expansion
+  // Toggle group expansion - only one group can be expanded at a time
   const toggleGroup = useCallback((groupKey, e) => {
     e.stopPropagation();
     setExpandedGroups(prev => {
-      const newSet = new Set(prev);
-      const wasExpanded = newSet.has(groupKey);
+      const wasExpanded = prev.has(groupKey);
       if (wasExpanded) {
+        // Collapse this group
+        const newSet = new Set(prev);
         newSet.delete(groupKey);
+        return newSet;
       } else {
-        newSet.add(groupKey);
+        // Expand this group and collapse all others (accordion behavior)
+        return new Set([groupKey]);
       }
-      return newSet;
     });
   }, []);
 
@@ -408,10 +440,12 @@ export default function CategorySelect({
                 // Find parent category (cash_parent, stocks_parent) or group header
                 const parentCategory = group.items.find(item => item.value === `${group.groupKey}_parent`);
                 const groupCategory = parentCategory || group.items.find(item => item.value === group.groupKey);
-                const children = group.items.filter(item => 
-                  item.value !== group.groupKey && 
-                  item.value !== `${group.groupKey}_parent`
-                );
+                // Filter children: 
+                // - If there's a parent category (cash_parent/stocks_parent), exclude only the parent, include everything else (including cash/stocks)
+                // - If no parent category, exclude items where value === groupKey (they're the header)
+                const children = parentCategory 
+                  ? group.items.filter(item => item.value !== `${group.groupKey}_parent`)
+                  : group.items.filter(item => item.value !== group.groupKey && item.value !== `${group.groupKey}_parent`);
                 const hasSelectableHeader = !!groupCategory;
                 const isExpanded = expandedGroups.has(group.groupKey);
                 const hasChildren = children.length > 0;
