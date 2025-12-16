@@ -32,7 +32,7 @@ export default function TotalAssetsByCurrency({ className, filteredAssetData, to
   return (
     <div className={`flex items-center justify-center flex-wrap gap-2 ${className}`}>
       {totalAssetsbyCurrency.map(value => (
-        <div className="inline-block" key={value.currency}>
+        <div key={value.currency} className="inline-block tooltip tooltip-neutral" data-tip={`Money in ${value.currency}`}>
           <div className="p-1 border border-base-content/10 rounded-lg shadow-sm bg-base-100 text-xs md:text-sm md:text-base">
             <div className="flex items-center justify-center gap-1">
               <Flag countryCode={currencies.find(currency => currency.code === value.currency)?.flag} size="sm" /> {value.currency} {showValues ? formatFullCurrency(value.totalValue) : maskValue(value.totalValue)}

@@ -87,7 +87,7 @@ export default function CurrencySelection({ isEditingCurrency, onEditingCurrency
   return (
     <button 
       className="btn btn-sm lg:btn-md gap-1 flex items-center"
-      title="Edit currency"
+      title="Change currency"
       onClick={() => onEditingCurrency(true)}
     >
       <Flag countryCode={preferredCurrencyDetails?.flag} size="sm" /> {preferredCurrency}
