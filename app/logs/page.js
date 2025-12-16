@@ -457,7 +457,7 @@ export default function LogsPage() {
                               {log.errorMessage}
                             </td>
                             <td className="text-sm">
-                              {log.userEmail || log.userName || 'N/A'}
+                              {log.userEmail || log.userName || 'Anonymous'}
                             </td>
                             <td className="max-w-xs truncate text-xs" title={log.url}>
                               {log.url}
