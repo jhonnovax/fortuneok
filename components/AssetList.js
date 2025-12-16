@@ -318,7 +318,7 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
                 >
                 </progress>
                 {/* Asset Percentage */}
-                <div className="flex items-center gap-2 text-xs font-bold" style={{ color: chartColors[assetIndex % chartColors.length] }}>
+                <div className="flex items-center gap-2 text-xs font-bold tooltip tooltip-neutral tooltip-left" data-tip={`${asset.description} represent ${formatPercentage(getAssetPercentage(asset, totalAssetsValue), 2)} of your portfolio`} style={{ color: chartColors[assetIndex % chartColors.length] }}>
                   {formatPercentage(getAssetPercentage(asset, totalAssetsValue), 2)}
                 </div>
               </div>

@@ -41,7 +41,7 @@ export default function SummaryCard({ isLoading, error, baseCurrency, filteredAs
 
         <div className="flex items-center gap-2 md:gap-4">
           {/* Currency Selection */}
-          <span className="tooltip tooltip-neutral" data-tip={`Values displayed in ${baseCurrency}`}>
+          <span className="tooltip tooltip-neutral" data-tip={`Portfolio values displayed in ${baseCurrency}`}>
             <CurrencySelection
               isEditingCurrency={isEditingCurrency}
               onEditingCurrency={setIsEditingCurrency}
@@ -50,7 +50,7 @@ export default function SummaryCard({ isLoading, error, baseCurrency, filteredAs
 
           {/* Portfolio Total Value */}
           {showTotalValue && (
-            <span className="tooltip tooltip-neutral" data-tip="Total portfolio value">
+            <span className="tooltip tooltip-neutral" data-tip={`Your total portfolio value in ${baseCurrency}`}>
               <span className="text-2xl md:text-3xl font-bold" title={showValues ? abbreviateSummaryTotalValue(totalAssetsValue, baseCurrency, true) : 'Hidden Value'}>
                 {showValues 
                   ? abbreviateSummaryTotalValue(totalAssetsValue, baseCurrency)
