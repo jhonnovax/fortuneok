@@ -70,7 +70,8 @@ export const dummyData = [
     "date": "1999-04-01T00:00:00.000Z",
     "category": "etf_funds",
     "symbol": "VOO",
-    "shares": 687.1765,
+    "shares": 387.1765,
+    "brokerName": "Vanguard",
     "notes": "Held in Roth IRA"
   },
   {
@@ -79,6 +80,7 @@ export const dummyData = [
     "category": "stocks",
     "symbol": "MSFT",
     "shares": 192.1568,
+    "brokerName": "Charles Schwab",
     "notes": "Core long-term holding"
   },
   {
@@ -87,6 +89,7 @@ export const dummyData = [
     "category": "stocks",
     "symbol": "AAPL",
     "shares": 200.3215,
+    "brokerName": "Fidelity",
     "notes": "Held since 2010"
   },
   {
@@ -95,6 +98,7 @@ export const dummyData = [
     "category": "stocks",
     "symbol": "NVDA",
     "shares": 125.6875,
+    "brokerName": "TD Ameritrade",
     "notes": "Tech sector growth stock"
   },
   {
@@ -103,6 +107,7 @@ export const dummyData = [
     "category": "bonds",
     "symbol": "GOVT",
     "shares": 6570.8276,
+    "brokerName": "E*TRADE",
     "notes": "Low-risk allocation"
   },
   {
@@ -144,6 +149,7 @@ export const dummyData = [
     "category": "cryptocurrencies",
     "symbol": "ETH",
     "shares": 8.6424,
+    "brokerName": "Coinbase",
     "notes": "Long-term crypto investment"
   },
   {
@@ -152,6 +158,7 @@ export const dummyData = [
     "category": "cryptocurrencies",
     "symbol": "BTC",
     "shares": 1.1521,
+    "brokerName": "Kraken",
     "notes": "Held in cold storage"
   },
   {
@@ -160,6 +167,7 @@ export const dummyData = [
     "category": "etf_funds",
     "symbol": 'GSPX.L',
     "shares": 617.9534,
+    "brokerName": "Interactive Brokers",
     "notes": "Held in Roth IRA"
   },
   {
@@ -168,6 +176,7 @@ export const dummyData = [
     "category": "etf_funds",
     "symbol": 'EQQQ.DE',
     "shares": 245.7881,
+    "brokerName": "Robinhood",
     "notes": "Held in Robinhood"
   },
   {
@@ -176,6 +185,7 @@ export const dummyData = [
     "category": "etf_funds",
     "symbol": 'QQQ',
     "shares": 356.7818,
+    "brokerName": "Robinhood",
     "notes": "Held in Robinhood"
   },
   {
@@ -195,6 +205,7 @@ export const dummyData = [
     "category": "bonds",
     "symbol": 'DE000ETFL581.SG',
     "shares": 875.5678,
+    "brokerName": "Merrill Edge",
     "notes": "Held in Trade Republic"
   },
   {
@@ -203,6 +214,7 @@ export const dummyData = [
     "category": "bonds",
     "symbol": 'FRA.DE',
     "shares": 567.8912,
+    "brokerName": "Webull",
     "notes": "Held in Trade Republic"
   },
   {
@@ -215,6 +227,24 @@ export const dummyData = [
       "amount": 550000
     },
     "notes": "1-bedroom, 1-bath condo in First Hill. Offers a comfortable living area and proximity to downtown amenities."
-  }
+  },
+  {
+    "id": 24,
+    "date": "2000-03-01T00:00:00.000Z",
+    "category": "etf_funds",
+    "symbol": "VOO",
+    "shares": 157.2346,
+    "brokerName": "Fidelity",
+    "notes": "Held for Jubilee"
+  },
+  {
+    "id": 25,
+    "date": "2002-02-04T00:00:00.000Z",
+    "category": "etf_funds",
+    "symbol": "VOO",
+    "shares": 262.1272,
+    "brokerName": "Charles Schwab",
+    "notes": "Held for Jubilee"
+  },
 ]
 
