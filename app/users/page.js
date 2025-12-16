@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import apiClient from '@/libs/api';
 import HeaderDashboard from '@/components/HeaderDashboard';
 import { ASSET_CATEGORIES } from '@/services/assetService';
+import * as XLSX from 'xlsx';
 
 export default function UsersPage() {
   const { status } = useSession();
@@ -20,6 +21,7 @@ export default function UsersPage() {
   const [selectedUserAssets, setSelectedUserAssets] = useState(null);
   const [isAssetsModalOpen, setIsAssetsModalOpen] = useState(false);
   const [isLoadingAssets, setIsLoadingAssets] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   // Handle Escape key to close modal
   useEffect(() => {
@@ -168,6 +170,68 @@ export default function UsersPage() {
     }
   };
 
+  // Handle Excel export
+  const handleExportExcel = async () => {
+    try {
+      setIsExporting(true);
+      setError(null);
+
+      // Fetch all users by making multiple API calls
+      const allUsers = [];
+      let currentPage = 1;
+      let hasMorePages = true;
+
+      while (hasMorePages) {
+        const params = new URLSearchParams({
+          page: currentPage.toString(),
+          limit: '100', // Fetch more per page for efficiency
+        });
+
+        if (search) {
+          params.append('search', search);
+        }
+        
+        params.append('sortField', sortField);
+        params.append('sortDirection', sortDirection);
+
+        const response = await apiClient.get(`/users?${params.toString()}`);
+        const users = response.users || [];
+        allUsers.push(...users);
+
+        const totalPages = response.pagination?.totalPages || 1;
+        hasMorePages = currentPage < totalPages;
+        currentPage++;
+      }
+
+      // Format data for Excel - only columns shown in UI table
+      const excelData = allUsers.map((user) => ({
+        'ID': user.id || '',
+        'Name': user.name || '',
+        'Email': user.email || '',
+        'Assets': user.assetStats?.totalAssets || 0,
+        'Created At': user.createdAt ? formatDate(user.createdAt) : '',
+        'Last Access At': user.lastAccessAt ? formatDate(user.lastAccessAt) : '',
+      }));
+
+      // Create workbook and worksheet
+      const worksheet = XLSX.utils.json_to_sheet(excelData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Users');
+
+      // Generate filename with timestamp
+      const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+      const filename = `users-export-${timestamp}.xlsx`;
+
+      // Write and download
+      XLSX.writeFile(workbook, filename);
+    } catch (err) {
+      console.error('Failed to export users:', err);
+      setError(err.message || 'Failed to export users');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -188,7 +252,28 @@ export default function UsersPage() {
         <main className="flex-1 w-full p-3 sm:p-4 md:p-6 space-y-4 md:space-y-6 overflow-x-hidden">
           <div className="card bg-base-100 shadow-xl w-full">
             <div className="card-body p-3 sm:p-4 md:p-6 overflow-visible">
-              <h1 className="card-title text-xl sm:text-2xl mb-4">Users</h1>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-4">
+                <h1 className="card-title text-xl sm:text-2xl mb-0">Users</h1>
+                <button
+                  className="btn btn-primary btn-sm sm:btn-md"
+                  onClick={handleExportExcel}
+                  disabled={isExporting || isLoading}
+                >
+                  {isExporting ? (
+                    <>
+                      <span className="loading loading-spinner loading-xs"></span>
+                      Exporting...
+                    </>
+                  ) : (
+                    <>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      Download Excel
+                    </>
+                  )}
+                </button>
+              </div>
 
               {/* Filters Section */}
               <div className="mb-4 sm:mb-6">
