@@ -1,6 +1,18 @@
 {
   "rules": [
     {
+      "description": "Financial logic for portfolio tracking: handle multi-currency, asset allocation, and risk insights.",
+      "pattern": "app/**/*.{js,jsx}",
+      "enforce": [
+        "Always use Decimal.js or similar for currency math to avoid floating-point errors",
+        "Calculate 'Allocation %' dynamically: (Asset Value / Total Portfolio Value) * 100",
+        "Group assets by 'Asset Class' (Bonds, Cars, Cash, Crypto, ETFs/Funds, Precious Metals, Real Estate, Stocks, Other custom assets) and 'Currency' (USD, EUR, etc.)",
+        "Identify 'Concentration Risk' based on profile risk tolerance and asset allocation",
+        "Provide diversification insights by comparing current allocation against a standard 60/40 or All-Weather model",
+        "Ensure all monetary displays include the correct currency symbol and ISO code"
+      ]
+    },
+    {
       "description": "Ensure all components follow the design system using Tailwind CSS and DaisyUI.",
       "pattern": "app/**/*.jsx",
       "enforce": [
