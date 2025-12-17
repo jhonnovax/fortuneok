@@ -137,6 +137,13 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
     setDeleteModal({ isOpen, assetId });
   }
 
+  function onMouseEnterAsset(assetId) {
+    if (openMoreActionsDropdown !== assetId) {
+      setOpenMoreActionsDropdown(null);
+    }
+    setHighlightedAssetId(assetId);
+  }
+
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -194,7 +201,7 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
               animationDelay: `${assetIndex * 50}ms`,
               animationFillMode: 'both'
             }}
-            onMouseEnter={() => setHighlightedAssetId && setHighlightedAssetId(asset.id)}
+            onMouseEnter={() => setHighlightedAssetId && onMouseEnterAsset(asset.id)}
             onMouseLeave={() => setHighlightedAssetId && setHighlightedAssetId(null)}
           >
             <div
