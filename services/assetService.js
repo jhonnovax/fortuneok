@@ -1,24 +1,109 @@
 import { getLocalDateFromUTCString } from "@/services/dateService";
 
-export const ASSET_CATEGORIES = [
-  { group: 'bonds', label: '📈 Bonds', value: 'bonds', icon: '📈' },
-  { group: 'cars', label: '🚗 Cars', value: 'cars', icon: '🚗' },
-  { group: 'cash', label: '💵 Cash', value: 'cash_parent', icon: '💵' },
-  { group: 'cash', label: '💵 Cash', value: 'cash', icon: '💵' },
-  { group: 'cash', label: '🏦 Certificates of deposit', value: 'certificates_of_deposit', icon: '🏦' },
-  { group: 'cash', label: '💵 Checking account', value: 'checking_account', icon: '🏦' },
-  { group: 'cash', label: '🏦 Savings account', value: 'savings_account', icon: '🏦' },
-  { group: 'cash', label: '🤝 P2P loans', value: 'p2p_loans', icon: '🤝' },
-  { group: 'cryptocurrencies', label: '📉 Cryptocurrencies', value: 'cryptocurrencies', icon: '📉' },
-  { group: 'etf_funds', label: '📈 ETF / Funds', value: 'etf_funds', icon: '📈' },
-  { group: 'precious_metals', label: '👑 Precious metals', value: 'precious_metals', icon: '👑' },
-  { group: 'real_estate', label: '🏠 Real Estate', value: 'real_estate', icon: '🏠' },
-  { group: 'stocks', label: '📈 Stocks', value: 'stocks_parent', icon: '📈' },
-  { group: 'stocks', label: '📈 Stocks', value: 'stocks', icon: '📈' },
-  { group: 'stocks', label: '📈 Option', value: 'option', icon: '📈' },
-  { group: 'stocks', label: '📈 Futures', value: 'futures', icon: '📈' },
-  { group: 'other', label: '🔷 Other custom assets', value: 'other', icon: '🔷' }
-];
+// Hierarchical structure for asset categories
+export const ASSET_CATEGORIES_STRUCTURE = {
+  bonds: {
+    icon: '📈',
+    label: 'Bonds',
+    value: 'bonds',
+    subcategories: []
+  },
+  cars: {
+    icon: '🚗',
+    label: 'Cars',
+    value: 'cars',
+    subcategories: []
+  },
+  cash: {
+    icon: '💵',
+    label: 'Cash',
+    value: 'cash_parent',
+    subcategories: [
+      { label: 'Cash', value: 'cash' },
+      { label: 'Certificates of deposit', value: 'certificates_of_deposit' },
+      { label: 'Checking account', value: 'checking_account' },
+      { label: 'Savings account', value: 'savings_account' },
+      { label: 'P2P loans', value: 'p2p_loans' }
+    ]
+  },
+  cryptocurrencies: {
+    icon: '📉',
+    label: 'Cryptocurrencies',
+    value: 'cryptocurrencies',
+    subcategories: []
+  },
+  etf_funds: {
+    icon: '📈',
+    label: 'ETF / Funds',
+    value: 'etf_funds',
+    subcategories: []
+  },
+  precious_metals: {
+    icon: '👑',
+    label: 'Precious metals',
+    value: 'precious_metals',
+    subcategories: []
+  },
+  real_estate: {
+    icon: '🏠',
+    label: 'Real Estate',
+    value: 'real_estate',
+    subcategories: []
+  },
+  stocks: {
+    icon: '📈',
+    label: 'Stocks',
+    value: 'stocks_parent',
+    subcategories: [
+      { label: 'Stocks', value: 'stocks' },
+      { label: 'Option', value: 'option' },
+      { label: 'Futures', value: 'futures' }
+    ]
+  },
+  other: {
+    icon: '🔷',
+    label: 'Other custom assets',
+    value: 'other',
+    subcategories: []
+  }
+};
+
+// Flatten structure for backward compatibility
+export const ASSET_CATEGORIES = (() => {
+  const flat = [];
+  Object.entries(ASSET_CATEGORIES_STRUCTURE).forEach(([groupKey, group]) => {
+    // Add parent category if it has subcategories, otherwise add as regular category
+    if (group.subcategories.length > 0) {
+      flat.push({
+        group: groupKey,
+        label: group.label,
+        value: group.value,
+        icon: group.icon
+      });
+    }
+    
+    // Add all subcategories
+    group.subcategories.forEach(subcategory => {
+      flat.push({
+        group: groupKey,
+        label: subcategory.label,
+        value: subcategory.value,
+        icon: group.icon
+      });
+    });
+    
+    // If no subcategories, add the group itself as a selectable category
+    if (group.subcategories.length === 0) {
+      flat.push({
+        group: groupKey,
+        label: group.label,
+        value: group.value,
+        icon: group.icon
+      });
+    }
+  });
+  return flat;
+})();
 
 export const TRADING_CATEGORIES = [
   'stocks', 
@@ -137,68 +222,43 @@ export function parseAssetCategoryFromAssetList(assetData) {
 }
 
 export function getAssetCategoryDescription(assetCategory) {
-  return ASSET_CATEGORIES.find(category => category.value === assetCategory)?.label || assetCategory;
+  const category = ASSET_CATEGORIES.find(cat => cat.value === assetCategory);
+  return category?.label || assetCategory;
 }
 
-export function getAssetCategoryGroupIcon (assetCategoryGroupName) {
-  switch (assetCategoryGroupName) {
-    case 'bonds':
-      return '📈';
-    case 'cars':
-      return '🚗';
-    case 'cash':
-      return '💵';
-    case 'cryptocurrencies':
-      return '📉';
-    case 'etf_funds':
-      return '📈';
-    case 'real_estate':
-      return '🏠';
-    case 'stocks':
-      return '📈';
-    case 'other':
-      return '🔷';
+export function getAssetCategoryIcon(categoryOrGroup) {
+  // First, check if it's a group name (direct key in ASSET_CATEGORIES_STRUCTURE)
+  if (ASSET_CATEGORIES_STRUCTURE[categoryOrGroup]) {
+    return ASSET_CATEGORIES_STRUCTURE[categoryOrGroup].icon || '';
   }
+  
+  // Otherwise, find which group this category value belongs to and return its icon
+  for (const group of Object.values(ASSET_CATEGORIES_STRUCTURE)) {
+    // Check if it's the parent category value
+    if (group.value === categoryOrGroup) {
+      return group.icon || '';
+    }
+    // Check if it's a subcategory value
+    if (group.subcategories.some(sub => sub.value === categoryOrGroup)) {
+      return group.icon || '';
+    }
+  }
+  return '';
 }
 
 export function getAssetCategoryGroupName(assetCategory) {
-
-  switch (assetCategory) {
-
-    case 'bonds':
-      return 'bonds';
-
-    case 'cars':
-      return 'cars';
-
-    case 'cash':
-    case 'certificates_of_deposit':
-    case 'checking_account':
-    case 'savings_account':
-    case 'p2p_loans':
-      return 'cash';
-
-    case 'cryptocurrencies':
-      return 'cryptocurrencies';
-
-    case 'etf_funds':
-      return 'etf_funds';
-
-    case 'precious_metals':
-      return 'precious_metals';
-
-    case 'real_estate':
-      return 'real_estate';
-
-    case 'stocks':
-    case 'option':
-    case 'futures':
-      return 'stocks';
-
-    default:
-      return 'other';
+  // Find which group this category belongs to
+  for (const [groupKey, group] of Object.entries(ASSET_CATEGORIES_STRUCTURE)) {
+    // Check if it's the parent category
+    if (group.value === assetCategory) {
+      return groupKey;
+    }
+    // Check if it's a subcategory
+    if (group.subcategories.some(sub => sub.value === assetCategory)) {
+      return groupKey;
+    }
   }
-
+  return 'other';
 }
 
 export function validateAssetData(assetData) {

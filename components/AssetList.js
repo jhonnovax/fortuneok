@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, memo } from 'react';
 import { formatDateToString, formatFullCurrency, formatNumber, formatPercentage, maskValue } from '@/services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import EmptyState from './EmptyState';
-import { getAssetCategoryGroupIcon, getAssetPercentage } from '@/services/assetService';
+import { getAssetCategoryIcon, getAssetPercentage } from '@/services/assetService';
 import { getChartColors } from '@/services/chartService';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
 import currencies from '@/public/currencies.json';
@@ -184,7 +184,7 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="font-bold text-sm">
-                        {selectedCategory === 'all' && getAssetCategoryGroupIcon(asset.category)} {asset.description}
+                        {getAssetCategoryIcon(asset.category)} {asset.description}
                       </h3>
 
                       {TRADING_CATEGORIES.includes(asset.category) && (

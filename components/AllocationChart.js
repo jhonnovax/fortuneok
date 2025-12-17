@@ -15,7 +15,7 @@ import { getChartColors } from '../services/chartService';
 import { BREAKPOINTS } from '@/services/breakpointService';
 import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
-import { ASSET_CATEGORIES } from '../services/assetService';
+import { getAssetCategoryIcon } from '../services/assetService';
 import AllocationChartSkeleton from './AllocationChartSkeleton';
 
 // Custom tooltip component
@@ -48,7 +48,7 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, s
   // Add fill property to data for tooltip color  
   const assetDataWithFill = useMemo(() => {
     return filteredAssetData.map((item, index) => ({
-      name: isDesktopOrUpper ? item.description : ASSET_CATEGORIES.find(category => category.value === item.category)?.icon,
+      name: isDesktopOrUpper ? item.description : getAssetCategoryIcon(item.category),
       value: item.valuationInPreferredCurrency,
       fill: chartColors[index % chartColors.length]
     }));
