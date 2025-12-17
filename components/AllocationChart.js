@@ -144,69 +144,62 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, s
     series.appear(1000, 100);
 
     // --- LEGEND CONFIGURATION ---
-    let legend = root.container.children.push(am5.Legend.new(root, {
-      centerX: isDesktopOrUpper ? undefined : am5.percent(50),
-      x: isDesktopOrUpper ? undefined : am5.percent(50),
-      layout: isDesktopOrUpper ? root.verticalLayout : root.gridLayout,
-      centerY: isDesktopOrUpper ? am5.percent(50) : undefined,
-      y: isDesktopOrUpper ? am5.percent(50) : undefined,
-      height: isDesktopOrUpper ? am5.percent(100) : undefined,
-      width: isDesktopOrUpper ? am5.percent(40) : am5.percent(100),
-      useDefaultMarker: true,
-      verticalScrollbar: isDesktopOrUpper ? am5.Scrollbar.new(root, {
-        orientation: "vertical"
-      }) : undefined
-    }));
+    if (isDesktopOrUpper) {
+      let legend = root.container.children.push(am5.Legend.new(root, {
+        centerX: undefined,
+        x: undefined,
+        layout: root.verticalLayout,
+        centerY: am5.percent(50),
+        y: am5.percent(50),
+        height: am5.percent(100),
+        width: am5.percent(40),
+        useDefaultMarker: true,
+        verticalScrollbar: am5.Scrollbar.new(root, {
+          orientation: "vertical"
+        })
+      }));
 
-    if (!isDesktopOrUpper) {
-      legend.setAll({
-        marginTop: 30,
-        paddingTop: 10
-      });
-      // Allow legend to wrap nicely on mobile
-      legend.itemContainers.template.set("width", am5.percent(45));
-    } else {
       legend.setAll({
         marginLeft: 20
       });
+
+      // Legend content
+      legend.labels.template.setAll({
+        fill: am5.color(theme === 'light' ? '#1f2937' : '#e5e7eb'),
+        fontSize: 12,
+        fontWeight: "500",
+      });
+
+      legend.valueLabels.template.setAll({
+        fill: am5.color(theme === 'light' ? '#1f2937' : '#e5e7eb'),
+        fontSize: 12,
+        align: "right",
+        text: "{valuePercentTotal.formatNumber('0.00')}%"
+      });
+
+      // Make legend interactive
+      legend.itemContainers.template.setAll({
+        interactive: true,
+        cursorOverStyle: "pointer"
+      });
+
+      // Legend interaction - State driven
+      legend.itemContainers.template.events.on("pointerover", function (e) {
+        var item = e.target.dataItem.dataContext;
+        if (item && item.dataContext && item.dataContext.id && setHighlightedAssetId) {
+          setHighlightedAssetId(item.dataContext.id);
+        }
+      });
+
+      legend.itemContainers.template.events.on("pointerout", function (e) {
+        if (setHighlightedAssetId) {
+          setHighlightedAssetId(null);
+        }
+      });
+
+      // Bind legend to data
+      legend.data.setAll(series.dataItems); // Bind immediately as we set data above
     }
-
-    // Legend content
-    legend.labels.template.setAll({
-      fill: am5.color(theme === 'light' ? '#1f2937' : '#e5e7eb'),
-      fontSize: 12,
-      fontWeight: "500",
-    });
-
-    legend.valueLabels.template.setAll({
-      fill: am5.color(theme === 'light' ? '#1f2937' : '#e5e7eb'),
-      fontSize: 12,
-      align: "right",
-      text: "{valuePercentTotal.formatNumber('0.00')}%"
-    });
-
-    // Make legend interactive
-    legend.itemContainers.template.setAll({
-      interactive: true,
-      cursorOverStyle: "pointer"
-    });
-
-    // Legend interaction - State driven
-    legend.itemContainers.template.events.on("pointerover", function (e) {
-      var item = e.target.dataItem.dataContext;
-      if (item && item.dataContext && item.dataContext.id && setHighlightedAssetId) {
-        setHighlightedAssetId(item.dataContext.id);
-      }
-    });
-
-    legend.itemContainers.template.events.on("pointerout", function (e) {
-      if (setHighlightedAssetId) {
-        setHighlightedAssetId(null);
-      }
-    });
-
-    // Bind legend to data
-    legend.data.setAll(series.dataItems); // Bind immediately as we set data above
 
     // Slice hover state
     series.slices.template.states.create("hover", {
