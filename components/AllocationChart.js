@@ -1,13 +1,9 @@
 'use client';
 
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  Tooltip,
-} from 'recharts';
-import { useMemo } from 'react';
+import { useLayoutEffect, useRef, useEffect, useMemo } from 'react';
+import * as am5 from "@amcharts/amcharts5";
+import * as am5percent from "@amcharts/amcharts5/percent";
+import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import { formatCurrency, formatPercentage, maskValue } from '../services/intlService';
 import ErrorLoadingData from './ErrorLoadingData';
 import EmptyState from './EmptyState';
@@ -15,151 +11,308 @@ import { getChartColors } from '../services/chartService';
 import { BREAKPOINTS } from '@/services/breakpointService';
 import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
-import { getAssetCategoryIcon } from '../services/assetService';
 import AllocationChartSkeleton from './AllocationChartSkeleton';
 
-// Custom tooltip component
-const CustomTooltip = ({ active, payload, showValues }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-base-100 p-2 border border-base-300 shadow-md rounded-md">
-        <div className="flex items-center gap-2">
-          <div 
-            className="w-3 h-3 rounded-sm" 
-            style={{ backgroundColor: payload[0].payload.fill || payload[0].color }}
-          />
-          <span className="font-medium">{payload[0].payload.name}</span>
-        </div>
-        <p className="text-sm mt-1">{showValues ? formatCurrency(payload[0].value) : maskValue(payload[0].value)}</p>
-      </div>
-    );
-  }
-  return null;
-};
-
-export default function AllocationChart({ isLoading, error, filteredAssetData, showValues, onAddAsset }) {
+export default function AllocationChart({ isLoading, error, filteredAssetData, showValues, onAddAsset, highlightedAssetId, setHighlightedAssetId }) {
 
   const { breakpointInPixels } = useTailwindBreakpoint();
   const theme = useSystemTheme();
+  const sliceScaleEffect = 1.1;
 
   const chartColors = getChartColors(theme);
   const isDesktopOrUpper = breakpointInPixels >= BREAKPOINTS.LG;
 
-  // Add fill property to data for tooltip color  
-  const assetDataWithFill = useMemo(() => {
-    return filteredAssetData.map((item, index) => ({
-      name: isDesktopOrUpper ? item.description : getAssetCategoryIcon(item.category),
-      value: item.valuationInPreferredCurrency,
+  const chartRef = useRef(null);
+  const seriesRef = useRef(null);
+
+  // Prepare data for AmCharts
+  const chartData = useMemo(() => {
+    return filteredAssetData.map((asset, index) => ({
+      category: asset.description,
+      value: asset.valuationInPreferredCurrency,
+      id: asset.id,
       fill: chartColors[index % chartColors.length]
     }));
-  }, [filteredAssetData, chartColors, isDesktopOrUpper]);
+  }, [filteredAssetData, chartColors]);
 
-  // Render pie custom label
-  function renderPieCustomLabel({ cx, cy, midAngle, outerRadius, percent, index, name }){
-    const RADIAN = Math.PI / 180;
-    const radius = outerRadius + 25; // Add padding
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    let y = cy + radius * Math.sin(-midAngle * RADIAN);
+  useLayoutEffect(() => {
+    if (isLoading || error || filteredAssetData.length === 0) return;
 
-    // ADD vertical offset to avoid collision from tight stacking
-    const verticalPadding = percent < 0.03 ? 1 : 0; // Adjust this as needed
-    y += verticalPadding * (index % 3 - 1); // alternates -1, 0, 1 for some breathing room
+    // Create root element
+    // https://www.amcharts.com/docs/v5/getting-started/#Root_element
+    let root = am5.Root.new("chartdiv");
 
-    const totalNumberOfAssets = filteredAssetData.length;
-    const fontSize = (isDesktopOrUpper && totalNumberOfAssets > 10) ? 9 : 12;
+    // Set themes
+    // https://www.amcharts.com/docs/v5/concepts/themes/
+    root.setThemes([
+      am5themes_Animated.new(root)
+    ]);
 
-    return (
-      <text
-        x={x}
-        y={y}
-        fill={chartColors[index % chartColors.length]}
-        fontSize={fontSize}
-        textAnchor={x > cx ? 'start' : 'end'}
-        dominantBaseline="central"
-        style={{
-          pointerEvents: 'none',
-          whiteSpace: 'nowrap'
-        }}
-      >
-        {`${formatPercentage(percent * 100, 2)} ${name}`}
-      </text>
-    );
-  }
+    // Define layout based on screen size
+    // Desktop: Horizontal (Chart Left, Legend Right)
+    // Mobile: Vertical (Chart Top, Legend Bottom)
+    root.container.set("layout", isDesktopOrUpper ? root.horizontalLayout : root.verticalLayout);
+
+    // Create chart
+    // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/
+    let chart = root.container.children.push(am5percent.PieChart.new(root, {
+      layout: root.verticalLayout,
+      innerRadius: am5.percent(60), // Make it a donut
+      width: isDesktopOrUpper ? am5.percent(65) : am5.percent(100), // Give space for legend on desktop
+    }));
+
+    // Create series
+    // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Series
+    let series = chart.series.push(am5percent.PieSeries.new(root, {
+      name: "Series",
+      valueField: "value",
+      categoryField: "category",
+      alignLabels: false
+    }));
+
+    seriesRef.current = series;
+
+    // Configure slices
+    series.slices.template.setAll({
+      stroke: am5.color(theme === 'light' ? '#ffffff' : '#1d232a'),
+      strokeWidth: 2,
+      scale: 1,
+      toggleKey: "none", // Disable toggling on click
+      cursorOverStyle: "pointer",
+      cornerRadius: 5,
+      interactive: true
+    });
+
+    // Custom colors using the dataContext
+    series.slices.template.adapters.add("fill", function (fill, target) {
+      if (target.dataItem) {
+        return am5.color(target.dataItem.dataContext.fill);
+      }
+      return fill;
+    });
+
+    series.slices.template.adapters.add("stroke", function (stroke, target) {
+      return am5.color(theme === 'light' ? '#ffffff' : '#1d232a'); // Border color matching theme bg
+    });
+
+    // Tooltip settings
+    let tooltip = am5.Tooltip.new(root, {
+      getFillFromSprite: false,
+      autoTextColor: false,
+      pointerOrientation: "horizontal",
+    });
+
+    tooltip.get("background").setAll({
+      fill: am5.color(theme === 'light' ? '#ffffff' : '#1d232a'), // base-100
+      stroke: am5.color(theme === 'light' ? '#e5e7eb' : '#374151'), // base-300
+      fillOpacity: 0.9,
+      interactive: false
+    });
+
+    tooltip.label.setAll({
+      fill: am5.color(theme === 'light' ? '#1f2937' : '#e5e7eb'), // base-content
+      text: "{category}: {valueFormatted}",
+      interactive: false
+    });
+
+    series.set("tooltip", tooltip);
+
+    // Format tooltip value
+    series.slices.template.adapters.add("tooltipText", function (text, target) {
+      if (target.dataItem) {
+        const value = target.dataItem.get("value");
+        const formattedValue = showValues ? formatCurrency(value) : maskValue(value);
+        return `[bold]${target.dataItem.get("category")}[/]\n${formattedValue} (${formatPercentage(target.dataItem.get("valuePercentTotal"), 2)})`;
+      }
+      return text;
+    });
+
+    // Labels - Disabled
+    series.labels.template.setAll({
+      forceHidden: true
+    });
+
+    series.ticks.template.setAll({
+      forceHidden: true
+    });
+
+    // Set data
+    series.data.setAll(chartData);
+
+    // Play initial animation
+    // https://www.amcharts.com/docs/v5/concepts/animations/#Component_animations
+    series.appear(1000, 100);
+
+    // --- LEGEND CONFIGURATION ---
+    let legend = root.container.children.push(am5.Legend.new(root, {
+      centerX: isDesktopOrUpper ? undefined : am5.percent(50),
+      x: isDesktopOrUpper ? undefined : am5.percent(50),
+      layout: isDesktopOrUpper ? root.verticalLayout : root.gridLayout,
+      centerY: isDesktopOrUpper ? am5.percent(50) : undefined,
+      y: isDesktopOrUpper ? am5.percent(50) : undefined,
+      height: isDesktopOrUpper ? am5.percent(100) : undefined,
+      width: isDesktopOrUpper ? am5.percent(40) : am5.percent(100),
+      useDefaultMarker: true,
+      verticalScrollbar: isDesktopOrUpper ? am5.Scrollbar.new(root, {
+        orientation: "vertical"
+      }) : undefined
+    }));
+
+    if (!isDesktopOrUpper) {
+      legend.setAll({
+        marginTop: 30,
+        paddingTop: 10
+      });
+      // Allow legend to wrap nicely on mobile
+      legend.itemContainers.template.set("width", am5.percent(45));
+    } else {
+      legend.setAll({
+        marginLeft: 20
+      });
+    }
+
+    // Legend content
+    legend.labels.template.setAll({
+      fill: am5.color(theme === 'light' ? '#1f2937' : '#e5e7eb'),
+      fontSize: 12,
+      fontWeight: "500",
+    });
+
+    legend.valueLabels.template.setAll({
+      fill: am5.color(theme === 'light' ? '#1f2937' : '#e5e7eb'),
+      fontSize: 12,
+      align: "right",
+      text: "{valuePercentTotal.formatNumber('0.00')}%"
+    });
+
+    // Make legend interactive
+    legend.itemContainers.template.setAll({
+      interactive: true,
+      cursorOverStyle: "pointer"
+    });
+
+    // Legend interaction - State driven
+    legend.itemContainers.template.events.on("pointerover", function (e) {
+      var item = e.target.dataItem.dataContext;
+      if (item && item.dataContext && item.dataContext.id && setHighlightedAssetId) {
+        setHighlightedAssetId(item.dataContext.id);
+      }
+    });
+
+    legend.itemContainers.template.events.on("pointerout", function (e) {
+      if (setHighlightedAssetId) {
+        setHighlightedAssetId(null);
+      }
+    });
+
+    // Bind legend to data
+    legend.data.setAll(series.dataItems); // Bind immediately as we set data above
+
+    // Slice hover state
+    series.slices.template.states.create("hover", {
+      scale: sliceScaleEffect
+    });
+
+    series.events.on("datavalidated", () => {
+      series.slices.each((slice) => {
+        slice.events.on("pointerover", () => {
+          if (setHighlightedAssetId) {
+            setHighlightedAssetId(slice.dataItem.dataContext.id);
+          }
+        });
+
+        slice.events.on("pointerout", () => {
+          if (setHighlightedAssetId) {
+            setHighlightedAssetId(null);
+          }
+        });
+      });
+    });
+
+    chartRef.current = chart;
+
+    return () => {
+      root.dispose();
+    };
+  }, [chartData, isLoading, error, theme, isDesktopOrUpper, showValues, setHighlightedAssetId]);
+
+  // Handle highlightedAssetId prop change (from list hover)
+  useEffect(() => {
+    if (!seriesRef.current) return;
+
+    const series = seriesRef.current;
+    let isAnyHighlighted = false;
+
+    series.dataItems.forEach((dataItem) => {
+      const slice = dataItem.get("slice");
+      if (!slice) return;
+
+      if (dataItem.dataContext.id === highlightedAssetId) {
+        isAnyHighlighted = true;
+        slice.animate({
+          key: "scale",
+          to: sliceScaleEffect,
+          duration: 300,
+          easing: am5.ease.out(am5.ease.cubic)
+        });
+
+        slice.set("zIndex", 1000); // Bring to front
+        slice.showTooltip();
+      } else {
+        slice.animate({
+          key: "scale",
+          to: 1,
+          duration: 300,
+          easing: am5.ease.out(am5.ease.cubic)
+        });
+        slice.set("zIndex", 0);
+        slice.hideTooltip();
+      }
+    });
+
+    if (!isAnyHighlighted) {
+      series.hideTooltip();
+    }
+
+  }, [highlightedAssetId]);
 
   // Chart UI based on the state of the component
-  let chartUI = null;
-
   if (isLoading) {
     return <AllocationChartSkeleton />;
   }
 
   if (error) {
-    chartUI = (
-      <ErrorLoadingData error={error} />
-    );
-  } else if (filteredAssetData.length === 0) {
-    chartUI = (
-      <EmptyState
-        title="Portfolio Allocation"
-        description="Once you add assets, you'll see a beautiful visualization of how your portfolio is allocated across different investments."
-        onAction={onAddAsset}
-        actionLabel="Add assets to get started"
-        variant="chart"
-      />
-    );
-  } else {
-    chartUI = (
-      <>
-        {/* Chart */}
-        {filteredAssetData.length === 0 ? (
-          <div className="h-full">
-            <p className="text-gray-500">No data available</p>
-          </div>
-        ) : (
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart width={400} height={400}>
-              <Pie
-                data={assetDataWithFill}
-                cx="50%"
-                cy="50%"
-                labelLine={true}
-                label={renderPieCustomLabel}
-                outerRadius={isDesktopOrUpper ? 140 : 95}
-                nameKey="name"
-                dataKey="value"
-                animationEasing="ease-in-out"
-                animationDuration={150}
-                stroke={theme === 'light' ? '#fff' : '#2a303c'}
-              >
-                {assetDataWithFill.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
-                ))}
-              </Pie>
-              <Tooltip content={<CustomTooltip showValues={showValues} />} />
-            </PieChart>
-          </ResponsiveContainer>
-        )}
-      </>
+    return <ErrorLoadingData error={error} />;
+  }
+
+  if (filteredAssetData.length === 0) {
+    return (
+      <div className="card bg-base-100 shadow-xl">
+        <h2 className="text-lg font-semibold text-center flex items-center justify-center gap-2 sr-only">
+          Allocation Chart
+        </h2>
+        <div className="card-body p-4 lg:p-6 items-center justify-center">
+          <EmptyState
+            title="Portfolio Allocation"
+            description="Once you add assets, you'll see a beautiful visualization of how your portfolio is allocated across different investments."
+            onAction={onAddAsset}
+            actionLabel="Add assets to get started"
+            variant="chart"
+          />
+        </div>
+      </div>
     );
   }
 
   return (
-    <div className="card bg-base-100 shadow-xl">
-      {/* Heading */}
+    <div className="card bg-base-100 shadow-xl overflow-visible">
       <h2 className="text-lg font-semibold text-center flex items-center justify-center gap-2 sr-only">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
-        </svg>
         Allocation Chart
       </h2>
 
-      {/* Chart */}
-      <div className={`card-body p-4 lg:p-6 items-center justify-center ${filteredAssetData.length > 0 ? 'h-[300px] lg:h-[400px]' : ''}`}>
-        {chartUI}
+      <div className={`card-body p-4 lg:p-6 items-center justify-center ${filteredAssetData.length > 0 ? 'h-[500px] lg:h-[400px]' : ''}`}>
+        <div id="chartdiv" style={{ width: "100%", height: "100%" }}></div>
       </div>
-
     </div>
   );
-  
 } 

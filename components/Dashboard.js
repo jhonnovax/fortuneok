@@ -17,9 +17,9 @@ import Toast from './Toast';
 import ConfettiEffect from './Confetti';
 
 // Dynamic imports for heavy components
-const AllocationChart = dynamic(() => import('./AllocationChart'), { 
-  ssr: false, 
-  loading: () => <AllocationChartSkeleton /> 
+const AllocationChart = dynamic(() => import('./AllocationChart'), {
+  ssr: false,
+  loading: () => <AllocationChartSkeleton />
 });
 
 const AssetEditionModal = dynamic(() => import('./AssetEditionModal'), {
@@ -42,6 +42,7 @@ export default function Dashboard() {
   const [showValues, setShowValues] = useState(true);
   const [error, setError] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
+  const [highlightedAssetId, setHighlightedAssetId] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' });
   const [showConfetti, setShowConfetti] = useState(false);
@@ -57,12 +58,12 @@ export default function Dashboard() {
   const addAsset = useAssetStore((state) => state.addAsset);
   const updateAsset = useAssetStore((state) => state.updateAsset);
   const deleteAsset = useAssetStore((state) => state.deleteAsset);
-  
+
   const assetData = useMemo(() => {
     return getFilteredAndSortedAssets(currencyRates);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currencyRates, assets, selectedAssetIds, sortBy]);
-  
+
   const filteredAssets = useMemo(() => {
     let assets = assetData.map((asset) => {
       return {
@@ -76,15 +77,15 @@ export default function Dashboard() {
 
     // If a category is selected, and it's not 'all', filter the assets to only include the assets in that category
     if (selectedCategory && selectedCategory !== 'all') {
-      const categoryGroupName = getAssetCategoryGroupName(selectedCategory);      
+      const categoryGroupName = getAssetCategoryGroupName(selectedCategory);
       assets = assets.filter((asset) => getAssetCategoryGroupName(asset.category) === categoryGroupName);
     }
-    
+
     // If no category is selected, parse the asset data to get the categories
     if (!selectedCategory) {
       assets = parseAssetCategoryFromAssetList(assets);
     }
-    
+
     assets = assets.sort((a, b) => b.valuationInPreferredCurrency - a.valuationInPreferredCurrency);
 
     return assets;
@@ -124,19 +125,19 @@ export default function Dashboard() {
       if (id) {
         // Update existing asset
         await updateAsset(id, assetData);
-        setToast({ 
-          isVisible: true, 
-          message: 'Asset updated successfully! 🎉', 
-          type: 'success' 
+        setToast({
+          isVisible: true,
+          message: 'Asset updated successfully! 🎉',
+          type: 'success'
         });
         setIsAddModalOpen(false);
       } else {
         // Create new asset
         await addAsset(assetData);
-        setToast({ 
-          isVisible: true, 
-          message: 'Asset added successfully! 🚀', 
-          type: 'success' 
+        setToast({
+          isVisible: true,
+          message: 'Asset added successfully! 🚀',
+          type: 'success'
         });
         setShowConfetti(true);
         setIsAddModalOpen(false);
@@ -145,10 +146,10 @@ export default function Dashboard() {
     } catch (err) {
       console.error('Failed to save asset:', err);
       setSubmitAssetError(err.message);
-      setToast({ 
-        isVisible: true, 
-        message: err.message || 'Failed to save asset', 
-        type: 'error' 
+      setToast({
+        isVisible: true,
+        message: err.message || 'Failed to save asset',
+        type: 'error'
       });
       // Error is already logged in the store, but we ensure it's captured here too
       // The store will handle the logging, so we don't need to duplicate it
@@ -160,17 +161,17 @@ export default function Dashboard() {
   const handleDeleteAsset = useCallback(async (assetId) => {
     try {
       await deleteAsset(assetId);
-      setToast({ 
-        isVisible: true, 
-        message: 'Asset deleted successfully! ✅', 
-        type: 'success' 
+      setToast({
+        isVisible: true,
+        message: 'Asset deleted successfully! ✅',
+        type: 'success'
       });
     } catch (err) {
       console.error('Failed to delete asset:', err);
-      setToast({ 
-        isVisible: true, 
-        message: err.message || 'Failed to delete asset', 
-        type: 'error' 
+      setToast({
+        isVisible: true,
+        message: err.message || 'Failed to delete asset',
+        type: 'error'
       });
       // Error is already logged in the store, but we ensure it's captured here too
       // The store will handle the logging, so we don't need to duplicate it
@@ -202,7 +203,7 @@ export default function Dashboard() {
         setIsLoading(false);
       });
   }, [getAssets]);
-  
+
   return (
     <div className="min-h-screen flex flex-col bg-base-200">
 
@@ -210,26 +211,28 @@ export default function Dashboard() {
       <HeaderDashboard onAddAsset={handleNewAsset} />
 
       {/* Desktop sidebar */}
-      <Sidebar 
-          isLoading={isLoading} 
-          assetData={filteredAssets}  
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-        >
-        <AssetList 
-          isLoading={isLoading} 
-          error={error} 
+      <Sidebar
+        isLoading={isLoading}
+        assetData={filteredAssets}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+      >
+        <AssetList
+          isLoading={isLoading}
+          error={error}
           baseCurrency={baseCurrency}
-          assetData={filteredAssets} 
+          assetData={filteredAssets}
           selectedCategory={selectedCategory}
           totalAssetsValue={totalAssetsValue}
           showMoreActions={showAssetActionsButton}
           showViewDetails={showAssetViewDetailsButton}
           showValues={showValues}
-          onEditAsset={handleEditAsset} 
+          onEditAsset={handleEditAsset}
           onDeleteAsset={handleDeleteAsset}
           onViewDetails={handleViewDetails}
           onAddAsset={handleNewAsset}
+          highlightedAssetId={highlightedAssetId}
+          setHighlightedAssetId={setHighlightedAssetId}
         />
       </Sidebar>
 
@@ -243,49 +246,53 @@ export default function Dashboard() {
           </div>
 
           {/* Portfolio Summary Card */}
-          <SummaryCard 
+          <SummaryCard
             isLoading={isLoading}
             error={error}
             baseCurrency={baseCurrency}
-            filteredAssetData={filteredAssets} 
+            filteredAssetData={filteredAssets}
             totalAssetsValue={totalAssetsValue}
             showValues={showValues}
             setShowValues={setShowValues}
           />
 
           {/* Render Allocation Chart */}
-          <AllocationChart 
+          <AllocationChart
             isLoading={isLoading}
             error={error}
-            filteredAssetData={filteredAssets} 
+            filteredAssetData={filteredAssets}
             showValues={showValues}
             onAddAsset={handleNewAsset}
+            highlightedAssetId={highlightedAssetId}
+            setHighlightedAssetId={setHighlightedAssetId}
           />
 
           {/* Mobile Assets List */}
           <div className="card bg-base-100 shadow-xl lg:hidden">
             <div className="card-body p-0">
               {!isLoading && (
-                <AssetTopBarNavigation 
-                  assetData={filteredAssets} 
+                <AssetTopBarNavigation
+                  assetData={filteredAssets}
                   selectedCategory={selectedCategory}
                   setSelectedCategory={setSelectedCategory}
                 />
               )}
-              <AssetList 
-                isLoading={isLoading} 
-                error={error} 
+              <AssetList
+                isLoading={isLoading}
+                error={error}
                 baseCurrency={baseCurrency}
-                assetData={filteredAssets} 
+                assetData={filteredAssets}
                 selectedCategory={selectedCategory}
                 totalAssetsValue={totalAssetsValue}
                 showMoreActions={showAssetActionsButton}
                 showViewDetails={showAssetViewDetailsButton}
                 showValues={showValues}
-                onEditAsset={handleEditAsset} 
+                onEditAsset={handleEditAsset}
                 onDeleteAsset={handleDeleteAsset}
                 onViewDetails={handleViewDetails}
                 onAddAsset={handleNewAsset}
+                highlightedAssetId={highlightedAssetId}
+                setHighlightedAssetId={setHighlightedAssetId}
               />
             </div>
           </div>

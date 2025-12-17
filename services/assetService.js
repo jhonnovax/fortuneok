@@ -81,7 +81,7 @@ export const ASSET_CATEGORIES = (() => {
         icon: group.icon
       });
     }
-    
+
     // Add all subcategories
     group.subcategories.forEach(subcategory => {
       flat.push({
@@ -91,7 +91,7 @@ export const ASSET_CATEGORIES = (() => {
         icon: group.icon
       });
     });
-    
+
     // If no subcategories, add the group itself as a selectable category
     if (group.subcategories.length === 0) {
       flat.push({
@@ -106,11 +106,11 @@ export const ASSET_CATEGORIES = (() => {
 })();
 
 export const TRADING_CATEGORIES = [
-  'stocks', 
-  'bonds', 
-  'cryptocurrencies', 
-  'etf_funds', 
-  'option', 
+  'stocks',
+  'bonds',
+  'cryptocurrencies',
+  'etf_funds',
+  'option',
   'futures'
 ];
 
@@ -174,7 +174,7 @@ export function parseAssetCategoryFromAssetList(assetData) {
 
     if (!categoryExists) {
       categories = categories.concat({
-        id: Date.now().toString() + Math.floor(Math.random() * 1000000).toString(),
+        id: `category-${assetCategoryGroup}`,
         assets: [asset],
         category: assetCategoryGroup,
         description: getAssetCategoryDescription(assetCategoryGroup),
@@ -190,8 +190,8 @@ export function parseAssetCategoryFromAssetList(assetData) {
             if (categoryCurrencyExists) {
               return categoryCurrencies.map(categoryCurrency => {
                 if (categoryCurrency.currency === currentCurrency.currency) {
-                  return { 
-                    ...categoryCurrency, 
+                  return {
+                    ...categoryCurrency,
                     valuationInPreferredCurrency: (categoryCurrency.valuationInPreferredCurrency + currentCurrency.valuationInPreferredCurrency)
                   };
                 }
@@ -203,11 +203,11 @@ export function parseAssetCategoryFromAssetList(assetData) {
             return [...categoryCurrencies, currentCurrency];
           }, []);
 
-          return { 
-            ...category, 
+          return {
+            ...category,
             assets: [...category.assets, asset],
             currencies: categoryCurrencies.sort((a, b) => b.valuationInPreferredCurrency - a.valuationInPreferredCurrency),
-            valuationInPreferredCurrency: category.valuationInPreferredCurrency + (asset.valuationInPreferredCurrency || 0) 
+            valuationInPreferredCurrency: category.valuationInPreferredCurrency + (asset.valuationInPreferredCurrency || 0)
           };
         }
 
@@ -231,7 +231,7 @@ export function getAssetCategoryIcon(categoryOrGroup) {
   if (ASSET_CATEGORIES_STRUCTURE[categoryOrGroup]) {
     return ASSET_CATEGORIES_STRUCTURE[categoryOrGroup].icon || '';
   }
-  
+
   // Otherwise, find which group this category value belongs to and return its icon
   for (const group of Object.values(ASSET_CATEGORIES_STRUCTURE)) {
     // Check if it's the parent category value
@@ -262,10 +262,10 @@ export function getAssetCategoryGroupName(assetCategory) {
 }
 
 export function validateAssetData(assetData) {
-  const assetErrors  = {};
+  const assetErrors = {};
 
   const isTradingCategory = TRADING_CATEGORIES.includes(assetData.category);
-    
+
   // Required field validation
   if (!assetData.date) assetErrors.date = 'Date is required';
   if (!assetData.category) assetErrors.category = 'Category is required';
@@ -275,11 +275,11 @@ export function validateAssetData(assetData) {
   if (isTradingCategory && !assetData.shares) assetErrors.shares = 'Shares is required';
   if (!isTradingCategory && !assetData.currentValuation?.currency) assetErrors.currentValuationCurrency = 'Currency is required';
   if (!isTradingCategory && !assetData.currentValuation?.amount) assetErrors.currentValuation = 'Amount is required';
-  
+
   if (isTradingCategory && isNaN(Number(assetData.shares))) {
     assetErrors.shares = 'Enter a valid number';
   }
-  
+
   if (!isTradingCategory && isNaN(Number(assetData.currentValuation.amount))) {
     assetErrors.currentValuation = 'Enter a valid number';
   }

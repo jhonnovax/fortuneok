@@ -17,21 +17,38 @@ const CurrencyBadge = dynamic(() => import('./CurrencyBadge'), {
   loading: () => <div className="animate-pulse bg-base-200 h-6 w-12 rounded"></div>
 });
 
+
+
 const DeleteAssetModal = dynamic(() => import('./DeleteAssetModal'), {
   ssr: false,
 });
 
 const TRADING_CATEGORIES = [
-  'stocks', 
-  'bonds', 
-  'cryptocurrencies', 
-  'etf_funds', 
-  'option', 
+  'stocks',
+  'bonds',
+  'cryptocurrencies',
+  'etf_funds',
+  'option',
   'futures'
 ];
 
 
-function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategory, totalAssetsValue, showMoreActions, showViewDetails, showValues, onEditAsset, onDeleteAsset, onViewDetails, onAddAsset }) {
+function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategory, totalAssetsValue, showMoreActions, showViewDetails, showValues, onEditAsset, onDeleteAsset, onViewDetails, onAddAsset, highlightedAssetId, setHighlightedAssetId }) {
+
+  const itemsRef = useRef({});
+  const isHoveringList = useRef(false);
+
+  // Scroll to highlighted asset if not hovering the list (meaning the trigger comes from the chart)
+  // Scroll to highlighted asset 
+  useEffect(() => {
+    // We removed the isHoveringList check to ensure scrolling works reliably.
+    if (highlightedAssetId && itemsRef.current[highlightedAssetId] && !isHoveringList.current) {
+      itemsRef.current[highlightedAssetId].scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [highlightedAssetId]);
 
   const moreActionsDropdownRef = useRef(null);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, assetId: null });
@@ -120,7 +137,7 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
     setDeleteModal({ isOpen, assetId });
   }
 
-  useEffect(() => {    
+  useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
@@ -170,14 +187,25 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
       <>
         {/* Assets List */}
         {assetData.map((asset, assetIndex) => (
-          <div 
-            key={asset.id} 
-            style={{ 
+          <div
+            key={asset.id}
+            ref={(el) => itemsRef.current[asset.id] = el}
+            style={{
               animationDelay: `${assetIndex * 50}ms`,
               animationFillMode: 'both'
             }}
+            onMouseEnter={() => setHighlightedAssetId && setHighlightedAssetId(asset.id)}
+            onMouseLeave={() => setHighlightedAssetId && setHighlightedAssetId(null)}
           >
-            <div className="p-4 lg:p-6 shadow-sm hover:shadow-md transition-shadow duration-200 rounded-lg hover:scale-[1.01]">
+            <div
+              className={`p-4 lg:p-6 transition-all duration-300 ease-[cubic-bezier(0.25,0.8,0.25,1)] rounded-xl border-2 ${highlightedAssetId === asset.id
+                ? 'bg-base-200 scale-[1.02] shadow-xl z-10'
+                : 'bg-base-100 border-transparent hover:shadow-lg hover:scale-[1.01] hover:bg-base-200/50'
+                }`}
+              style={{
+                borderColor: highlightedAssetId === asset.id ? chartColors[assetIndex % chartColors.length] : 'transparent'
+              }}
+            >
               {/* Asset Details */}
               <div className="flex items-center gap-3">
                 <div className="flex-1">
@@ -194,7 +222,7 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
                       )}
 
                       <div className="text-sm flex items-center gap-1">
-                        <Flag countryCode={currencies.find(currency => currency.code === baseCurrency)?.flag} size="sm" /> 
+                        <Flag countryCode={currencies.find(currency => currency.code === baseCurrency)?.flag} size="sm" />
                         {baseCurrency}
 
                         <span className="ml-0">
@@ -205,9 +233,9 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
                           <div className='flex flex-col gap-1'>
                             {asset.currencies.map((currencyData, currencyIndex) => (
                               <div key={currencyIndex} className="tooltip tooltip-neutral" data-tip={`${formatPercentage(currencyData.valuationInPreferredCurrency / asset.valuationInPreferredCurrency * 100, 2)} of ${asset.description} is in ${currencyData.currency}`}>
-                                <CurrencyBadge 
-                                  currencyCode={currencyData.currency} 
-                                  percentage={formatPercentage(currencyData.valuationInPreferredCurrency / asset.valuationInPreferredCurrency * 100, 2)} 
+                                <CurrencyBadge
+                                  currencyCode={currencyData.currency}
+                                  percentage={formatPercentage(currencyData.valuationInPreferredCurrency / asset.valuationInPreferredCurrency * 100, 2)}
                                 />
                               </div>
                             ))}
@@ -228,7 +256,7 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
                       {asset.date && (
                         <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400">
                           <svg xmlns="http://www.w3.org/2000/svg" width="12px" height="12px" viewBox="0 0 24 24" fill="none">
-                            <path d="M3 10H21M7 3V5M17 3V5M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.07989 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M3 10H21M7 3V5M17 3V5M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.07989 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                           Since {formatDateToString(asset.date)}
                         </div>
@@ -241,19 +269,19 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
                         <button className="btn btn-sm" onClick={() => onViewDetails(asset)}>
                           Assets
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="currentColor" className="w-4 h-4">
-                            <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
+                            <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
                           </svg>
                         </button>
                       )}
 
                       {/* Show more actions */}
                       {showMoreActions && (
-                        <div 
-                          ref={(ref) => moreActionsDropdownRef.current = openMoreActionsDropdown === asset.id ? ref : null} 
+                        <div
+                          ref={(ref) => moreActionsDropdownRef.current = openMoreActionsDropdown === asset.id ? ref : null}
                           className="dropdown dropdown-end"
                           onKeyDown={(e) => handleKeyDown(e, asset.id)}
                         >
-                          <button 
+                          <button
                             type="button"
                             className="btn btn-tertiary btn-sm btn-circle focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus:ring-2 focus:ring-black focus:ring-offset-2"
                             title="More actions"
@@ -266,13 +294,13 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
                               <path fillRule="evenodd" clipRule="evenodd" d="M4 8C4 8.82843 3.32843 9.5 2.5 9.5C1.67157 9.5 1 8.82843 1 8C1 7.17157 1.67157 6.5 2.5 6.5C3.32843 6.5 4 7.17157 4 8ZM9.5 8C9.5 8.82843 8.82843 9.5 8 9.5C7.17157 9.5 6.5 8.82843 6.5 8C6.5 7.17157 7.17157 6.5 8 6.5C8.82843 6.5 9.5 7.17157 9.5 8ZM13.5 9.5C14.3284 9.5 15 8.82843 15 8C15 7.17157 14.3284 6.5 13.5 6.5C12.6716 6.5 12 7.17157 12 8C12 8.82843 12.6716 9.5 13.5 9.5Z" fill="currentColor" />
                             </svg>
                           </button>
-                          <ul 
+                          <ul
                             className={`absolute right-0 z-[1] menu p-2 shadow bg-base-100 rounded-box w-40 ${openMoreActionsDropdown === asset.id ? 'block' : 'hidden'}`}
                             role="menu"
                           >
                             <li role="menuitem">
-                              <button 
-                                type="button" 
+                              <button
+                                type="button"
                                 onClick={() => handleEditAsset(asset)}
                                 className={openMoreActionsDropdown === asset.id && highlightedIndex === 0 ? 'bg-base-200' : ''}
                                 ref={(ref) => {
@@ -286,7 +314,7 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
                               </button>
                             </li>
                             <li role="menuitem">
-                              <button 
+                              <button
                                 type="button"
                                 className={`hover:bg-error/20 duration-200 ${openMoreActionsDropdown === asset.id && highlightedIndex === 1 ? 'bg-error/20' : ''}`}
                                 onClick={() => handleDeleteAsset({ isOpen: true, assetId: asset.id })}
@@ -309,11 +337,11 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
               </div>
 
               {/* Progress Bar */}
-              <div className="flex items-center gap-2 pt-2">  
+              <div className="flex items-center gap-2 pt-2">
                 {/* Progress Bar */}
-                <progress 
+                <progress
                   className="progress w-100 custom-progress"
-                  value={getAssetPercentage(asset, totalAssetsValue)} 
+                  value={getAssetPercentage(asset, totalAssetsValue)}
                   max="100"
                   style={{ "--progress‐fill": chartColors[assetIndex % chartColors.length] }}
                 >
@@ -331,7 +359,11 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
   }
 
   return (
-    <div className="">
+    <div
+      className=""
+      onMouseEnter={() => isHoveringList.current = true}
+      onMouseLeave={() => isHoveringList.current = false}
+    >
 
       {/* Asset List */}
       {assetListUI}
@@ -343,9 +375,11 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
         onConfirm={() => onDeleteAsset(deleteModal.assetId)}
         assetSymbol={assetData.find(a => a.id === deleteModal.assetId)?.symbol}
       />
-  
+
     </div>
   );
 }
 
-export default memo(AssetsList); 
+
+
+export default AssetsList; 
