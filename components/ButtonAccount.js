@@ -67,7 +67,10 @@ const ButtonAccount = ({ onAddAsset }) => {
     }
 
     const menuItems = [];
-    if (isDashboard) menuItems.push('addAsset');
+    if (isDashboard) {
+      menuItems.push('addAsset');
+      menuItems.push('support');
+    }
     menuItems.push('logout');
 
     const currentIndex = highlightedIndex;
@@ -96,6 +99,11 @@ const ButtonAccount = ({ onAddAsset }) => {
           e.preventDefault();
           if (menuItems[currentIndex] === 'addAsset') {
             handleAddAsset();
+          } else if (menuItems[currentIndex] === 'support') {
+            const supportLink = menuItemRefs.current[currentIndex];
+            if (supportLink) {
+              supportLink.click();
+            }
           } else if (menuItems[currentIndex] === 'logout') {
             handleLogout();
           }
@@ -196,30 +204,49 @@ const ButtonAccount = ({ onAddAsset }) => {
         role="menu"
       >
         {isDashboard && (
-          <li role="menuitem">
-            <button
-              className={`flex items-center gap-2 hover:bg-base-300 duration-200 py-1.5 px-4 w-full rounded-lg font-medium ${highlightedIndex === 0 ? 'bg-base-300' : ''}`}
-              onClick={handleAddAsset}
-              ref={(ref) => {
-                menuItemRefs.current[0] = ref;
-              }}
-              onMouseEnter={() => setHighlightedIndex(0)}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-              Add Asset
-            </button>
-          </li>
+          <>
+            <li role="menuitem">
+              <button
+                className={`flex items-center gap-2 hover:bg-base-300 duration-200 py-1.5 px-4 w-full rounded-lg font-medium ${highlightedIndex === 0 ? 'bg-base-300' : ''}`}
+                onClick={handleAddAsset}
+                ref={(ref) => {
+                  menuItemRefs.current[0] = ref;
+                }}
+                onMouseEnter={() => setHighlightedIndex(0)}
+                tabIndex={highlightedIndex === 0 ? 0 : -1}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                Add Asset
+              </button>
+            </li>
+            <li role="menuitem">
+              <a 
+                href="mailto:support@mail.fortuneok.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className={`flex items-center gap-2 hover:bg-base-300 duration-200 py-1.5 px-4 w-full rounded-lg font-medium ${highlightedIndex === 1 ? 'bg-base-300' : ''}`}
+                ref={(ref) => {
+                  menuItemRefs.current[1] = ref;
+                }}
+                onMouseEnter={() => setHighlightedIndex(1)}
+                tabIndex={highlightedIndex === 1 ? 0 : -1}
+              >
+                <span className="inline w-5">💬</span> <span className="inline">Support</span>
+              </a>
+            </li>
+          </>
         )}
         <li role="menuitem">
           <button
-            className={`flex items-center gap-2 hover:bg-error/20 duration-200 py-1.5 px-4 w-full rounded-lg font-medium ${highlightedIndex === (isDashboard ? 1 : 0) ? 'bg-error/20' : ''}`}
+            className={`flex items-center gap-2 hover:bg-error/20 duration-200 py-1.5 px-4 w-full rounded-lg font-medium ${highlightedIndex === (isDashboard ? 2 : 0) ? 'bg-error/20' : ''}`}
             onClick={handleLogout}
             ref={(ref) => {
-              menuItemRefs.current[isDashboard ? 1 : 0] = ref;
+              menuItemRefs.current[isDashboard ? 2 : 0] = ref;
             }}
-            onMouseEnter={() => setHighlightedIndex(isDashboard ? 1 : 0)}
+            onMouseEnter={() => setHighlightedIndex(isDashboard ? 2 : 0)}
+            tabIndex={highlightedIndex === (isDashboard ? 2 : 0) ? 0 : -1}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
