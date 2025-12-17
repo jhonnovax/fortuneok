@@ -14,18 +14,18 @@ const DEDUP_WINDOW_MS = 2000; // 2 seconds window
  */
 const isRecentlyLogged = (errorData) => {
   if (typeof window === "undefined") return false;
-  
+
   const recentErrors = window[RECENT_ERRORS_KEY] || [];
   const now = Date.now();
-  
+
   // Create a unique key for this error
   const errorKey = `${errorData.action}:${errorData.errorMessage}:${errorData.errorStack || ""}`;
-  
+
   // Check if this error was logged recently
   const isDuplicate = recentErrors.some(
     (entry) => entry.key === errorKey && now - entry.timestamp < DEDUP_WINDOW_MS
   );
-  
+
   if (!isDuplicate) {
     // Add to recent errors and clean up old entries
     recentErrors.push({ key: errorKey, timestamp: now });
@@ -35,7 +35,7 @@ const isRecentlyLogged = (errorData) => {
     );
     window[RECENT_ERRORS_KEY] = filtered;
   }
-  
+
   return isDuplicate;
 };
 
@@ -54,6 +54,11 @@ const isRecentlyLogged = (errorData) => {
  * @param {Object} [errorData.responseData] - Response data if applicable
  */
 export const logError = async (errorData) => {
+  // Only register log errors in production
+  if (process.env.NODE_ENV !== "production") {
+    return;
+  }
+
   try {
     // Deduplication: Skip if this error was recently logged
     if (isRecentlyLogged(errorData)) {
@@ -152,7 +157,7 @@ const HANDLER_REFS = "__errorHandlerRefs__";
  */
 export const initializeErrorHandlers = () => {
   if (typeof window === "undefined") return;
-  
+
   // Prevent duplicate initialization using window property (survives module reloads)
   if (window[INIT_FLAG]) {
     return;
@@ -170,7 +175,7 @@ export const initializeErrorHandlers = () => {
       },
     });
   };
-  
+
   window.addEventListener("unhandledrejection", unhandledRejectionHandler);
 
   // Handle global errors
@@ -187,7 +192,7 @@ export const initializeErrorHandlers = () => {
       },
     });
   };
-  
+
   window.addEventListener("error", errorHandler);
 
   // Store references for cleanup
@@ -205,7 +210,7 @@ export const initializeErrorHandlers = () => {
  */
 export const cleanupErrorHandlers = () => {
   if (typeof window === "undefined") return;
-  
+
   const refs = window[HANDLER_REFS];
   if (refs) {
     if (refs.unhandledRejection) {
@@ -216,6 +221,6 @@ export const cleanupErrorHandlers = () => {
     }
     delete window[HANDLER_REFS];
   }
-  
+
   delete window[INIT_FLAG];
 };
