@@ -3,7 +3,7 @@ import { getLocalDateFromUTCString } from "@/services/dateService";
 // Hierarchical structure for asset categories
 export const ASSET_CATEGORIES_STRUCTURE = {
   bonds: {
-    icon: '📈',
+    icon: '📜',
     label: 'Bonds',
     value: 'bonds',
     subcategories: []
@@ -27,7 +27,7 @@ export const ASSET_CATEGORIES_STRUCTURE = {
     ]
   },
   cryptocurrencies: {
-    icon: '📉',
+    icon: '₿',
     label: 'Cryptocurrencies',
     value: 'cryptocurrencies',
     subcategories: []
@@ -51,7 +51,7 @@ export const ASSET_CATEGORIES_STRUCTURE = {
     subcategories: []
   },
   stocks: {
-    icon: '📈',
+    icon: '📊',
     label: 'Stocks',
     value: 'stocks_parent',
     subcategories: [

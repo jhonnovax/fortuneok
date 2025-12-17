@@ -549,7 +549,7 @@ export default function CategorySelect({
                                 <button
                                   type="button"
                                   data-value={item.value}
-                                  className={`w-full text-left pl-6 pr-3 py-2 focus:outline-none transition-colors ${
+                                  className={`w-full text-left px-3 py-2 text-xs font-semibold text-base-content/70 uppercase focus:outline-none transition-colors ${
                                     isSelected
                                       ? 'bg-primary text-neutral font-medium cursor-default'
                                       : 'hover:bg-base-200 focus:bg-base-200 cursor-pointer'
