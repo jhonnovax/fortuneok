@@ -182,15 +182,31 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
     });
   };
 
-  // Reset form when modal opens
+  // Reset and populate form when modal opens
   useEffect(() => {
     if (isOpen) {
-      setForm(INITIAL_FORM_STATE);
       setErrors({});
       hasInteractedRef.current = false;
       closeButtonRef.current?.focus();
+
+      if (asset) {
+        setForm({
+          ...INITIAL_FORM_STATE,
+          id: asset.id,
+          date: asset.date?.toISOString?.()?.split('T')?.[0] || '',
+          category: asset.category,
+          description: asset.description,
+          brokerName: asset.brokerName,
+          symbol: asset.symbol,
+          shares: asset.shares,
+          currentValuation: asset.currentValuation,
+          notes: asset.notes
+        });
+      } else {
+        setForm(INITIAL_FORM_STATE);
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, asset]);
 
   // Add escape key handler
   useEffect(() => {
@@ -208,24 +224,6 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
       window.removeEventListener('keydown', handleEscape);
     };
   }, [isOpen, onClose]);
-
-  // Set form values when asset is provided
-  useEffect(() => {
-    if (asset) {
-      setForm(prevForm => ({
-        ...prevForm,
-        id: asset.id,
-        date: asset.date?.toISOString?.()?.split('T')?.[0] || '',
-        category: asset.category,
-        description: asset.description,
-        brokerName: asset.brokerName,
-        symbol: asset.symbol,
-        shares: asset.shares,
-        currentValuation: asset.currentValuation,
-        notes: asset.notes
-      }));
-    }
-  }, [asset]);
 
   // Helper function to render label with required asterisk
   const renderLabel = (text, required = true, error = false) => (
