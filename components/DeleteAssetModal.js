@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useLayoutEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { createPortal } from 'react-dom';
 
@@ -15,6 +16,7 @@ export default function DeleteAssetModal({ isOpen, onClose, onConfirm, assetSymb
 
   const closeButtonRef = useRef(null);
   const { data: session } = useSession();
+  const pathname = usePathname();
 
   // Handle Escape key press
   useEffect(() => {
@@ -44,7 +46,7 @@ export default function DeleteAssetModal({ isOpen, onClose, onConfirm, assetSymb
             <h3 className="font-bold text-lg">Remove Asset</h3>
 
             {/* Close button */}
-            <button 
+            <button
               ref={closeButtonRef}
               onClick={onClose}
               className="btn btn-sm btn-tertiary btn-circle ml-auto"
@@ -62,9 +64,9 @@ export default function DeleteAssetModal({ isOpen, onClose, onConfirm, assetSymb
             <button className="btn btn-tertiary" onClick={onClose}>
               Cancel
             </button>
-            {session && (
-              <button 
-                className="btn btn-error" 
+            {session && pathname === '/dashboard' ? (
+              <button
+                className="btn btn-error"
                 onClick={() => {
                   onConfirm();
                   onClose();
@@ -72,8 +74,7 @@ export default function DeleteAssetModal({ isOpen, onClose, onConfirm, assetSymb
               >
                 Remove Asset
               </button>
-            )}
-            {!session && <ButtonSignin extraStyle="btn-primary" />}
+            ) : <ButtonSignin extraStyle="btn-primary" />}
           </div>
 
         </div>
@@ -83,6 +84,6 @@ export default function DeleteAssetModal({ isOpen, onClose, onConfirm, assetSymb
         </form>
 
       </dialog>
-    , document.body)
+      , document.body)
   );
 } 

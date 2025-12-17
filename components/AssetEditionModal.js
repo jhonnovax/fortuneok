@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
 import ButtonSignin from '@/components/ButtonSignin';
 import dynamic from 'next/dynamic';
 import { createPortal } from 'react-dom';
@@ -62,6 +63,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
   const showCurrentValuation = !TRADING_CATEGORIES.includes(form.category);
 
   const { data: session } = useSession();
+  const pathname = usePathname();
 
   const validateForm = () => {
     const newErrors = validateAssetData(form);
@@ -468,7 +470,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
               Cancel
             </button>
 
-            {session
+            {session && pathname === '/dashboard'
               ? <button
                 type="button"
                 className="btn btn-primary transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-lg"
