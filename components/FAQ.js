@@ -28,7 +28,7 @@ const faqList = [
   },
   {
     question: "Can I get a refund?",
-    answer: <p>Yes! You can request a refund within 7 days of your purchase. Reach out by email at <a className="text-primary hover:underline" href="mailto:support@fortuneok.com" target="_blank" rel="noopener noreferrer">support@fortuneok.com</a>.</p>,
+    answer: <p>Yes! You can request a refund within 7 days of your purchase. Reach out by email at <a className="text-primary hover:underline" href="mailto:support@mail.fortuneok.com" target="_blank" rel="noopener noreferrer">support@mail.fortuneok.com</a>.</p>,
   }
 ];
 

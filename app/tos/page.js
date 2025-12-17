@@ -17,7 +17,7 @@ import QuestionsAboutDocs from "@/components/QuestionsAboutDocs";
 // I need your help to write a simple Terms & Services for my website. Here is some context:
 // - Website: https://fortuneok.com
 // - Name: FortuneOK
-// - Contact information: support@fortuneok.com
+// - Contact information: support@mail.fortuneok.com
 // - Description: A JavaScript code boilerplate to help entrepreneurs launch their startups faster
 // - Ownership: when buying a package, users can download code to create apps. They own the code but they do not have the right to resell it. They can ask for a full refund within 7 day after the purchase.
 // - User data collected: name, email and payment information
@@ -58,7 +58,7 @@ FortuneOK allows users to manage and track their investments in one place. By pu
 
 2. Purchases & Refund Policy
 
-Users who purchase a package can request a full refund within 7 days of purchase by contacting support@fortuneok.com.
+Users who purchase a package can request a full refund within 7 days of purchase by contacting support@mail.fortuneok.com.
 
 3. User Data Collection
 

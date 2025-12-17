@@ -17,7 +17,7 @@ const Footer = () => {
           <Link href="/tos" className="link link-hover">
             📜 Terms of services
           </Link>
-          <Link href="mailto:support@fortuneok.com" target="_blank" rel="noopener noreferrer" className="link link-hover order-first md:order-none">
+          <Link href="mailto:support@mail.fortuneok.com" target="_blank" rel="noopener noreferrer" className="link link-hover order-first md:order-none">
             💬 Support
           </Link>
         </nav>

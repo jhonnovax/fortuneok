@@ -24,7 +24,7 @@ import QuestionsAboutDocs from "@/components/QuestionsAboutDocs";
 // - Data sharing: we do not share the data with any other parties
 // - Children's Privacy: we do not collect any data from children
 // - Updates to the Privacy Policy: users will be updated by email
-// - Contact information: support@fortuneok.com
+// - Contact information: support@mail.fortuneok.com
 
 // Please write a simple privacy policy for my site. Add the current date.  Do not add or explain your reasoning. Answer:
 
