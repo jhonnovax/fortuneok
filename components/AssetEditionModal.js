@@ -293,7 +293,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
               </div>
 
               {/* Category */}
-              <div className="form-control">
+              <div className={`form-control ${!form.category ? 'md:col-span-2' : ''}`}>
                 {renderLabel('Category', true, errors.category)}
                 <CategorySelect
                   value={form.category}
@@ -306,7 +306,7 @@ export default function AssetEditionModal({ isOpen, isSubmitting, submitError, a
 
               {/* Description or Broker name based on category */}
               {
-                TRADING_CATEGORIES.includes(form.category) ? (
+                form.category && TRADING_CATEGORIES.includes(form.category) ? (
                   <div className="form-control">
                     {renderLabel('Broker Name', true, errors.brokerName)}
                     <input
