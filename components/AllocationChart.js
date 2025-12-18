@@ -13,7 +13,7 @@ import { useTailwindBreakpoint } from '@/hooks/useTailwindBreakpoint';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
 import AllocationChartSkeleton from './AllocationChartSkeleton';
 
-export default function AllocationChart({ isLoading, error, filteredAssetData, showValues, onAddAsset, highlightedAssetId, setHighlightedAssetId }) {
+export default function AllocationChart({ isLoading, error, filteredAssetData, showValues, onAddAsset, highlightedAssetId, setHighlightedAssetId, selectedAssetId, setSelectedAssetId }) {
 
   const { breakpointInPixels } = useTailwindBreakpoint();
   const theme = useSystemTheme();
@@ -77,7 +77,7 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, s
       stroke: am5.color(theme === 'light' ? '#ffffff' : '#1d232a'),
       strokeWidth: 2,
       scale: 1,
-      toggleKey: "none", // Disable toggling on click
+      toggleKey: "none", // Disable toggling on click (we handle it manually for sync)
       cursorOverStyle: "pointer",
       cornerRadius: 5,
       interactive: true
@@ -219,6 +219,13 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, s
             setHighlightedAssetId(null);
           }
         });
+
+        slice.events.on("click", () => {
+          if (setSelectedAssetId) {
+            const id = slice.dataItem.dataContext.id;
+            setSelectedAssetId(prev => prev === id ? null : id);
+          }
+        });
       });
     });
 
@@ -227,9 +234,9 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, s
     return () => {
       root.dispose();
     };
-  }, [chartData, isLoading, error, theme, isDesktopOrUpper, showValues, setHighlightedAssetId]);
+  }, [chartData, isLoading, error, theme, isDesktopOrUpper, showValues, setHighlightedAssetId, setSelectedAssetId]);
 
-  // Handle highlightedAssetId prop change (from list hover)
+  // Handle highlighted and selected states
   useEffect(() => {
     if (!seriesRef.current) return;
 
@@ -240,8 +247,13 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, s
       const slice = dataItem.get("slice");
       if (!slice) return;
 
-      if (dataItem.dataContext.id === highlightedAssetId) {
+      const isHighlighted = dataItem.dataContext.id === highlightedAssetId;
+      const isSelected = dataItem.dataContext.id === selectedAssetId;
+
+      if (isHighlighted || isSelected) {
         isAnyHighlighted = true;
+
+        // Scale animation
         slice.animate({
           key: "scale",
           to: sliceScaleEffect,
@@ -249,12 +261,32 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, s
           easing: am5.ease.out(am5.ease.cubic)
         });
 
+        // Explode animation (shiftRadius)
+        // If selected, shift out. If just highlighted, stay (or shift check?)
+        // User said: "Explode that slide from the donut" when clicked (selected).
+        const targetShiftRadius = isSelected ? 20 : 0;
+        slice.animate({
+          key: "shiftRadius",
+          to: targetShiftRadius,
+          duration: 300,
+          easing: am5.ease.out(am5.ease.cubic)
+        });
+
         slice.set("zIndex", 1000); // Bring to front
-        slice.showTooltip();
+
+        if (isHighlighted || isSelected) {
+          slice.showTooltip();
+        }
       } else {
         slice.animate({
           key: "scale",
           to: 1,
+          duration: 300,
+          easing: am5.ease.out(am5.ease.cubic)
+        });
+        slice.animate({
+          key: "shiftRadius",
+          to: 0,
           duration: 300,
           easing: am5.ease.out(am5.ease.cubic)
         });
@@ -267,7 +299,7 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, s
       series.hideTooltip();
     }
 
-  }, [highlightedAssetId]);
+  }, [highlightedAssetId, selectedAssetId]);
 
   // Chart UI based on the state of the component
   if (isLoading) {

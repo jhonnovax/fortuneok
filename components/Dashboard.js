@@ -43,6 +43,7 @@ export default function Dashboard() {
   const [error, setError] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [highlightedAssetId, setHighlightedAssetId] = useState(null);
+  const [selectedAssetId, setSelectedAssetId] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' });
   const [showConfetti, setShowConfetti] = useState(false);
@@ -233,6 +234,8 @@ export default function Dashboard() {
           onAddAsset={handleNewAsset}
           highlightedAssetId={highlightedAssetId}
           setHighlightedAssetId={setHighlightedAssetId}
+          selectedAssetId={selectedAssetId}
+          setSelectedAssetId={setSelectedAssetId}
         />
       </Sidebar>
 
@@ -265,6 +268,8 @@ export default function Dashboard() {
             onAddAsset={handleNewAsset}
             highlightedAssetId={highlightedAssetId}
             setHighlightedAssetId={setHighlightedAssetId}
+            selectedAssetId={selectedAssetId}
+            setSelectedAssetId={setSelectedAssetId}
           />
 
           {/* Mobile Assets List */}
@@ -293,6 +298,7 @@ export default function Dashboard() {
                 onAddAsset={handleNewAsset}
                 highlightedAssetId={highlightedAssetId}
                 setHighlightedAssetId={setHighlightedAssetId}
+                selectedAssetId={selectedAssetId}
               />
             </div>
           </div>

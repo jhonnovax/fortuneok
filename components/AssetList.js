@@ -33,7 +33,7 @@ const TRADING_CATEGORIES = [
 ];
 
 
-function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategory, totalAssetsValue, showMoreActions, showViewDetails, showValues, onEditAsset, onDeleteAsset, onViewDetails, onAddAsset, highlightedAssetId, setHighlightedAssetId }) {
+function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategory, totalAssetsValue, showMoreActions, showViewDetails, showValues, onEditAsset, onDeleteAsset, onViewDetails, onAddAsset, highlightedAssetId, setHighlightedAssetId, selectedAssetId }) {
 
   const itemsRef = useRef({});
   const isHoveringList = useRef(false);
@@ -42,13 +42,14 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
   // Scroll to highlighted asset 
   useEffect(() => {
     const isDesktop = window.innerWidth >= 1024;
-    if (isDesktop && highlightedAssetId && itemsRef.current[highlightedAssetId] && !isHoveringList.current) {
-      itemsRef.current[highlightedAssetId].scrollIntoView({
+    const targetId = highlightedAssetId || selectedAssetId;
+    if (isDesktop && targetId && itemsRef.current[targetId] && !isHoveringList.current) {
+      itemsRef.current[targetId].scrollIntoView({
         behavior: 'smooth',
         block: 'center',
       });
     }
-  }, [highlightedAssetId]);
+  }, [highlightedAssetId, selectedAssetId]);
 
   const moreActionsDropdownRef = useRef(null);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, assetId: null });
@@ -205,12 +206,12 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
             onMouseLeave={() => setHighlightedAssetId && setHighlightedAssetId(null)}
           >
             <div
-              className={`p-4 lg:p-6 transition-all duration-300 ease-[cubic-bezier(0.25,0.8,0.25,1)] rounded-xl border-2 ${highlightedAssetId === asset.id
+              className={`p-4 lg:p-6 transition-all duration-300 ease-[cubic-bezier(0.25,0.8,0.25,1)] rounded-xl border-2 ${(highlightedAssetId === asset.id || selectedAssetId === asset.id)
                 ? 'bg-base-200 scale-[1.02] shadow-xl z-10'
                 : 'bg-base-100 border-transparent hover:shadow-lg hover:scale-[1.01] hover:bg-base-200/50'
                 }`}
               style={{
-                borderColor: highlightedAssetId === asset.id ? chartColors[assetIndex % chartColors.length] : 'transparent'
+                borderColor: (highlightedAssetId === asset.id || selectedAssetId === asset.id) ? chartColors[assetIndex % chartColors.length] : 'transparent'
               }}
             >
               {/* Asset Details */}
