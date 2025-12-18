@@ -41,8 +41,8 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
   // Scroll to highlighted asset if not hovering the list (meaning the trigger comes from the chart)
   // Scroll to highlighted asset 
   useEffect(() => {
-    // We removed the isHoveringList check to ensure scrolling works reliably.
-    if (highlightedAssetId && itemsRef.current[highlightedAssetId] && !isHoveringList.current) {
+    const isDesktop = window.innerWidth >= 1024;
+    if (isDesktop && highlightedAssetId && itemsRef.current[highlightedAssetId] && !isHoveringList.current) {
       itemsRef.current[highlightedAssetId].scrollIntoView({
         behavior: 'smooth',
         block: 'center',
