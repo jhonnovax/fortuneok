@@ -151,8 +151,8 @@ export default function AllocationChart({ isLoading, error, filteredAssetData, s
         layout: root.verticalLayout,
         centerY: am5.percent(50),
         y: am5.percent(50),
-        height: am5.percent(100),
-        width: am5.percent(40),
+        maxHeight: am5.percent(100),
+        width: am5.percent(35),
         useDefaultMarker: true,
         verticalScrollbar: am5.Scrollbar.new(root, {
           orientation: "vertical"
