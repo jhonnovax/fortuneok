@@ -34,7 +34,7 @@ redis.keys('symbol_data:*').then(keys => {
 ```bash
 node -e "
 const Redis = require('ioredis');
-const redis = new Redis('rediss://default:AXSxAAIjcDFmYjMwYTdlNjYxZGY0ODNmOGFlN2JjNGQyNTJjMzgxY3AxMA@stable-gelding-29873.upstash.io:6379');
+const redis = new Redis('rediss://XXX');
 redis.keys('symbol_data:*').then(keys => {
   console.log('Deleting', keys.length, 'cached symbols...');
   if (keys.length > 0) {
