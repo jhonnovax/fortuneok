@@ -24,7 +24,7 @@ npm run analyze      # Build with bundle analyzer enabled
 - **Charts**: amCharts 5
 - **State Management**: Zustand stores
 - **Caching**: Redis (ioredis)
-- **API Data**: Yahoo Finance 2 for stock/ETF data
+- **API Data**: Financial Modeling Prep API for symbol search (prices fallback to $1 on free tier)
 
 ## Architecture
 
@@ -74,7 +74,17 @@ npm run analyze      # Build with bundle analyzer enabled
 - Stripe webhooks update `hasAccess` when payment succeeds/fails
 - `lastAccessAt` tracks user engagement; updated on every sign-in
 
-#### 7. API Route Patterns
+#### 7. Financial Data API (FMP Only)
+- **Financial Modeling Prep API** for both symbol search and price quotes
+- **Free tier limitation**: NO working price endpoints available
+- All price endpoints return "Legacy Endpoint" errors or empty arrays
+- **Current behavior**: All stock prices default to $1 (fallback)
+- 4-hour Redis cache for stock prices
+- Rate limiting: 500ms delay between batches, max 10 symbols per batch
+- Crypto symbols normalized to FMP format (e.g., BTC → BTCUSD)
+- **To get actual prices**: Upgrade to FMP Starter plan ($14/month)
+
+#### 8. API Route Patterns
 All API routes follow this structure:
 ```javascript
 import { getServerSession } from "next-auth";
@@ -147,7 +157,14 @@ STRIPE_WEBHOOK_SECRET
 GOOGLE_ID (optional - for Google OAuth)
 GOOGLE_SECRET (optional - for Google OAuth)
 RESEND_API_KEY
+FMP_API_KEY (Financial Modeling Prep API key - REQUIRED)
 ```
+
+### Getting FMP_API_KEY
+1. Sign up at https://financialmodelingprep.com/
+2. Free tier provides 250 API calls/day for symbol search
+3. **Important**: Free tier has NO price endpoints - all stock prices will show as $1
+4. For actual real-time prices, upgrade to Starter plan ($14/month)
 
 ## Development Guidelines
 
