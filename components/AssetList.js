@@ -206,12 +206,14 @@ function AssetsList({ isLoading, error, assetData, baseCurrency, selectedCategor
             onMouseLeave={() => setHighlightedAssetId && setHighlightedAssetId(null)}
           >
             <div
-              className={`p-4 lg:p-6 transition-all duration-300 ease-[cubic-bezier(0.25,0.8,0.25,1)] rounded-xl border-2 ${(highlightedAssetId === asset.id || selectedAssetId === asset.id)
-                ? 'bg-base-200 scale-[1.02] shadow-xl z-10'
-                : 'bg-base-100 border-transparent hover:shadow-lg hover:scale-[1.01] hover:bg-base-200/50'
+              className={`p-4 lg:p-6 transition-all duration-300 ease-[cubic-bezier(0.25,0.8,0.25,1)] rounded-xl ${(highlightedAssetId === asset.id || selectedAssetId === asset.id)
+                ? 'scale-[1.02] shadow-xl z-10'
+                : 'bg-base-100 hover:shadow-lg hover:scale-[1.01] hover:bg-base-200/50'
                 }`}
               style={{
-                borderColor: (highlightedAssetId === asset.id || selectedAssetId === asset.id) ? chartColors[assetIndex % chartColors.length] : 'transparent'
+                backgroundColor: (highlightedAssetId === asset.id || selectedAssetId === asset.id)
+                  ? `${chartColors[assetIndex % chartColors.length]}20`
+                  : undefined
               }}
             >
               {/* Asset Details */}
