@@ -223,7 +223,15 @@ const ButtonAccount = ({ onAddAsset }) => {
               </button>
             </li>
             <li role="menuitem">
-              <ButtonSupport className="w-full hover:bg-base-300" />
+              <ButtonSupport 
+                className="w-full hover:bg-base-300" 
+                onClick={() => setOpenDropdown(false)}
+                ref={(ref) => {
+                  menuItemRefs.current[1] = ref;
+                }}
+                onMouseEnter={() => setHighlightedIndex(1)}
+                tabIndex={highlightedIndex === 1 ? 0 : -1}
+              />
             </li>
           </>
         )}

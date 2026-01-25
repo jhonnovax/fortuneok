@@ -1,11 +1,12 @@
 "use client";
 
+import { forwardRef } from "react";
 import config from "@/config";
 import { Crisp } from "crisp-sdk-web";
 
 // Use this button if chat is hidden on some routes. config.js has onlyShowOnRoutes set to ["/"] so it will be hidden on all routes except the home page.
 // If Crisp is not enable, it will open the support email in the default email client.
-const ButtonSupport = ({ className, text }) => {
+const ButtonSupport = forwardRef(({ className, text, tabIndex, onMouseEnter, onClick }, ref) => {
 
   function handleClick() {
     if (config.crisp?.id) {
@@ -18,6 +19,9 @@ const ButtonSupport = ({ className, text }) => {
         "_blank"
       );
     }
+    if (onClick) {
+      onClick();
+    }
   }
 
   return (
@@ -27,6 +31,9 @@ const ButtonSupport = ({ className, text }) => {
       data-tooltip-id="tooltip"
       data-tooltip-content="Talk to support"
       title="Chat with support"
+      ref={ref}
+      onMouseEnter={onMouseEnter}
+      tabIndex={tabIndex}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -44,6 +51,6 @@ const ButtonSupport = ({ className, text }) => {
     </button>
   );
 
-};
+});
 
 export default ButtonSupport;
