@@ -5,7 +5,7 @@ import { Crisp } from "crisp-sdk-web";
 
 // Use this button if chat is hidden on some routes. config.js has onlyShowOnRoutes set to ["/"] so it will be hidden on all routes except the home page.
 // If Crisp is not enable, it will open the support email in the default email client.
-const ButtonSupport = ({ className }) => {
+const ButtonSupport = ({ className, text }) => {
 
   function handleClick() {
     if (config.crisp?.id) {
@@ -40,7 +40,7 @@ const ButtonSupport = ({ className }) => {
           clipRule="evenodd"
         />
       </svg>
-      Support
+      {text || "Support"}
     </button>
   );
 

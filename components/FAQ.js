@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import ButtonSupport from "@/components/ButtonSupport";
 
 // <FAQ> component is a lsit of <Item> component
 // Just import the FAQ & add your FAQ content to the const faqList
@@ -28,7 +29,7 @@ const faqList = [
   },
   {
     question: "Can I get a refund?",
-    answer: <p>Yes! You can request a refund within 7 days of your purchase. Reach out by email at <a className="text-primary hover:underline" href="mailto:support@fortuneok.com" target="_blank" rel="noopener noreferrer">support@fortuneok.com</a>.</p>,
+    answer: <p>Yes! You can request a refund within 7 days of your purchase. Reach out through our <ButtonSupport className="link link-primary inline" text="chat support" />.</p>,
   }
 ];
 

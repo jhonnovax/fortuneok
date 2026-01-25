@@ -4,6 +4,7 @@ import config from "@/config";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import QuestionsAboutDocs from "@/components/QuestionsAboutDocs";
+import ButtonSupport from "@/components/ButtonSupport";
 
 // CHATGPT PROMPT TO GENERATE YOUR PRIVACY POLICY — replace with your own data 👇
 
@@ -24,7 +25,7 @@ import QuestionsAboutDocs from "@/components/QuestionsAboutDocs";
 // - Data sharing: we do not share the data with any other parties
 // - Children's Privacy: we do not collect any data from children
 // - Updates to the Privacy Policy: users will be updated by email
-// - Contact information: support@fortuneok.com
+// - Contact information: Use crisp chat support
 
 // Please write a simple privacy policy for my site. Add the current date.  Do not add or explain your reasoning. Answer:
 
@@ -67,7 +68,12 @@ We do not share your personal data with third parties.
 We do not collect or process data from children under 13.
 
 5. Updates to This Policy
-We may update this Privacy Policy from time to time. Users will be notified via email of any changes.`}
+We may update this Privacy Policy from time to time. Users will be notified via email of any changes.
+
+6. Contact Us
+If you have any questions about this Privacy Policy, please reach out to us through our `}
+          <ButtonSupport className="link inline-flex" text="chat support" />
+          {`.`}
           </pre>
         <QuestionsAboutDocs documentName="privacy policy" />
       </main>

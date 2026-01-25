@@ -8,7 +8,8 @@
       "Bash(pkill:*)",
       "Bash(lsof:*)",
       "Bash(node:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "mcp__ide__getDiagnostics"
     ]
   }
 }

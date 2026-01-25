@@ -4,6 +4,7 @@ import config from "@/config";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import QuestionsAboutDocs from "@/components/QuestionsAboutDocs";
+import ButtonSupport from "@/components/ButtonSupport";
 
 // CHATGPT PROMPT TO GENERATE YOUR TERMS & SERVICES — replace with your own data 👇
 
@@ -17,7 +18,7 @@ import QuestionsAboutDocs from "@/components/QuestionsAboutDocs";
 // I need your help to write a simple Terms & Services for my website. Here is some context:
 // - Website: https://fortuneok.com
 // - Name: FortuneOK
-// - Contact information: support@fortuneok.com
+// - Contact information: Use crisp chat support
 // - Description: A JavaScript code boilerplate to help entrepreneurs launch their startups faster
 // - Ownership: when buying a package, users can download code to create apps. They own the code but they do not have the right to resell it. They can ask for a full refund within 7 day after the purchase.
 // - User data collected: name, email and payment information
@@ -58,7 +59,9 @@ FortuneOK allows users to manage and track their investments in one place. By pu
 
 2. Purchases & Refund Policy
 
-Users who purchase a package can request a full refund within 7 days of purchase by contacting support@fortuneok.com.
+Users who purchase a package can request a full refund within 7 days of purchase by contacting our `}
+          <ButtonSupport className="link inline-flex" text="chat support" />
+          {`.
 
 3. User Data Collection
 
