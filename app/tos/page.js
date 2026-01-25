@@ -58,7 +58,7 @@ FortuneOK allows users to manage and track their investments in one place. By pu
 
 2. Purchases & Refund Policy
 
-Users who purchase a package can request a full refund within 7 days of purchase by contacting support@mail.fortuneok.com.
+Users who purchase a package can request a full refund within 7 days of purchase by contacting support@fortuneok.com.
 
 3. User Data Collection
 
