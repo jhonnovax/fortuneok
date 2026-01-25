@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import apiClient from "@/libs/api";
+import ButtonSupport from "@/components/ButtonSupport";
 
 // A button to show user some account actions
 //  1. Billing: open a Stripe Customer Portal to manage their billing (cancel subscription, update payment method, etc.).
@@ -222,19 +223,7 @@ const ButtonAccount = ({ onAddAsset }) => {
               </button>
             </li>
             <li role="menuitem">
-              <a 
-                href="mailto:support@mail.fortuneok.com" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className={`flex items-center gap-2 hover:bg-base-300 duration-200 py-1.5 px-4 w-full rounded-lg font-medium ${highlightedIndex === 1 ? 'bg-base-300' : ''}`}
-                ref={(ref) => {
-                  menuItemRefs.current[1] = ref;
-                }}
-                onMouseEnter={() => setHighlightedIndex(1)}
-                tabIndex={highlightedIndex === 1 ? 0 : -1}
-              >
-                <span className="inline w-5">💬</span> <span className="inline">Support</span>
-              </a>
+              <ButtonSupport className="w-full hover:bg-base-300" />
             </li>
           </>
         )}

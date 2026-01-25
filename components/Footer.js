@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import ButtonSupport from "@/components/ButtonSupport";
 
 // Add the Footer to the bottom of your landing page and more.
 // The support link is connected to the config.js file. If there's no config.resend.supportEmail, the link won't be displayed.
@@ -17,9 +18,7 @@ const Footer = () => {
           <Link href="/tos" className="link link-hover">
             📜 Terms of services
           </Link>
-          <Link href="mailto:support@mail.fortuneok.com" target="_blank" rel="noopener noreferrer" className="link link-hover order-first md:order-none">
-            💬 Support
-          </Link>
+          <ButtonSupport />
         </nav>
 
         <p className="mt-3 text-base-content/80">

@@ -7,6 +7,12 @@ const config = {
   appDescription: "Track all your investments in one place with FortuneOK, an intuitive portfolio tracker that helps you analyze performance, manage assets, and make informed financial decisions.",
   // (no https://, not trialing slash at the end, just the naked domain)
   domainName: "fortuneok.com",
+  crisp: {
+    // Crisp website ID. IF YOU DON'T USE CRISP: just remove this => Then add a support email in this config file (resend.supportEmail) otherwise customer support won't work.
+    id: "5ed25897-8779-4d7c-8ade-a9cb18fcd077",
+    // Hide Crisp by default, except on route "/". Crisp is toggled with <ButtonSupport/>. If you want to show Crisp on every routes, just remove this below
+    onlyShowOnRoutes: ["/", "/tos", "/privacy-policy"],
+  },
   ownership: {
     name: "FortuneOK",
     username: "fortuneok",
@@ -47,11 +53,11 @@ const config = {
   },
   resend: {
     // REQUIRED — Email 'From' field to be used when sending magic login links
-    fromNoReply: `FortuneOK <noreply@mail.fortuneok.com>`,
+    fromNoReply: `FortuneOK <noreply@fortuneok.com>`,
     // REQUIRED — Email 'From' field to be used when sending other emails, like abandoned carts, updates etc..
-    fromAdmin: `FortuneOK <support@mail.fortuneok.com>`,
+    fromAdmin: `FortuneOK <support@fortuneok.com>`,
     // Email shown to customer if need support. Leave empty if not needed => if empty, set up Crisp above, otherwise you won't be able to offer customer support."
-    supportEmail: "support@mail.fortuneok.com",
+    supportEmail: "",
   },
   colors: {
     // REQUIRED — The DaisyUI theme to use (added to the main layout.js). Leave blank for default (light & dark mode). If you any other theme than light/dark, you need to add it in config.tailwind.js in daisyui.themes.
