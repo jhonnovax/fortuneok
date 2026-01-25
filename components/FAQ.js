@@ -29,7 +29,7 @@ const faqList = [
   },
   {
     question: "Can I get a refund?",
-    answer: <p>Yes! You can request a refund within 7 days of your purchase. Reach out through our <ButtonSupport className="link link-primary inline" text="chat support" />.</p>,
+    answer: <p>Yes! You can request a refund within 7 days of your purchase. Reach out through our <ButtonSupport className="link link-primary inline-flex" text="chat support" />.</p>,
   }
 ];
 
